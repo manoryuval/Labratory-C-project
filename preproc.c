@@ -86,6 +86,8 @@ int preproc(char *file_name) {
         char trim_line[MAX_LINE];
         strcpy(trim_line, line);
         trim(trim_line);
+        printf("%s\n", line);
+        printf("%s\n", trim_line);
         char line_copy[MAX_LINE];
         strcpy(line_copy, line);
         char *first = strtok(line_copy, " ");
@@ -99,7 +101,7 @@ int preproc(char *file_name) {
 
         if(is_mcro_end(trim_line)){
             add_mcro(&mcro_head,mcro_name, mcro_body);
-            print_mcro_list(mcro_head);
+            mcro_body[0] = '\0';
             in_mcro = 0;
             continue;
         }
@@ -117,13 +119,14 @@ int preproc(char *file_name) {
     }
     }
     fclose(f);
+    print_mcro_list(mcro_head);
     return 1;
 }
 
 void print_mcro_list(Mcro *head) {
     while (head != NULL) {
-        printf("%s\n", head->name);
-        printf("%s\n", head->body);
+        printf(" NAME: %s\n", head->name);
+        printf("BODY: %s\n", head->body);
         head = head->next;
     }
 }

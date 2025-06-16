@@ -19,10 +19,27 @@ char *create_extension(char *filename, char *extension) {
     return output_filename;
 }
 
-
 void trim(char *line) {
+    char *start = line;
     char *end;
-    while (isspace((unsigned char)*line)) line++; /* leading spaces*/
-    end = line + strlen(line) - 1;
-    while (end > line && isspace((unsigned char)*end)) *end-- = '\0';
+    int len;
+
+    while (isspace((unsigned char)*start)) {
+        start++;
+    }
+
+    if (*start == '\0') {
+        line[0] = '\0';
+        return;
+    }
+
+    end = start + strlen(start) - 1;
+    while (end > start && isspace((unsigned char)*end)) {
+        end--;
+    }
+
+    len = end - start + 1;
+
+    memmove(line, start, len);
+    line[len] = '\0';
 }
