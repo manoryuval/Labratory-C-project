@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "utilc.h": "c",
+        "string.h": "c"
+    }
+}

@@ -1,10 +1,11 @@
-CC = gcc
-CFLAGS = -Wall -Wextra -std=c99
+assembler: preproc.o utils.o assembler.o
+	gcc -g -ansi -Wall -pedantic preproc.o utils.o assembler.o -lm -o assembler
 
-all: check
+preproc.o: preproc.c preproc.h utils.h
+	gcc -c -g -ansi -Wall preproc.c -o preproc.o
 
-check: check.c
-	$(CC) $(CFLAGS) -o check check.c
+utils.o: utils.c utils.h
+	gcc -c -g -ansi -Wall utils.c -o utils.o
 
-clean:
-	rm -f check
+assembler.o: assembler.c preproc.h utils.h
+	gcc -c -g -ansi -Wall assembler.c -o assembler.o
