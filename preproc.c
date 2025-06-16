@@ -7,22 +7,40 @@
 
 /*Function to add a new mcro to the linked list*/
 void add_mcro(Mcro **head, char *name, char *body) {
-   Mcro *new_node = malloc(sizeof(Mcro));
-   printf("%s,%s\n", name, body);
-   if (!new_node) {
-       printf("eror: Memory allocation failed for new mcro.\n");/*שגיאה בהמשך*/
+    Mcro *new_node = (Mcro *)malloc(sizeof(Mcro));
+    if (!new_node) {
+        perror("malloc failed");
         return;
-   }
-   strncpy(new_node->name, name, sizeof(new_node->name));
-   new_node->body = body;  
-   new_node->next = NULL;
-   if (*head == NULL) {
-       *head = new_node;
-   } else {
-       Mcro *curr = *head;
-       while (curr->next) curr = curr->next;
-       curr->next = new_node;
-   }
+    }
+
+    strncpy(new_node->name, name, 30);
+    new_node->name[30] = '\0';
+
+
+    if (body != NULL) {
+        size_t body_len = strlen(body); 
+        new_node->body = (char *)malloc(body_len + 1);
+        if (new_node->body == NULL) {
+            perror("Failed to allocate memory for Mcro body");
+            free(new_node); 
+            return;
+        }
+        strcpy(new_node->body, body);
+    } else {
+        new_node->body = NULL;
+    }
+    new_node->next = NULL;
+
+    if (*head == NULL) {
+        *head = new_node;
+    } else {
+        Mcro *curr = *head;
+        while (curr->next) {
+            curr = curr->next;
+        }
+        curr->next = new_node;
+    }
+
 }
 
 char *find_mcro_body(Mcro *head, char *name) {
@@ -33,13 +51,6 @@ char *find_mcro_body(Mcro *head, char *name) {
         head = head->next;
     }
     return NULL;
-}
-
-void trim(char *line) {
-    char *end;
-    while (isspace((unsigned char)*line)) line++; /* leading spaces*/
-    end = line + strlen(line) - 1;
-    while (end > line && isspace((unsigned char)*end)) *end-- = '\0';
 }
 
 int is_mcro_start(char *line) {
@@ -59,8 +70,11 @@ int preproc(char *file_name) {
     FILE *f = fopen(output, "w+");
     FILE *input = fopen(file_name,"r");
     char line[MAX_LINE];
-    char mcro_name[MAX_NAME];
-    char mcro_body[MAX_MCRO_BODY];
+    char mcro_name[MAX_NAME] ;
+    mcro_name[0] = '\0';
+    char mcro_body[MAX_MCRO_BODY] ;
+    mcro_body[0] = '\0';
+    char *body;
     int in_mcro = 0;
     Mcro *mcro_head = NULL;
 
@@ -79,13 +93,13 @@ int preproc(char *file_name) {
         if (in_mcro==0 && is_mcro_start(trim_line)) {
             in_mcro = 1;
             char *name = strtok(NULL, " ");
-            printf("%s\n", name);
             strcpy(mcro_name, name);
             continue;
         }
 
         if(is_mcro_end(trim_line)){
             add_mcro(&mcro_head,mcro_name, mcro_body);
+            print_mcro_list(mcro_head);
             in_mcro = 0;
             continue;
         }
@@ -93,10 +107,9 @@ int preproc(char *file_name) {
             strcat(mcro_body, line);
             continue;
         } else{
-            if (find_mcro_body(mcro_head,line) != NULL){
-                fprintf(f, "body", MAX_LINE);
-                fprintf(f, find_mcro_body(mcro_head,line), MAX_LINE);
-                mcro_name[0]='\0';
+            body  = find_mcro_body(mcro_head,trim_line);
+            if (body != NULL){
+                fprintf(f, body, MAX_LINE);
             }
             else{
                 fprintf(f, line, MAX_LINE);
@@ -107,6 +120,10 @@ int preproc(char *file_name) {
     return 1;
 }
 
-int print_mcro_list(Mcro *head){
-    
+void print_mcro_list(Mcro *head) {
+    while (head != NULL) {
+        printf("%s\n", head->name);
+        printf("%s\n", head->body);
+        head = head->next;
+    }
 }

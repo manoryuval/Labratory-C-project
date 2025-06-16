@@ -13,7 +13,7 @@ typedef struct Mcro {
 
 void add_mcro(Mcro **head, char *name, char *body) ;
 char *find_mcro_body(Mcro *head, char *name);
-void trim(char *line);
 int is_mcro_start(char *line);
 int is_mcro_end(char *line);
-int preproc(char *file_name);  
+int preproc(char *file_name);
+void print_mcro_list(Mcro *head);

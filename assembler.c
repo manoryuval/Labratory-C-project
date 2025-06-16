@@ -7,7 +7,7 @@
 
 int main(int argc, char *argv[]) {
     int i;
-    printf("%d\n",is_mcro_end("mcroend"));
+    
     for(i = 1; i < argc; i++) {
         FILE *file = fopen(argv[i], "r");
         if (!file) {
