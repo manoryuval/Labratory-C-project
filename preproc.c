@@ -9,19 +9,19 @@
 void add_mcro(Mcro **head, char *name, char *body) {
     Mcro *new_node = (Mcro *)malloc(sizeof(Mcro));
     if (!new_node) {
-        perror("malloc failed");
+        perror("malloc failed"); /*להוסיף שגיאה*/
         return;
     }
 
-    strncpy(new_node->name, name, 30);
-    new_node->name[30] = '\0';
+    strncpy(new_node->name, name, 80);
+    new_node->name[80] = '\0';
 
 
     if (body != NULL) {
         size_t body_len = strlen(body); 
         new_node->body = (char *)malloc(body_len + 1);
         if (new_node->body == NULL) {
-            perror("Failed to allocate memory for Mcro body");
+            perror("Failed to allocate memory for Mcro body");/*להוסיף שגיאה*/
             free(new_node); 
             return;
         }
@@ -79,23 +79,22 @@ int preproc(char *file_name) {
     Mcro *mcro_head = NULL;
 
     if (!input || !f) {
-        perror("File error");/*שגיאת קובץ*/
+        perror("File error");/*שגיאת קובץ להוסיף שגיאה*/
         return 1;
     }
     while (fgets(line, sizeof(line), input)) {
         char trim_line[MAX_LINE];
         strcpy(trim_line, line);
         trim(trim_line);
-        printf("%s\n", line);
-        printf("%s\n", trim_line);
         char line_copy[MAX_LINE];
         strcpy(line_copy, line);
-        char *first = strtok(line_copy, " ");
+        strtok(line_copy, " ");
 
         if (in_mcro==0 && is_mcro_start(trim_line)) {
             in_mcro = 1;
             char *name = strtok(NULL, " ");
             strcpy(mcro_name, name);
+            /*לבדוק שהשם לא אותו שם כמו הנחיה*/
             continue;
         }
 
@@ -119,7 +118,6 @@ int preproc(char *file_name) {
     }
     }
     fclose(f);
-    print_mcro_list(mcro_head);
     return 1;
 }
 

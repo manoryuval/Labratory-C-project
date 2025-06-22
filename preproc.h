@@ -1,7 +1,7 @@
 #define MAX_LINE 256
 #define MAX_MCROS 100
 #define MAX_MCRO_BODY 2048
-#define MAX_NAME 31
+#define MAX_NAME 81
 
 
 typedef struct Mcro {

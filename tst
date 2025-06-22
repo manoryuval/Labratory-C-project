@@ -1,4 +1,4 @@
-mcro PRINT_DEBUG
+mcro     PRINT_DEBUG
     MOV R0, #0xAA
     BL print_hex_val
     ; This is an inline comment within the macro body
