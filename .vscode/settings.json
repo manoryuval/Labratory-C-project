@@ -1,7 +1,9 @@
 {
     "files.associations": {
         "utilc.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "preproc.h": "c",
+        "utils.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

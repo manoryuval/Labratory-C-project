@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "preproc.h"
-#include "utils.h"
+#include "../header_files/preproc.h"
+#include "../header_files/utils.h"
 
 
 int main(int argc, char *argv[]) {

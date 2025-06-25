@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
-#include "preproc.h"
-#include "utils.h"
+#include "../header_files/preproc.h"
+#include "../header_files/utils.h"
 
 /*Function to add a new mcro to the linked list*/
 void add_mcro(Mcro **head, char *name, char *body) {

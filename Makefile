@@ -1,11 +1,23 @@
-assembler: preproc.o utils.o assembler.o
-	gcc -g -ansi -Wall -pedantic preproc.o utils.o assembler.o -lm -o assembler
+CC = gcc
+CFLAGS = -g -ansi -Wall -pedantic
 
-preproc.o: preproc.c preproc.h utils.h
-	gcc -c -g -ansi -Wall preproc.c -o preproc.o
+SRC_DIR = c_files
+INC_DIR = header_files
 
-utils.o: utils.c utils.h
-	gcc -c -g -ansi -Wall utils.c -o utils.o
+OBJ = preproc.o utils.o assembler.o
+EXEC = assembler
 
-assembler.o: assembler.c preproc.h utils.h
-	gcc -c -g -ansi -Wall assembler.c -o assembler.o
+$(EXEC): $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -lm -o $(EXEC)
+
+preproc.o: $(SRC_DIR)/preproc.c $(INC_DIR)/preproc.h $(INC_DIR)/utils.h
+	$(CC) -c $(CFLAGS) $(SRC_DIR)/preproc.c -o preproc.o
+
+utils.o: $(SRC_DIR)/utils.c $(INC_DIR)/utils.h
+	$(CC) -c $(CFLAGS) $(SRC_DIR)/utils.c -o utils.o
+
+assembler.o: $(SRC_DIR)/assembler.c $(INC_DIR)/preproc.h $(INC_DIR)/utils.h
+	$(CC) -c $(CFLAGS) $(SRC_DIR)/assembler.c -o assembler.o
+
+clean:
+	rm -f *.o $(EXEC)

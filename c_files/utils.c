@@ -2,15 +2,16 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "preproc.h"
-#include "utils.h"
+#include "../header_files/preproc.h"
+#include "../header_files/utils.h"
 
 char *create_extension(char *filename, char *extension) {
 
     char *output_filename = malloc(FILENAME_MAX);
+    char *dot;
     if (!output_filename) return NULL; /*שגיאת לזיכרון*/
     strcpy(output_filename, filename);
-    char *dot = strrchr(output_filename, '.');
+    dot = strrchr(output_filename, '.');
     if (dot) {
         strcpy(dot, extension);
     } else {
