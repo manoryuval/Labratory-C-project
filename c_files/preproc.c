@@ -2,8 +2,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "../header_files/assembler.h"
 #include "../header_files/preproc.h"
 #include "../header_files/utils.h"
+#include "../header_files/labels.h"
+#include "../header_files/first_pass.h"
+
+
+Mcro *mcro_head = NULL;
 
 /*Function to add a new mcro to the linked list*/
 void add_mcro(Mcro **head, char *name, char *body) {
@@ -76,7 +82,7 @@ int preproc(char *file_name) {
     mcro_body[0] = '\0';
     char *body;
     int in_mcro = 0;
-    Mcro *mcro_head = NULL;
+    char *name;
 
     if (!input || !f) {
         perror("File error");/*שגיאת קובץ להוסיף שגיאה*/
@@ -92,7 +98,8 @@ int preproc(char *file_name) {
 
         if (in_mcro==0 && is_mcro_start(trim_line)) {
             in_mcro = 1;
-            char *name = strtok(NULL, " ");
+            
+            *name = strtok(NULL, " ");
             strcpy(mcro_name, name);
             /*לבדוק שהשם לא אותו שם כמו הנחיה*/
             continue;
@@ -118,6 +125,9 @@ int preproc(char *file_name) {
     }
     }
     fclose(f);
+    fclose(input);
+    free(output);
+    free_mcro_list(mcro_head);
     return 1;
 }
 
@@ -126,5 +136,16 @@ void print_mcro_list(Mcro *head) {
         printf(" NAME: %s\n", head->name);
         printf("BODY: %s\n", head->body);
         head = head->next;
+    }
+}
+
+/* Frees all memory allocated for the Mcro linked list */
+void free_mcro_list(Mcro *head) {
+    Mcro *tmp;
+    while (head != NULL) {
+        tmp = head;
+        head = head->next;
+        if (tmp->body) free(tmp->body);
+        free(tmp);
     }
 }
