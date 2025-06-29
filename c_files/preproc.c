@@ -9,7 +9,7 @@
 #include "../header_files/first_pass.h"
 
 
-
+Mcro *mcro_head = NULL; /* Initialize the global macro head pointer */
 
 /*Function to add a new mcro to the linked list*/
 void add_mcro(Mcro **head, char *name, char *body) {
@@ -99,7 +99,7 @@ int preproc(char *file_name) {
         if (in_mcro==0 && is_mcro_start(trim_line)) {
             in_mcro = 1;
             
-            *name = strtok(NULL, " ");
+            name = strtok(NULL, " ");
             strcpy(mcro_name, name);
             /*לבדוק שהשם לא אותו שם כמו הנחיה*/
             continue;
