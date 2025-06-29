@@ -17,7 +17,8 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "Error: Could not open file %s\n", argv[i]);
             continue;
         }
-        preproc(argv[i]);/*
+        preproc(argv[i]);
+        /*
         first_pass(argv[i]);*/
         fclose(file);
     }

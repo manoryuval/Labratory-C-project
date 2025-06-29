@@ -9,7 +9,7 @@
 #include "../header_files/first_pass.h"
 
 
-Mcro *mcro_head = NULL;
+
 
 /*Function to add a new mcro to the linked list*/
 void add_mcro(Mcro **head, char *name, char *body) {
