@@ -1,11 +1,11 @@
-mcro     PRINT_DEBUG
+mcro     PRINTDEBUG
     MOV R0, #0xAA
     BL print_hex_val
     ; This is an inline comment within the macro body
     PUSH {LR}
 mcroend
 
-mcro CALCULATE_SUM
+mcro CALCULATESUM
     ADD R1, R2, R3
     SUB R4, R1, #5
     ; Another line inside the macro
@@ -20,10 +20,10 @@ mcro SHORT_MACRO
 mcroend
 
 START_PROGRAM:
-    PRINT_DEBUG
+    PRINTDEBUG:
     
-    CALCULATE_SUM
-
+    CALCULATESUM
+    CALCULATESUM: sss
     EMPTY_MACRO
 
     SHORT_MACRO

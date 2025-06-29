@@ -30,10 +30,12 @@ int first_pass (char *file_name) {
         trim(trimmed_line);
         /*בדיקה אם יש לייבל*/
         if (is_label_start(line)) {
+        
             /*האם הלייבל חוקי - פירוט בהערות */
             strncpy(label, strtok(trimmed_line, ":"), MAX_LABEL_LENGTH);
             is_label = 1;
-            if (valid_label(trimmed_line) !=1) {
+            printf("Label found: %s\n", label);
+            if (valid_label(label) !=1) {
                 /* לעשדות שגיאה*/
                 continue; /*continue to next line*/
 
@@ -64,8 +66,8 @@ int first_pass (char *file_name) {
     printf("%d",is_label_exists(symbols, count_labels, "END"));
 
 
-    close(input);
-    close(f);
+    fclose(input);
+    fclose(f);
     free(symbols);
     return 1;
 }

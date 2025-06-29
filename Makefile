@@ -16,7 +16,7 @@ preproc.o: $(SRC_DIR)/preproc.c $(INC_DIR)/preproc.h $(INC_DIR)/utils.h
 utils.o: $(SRC_DIR)/utils.c $(INC_DIR)/utils.h
 	$(CC) -c $(CFLAGS) $(SRC_DIR)/utils.c -o utils.o
 
-assembler.o: $(SRC_DIR)/assembler.c $(INC_DIR)/preproc.h $(INC_DIR)/utils.h
+assembler.o: $(SRC_DIR)/assembler.c $(INC_DIR)/preproc.h $(INC_DIR)/utils.h $(INC_DIR)/first_pass.h
 	$(CC) -c $(CFLAGS) $(SRC_DIR)/assembler.c -o assembler.o
 
 first_pass.o: $(SRC_DIR)/first_pass.c $(INC_DIR)/first_pass.h $(INC_DIR)/utils.h

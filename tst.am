@@ -3,16 +3,13 @@
 
 
 START_PROGRAM:
-    MOV R0, #0xAA
-    BL print_hex_val
-    ; This is an inline comment within the macro body
-    PUSH {LR}
+    PRINTDEBUG:
     
     ADD R1, R2, R3
     SUB R4, R1, #5
     ; Another line inside the macro
     LDR R0, [SP, #4]
-
+    CALCULATESUM: sss
 
     NOP
 

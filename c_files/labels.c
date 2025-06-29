@@ -53,11 +53,14 @@ int is_label_start(char *line) {
 
 int valid_label(char *label) {
     if (strlen(label) > MAX_LABEL_LENGTH) {
+        printf("Error: Label '%s' is too long.\n", label);
         return 0; /* Label too long שגיאה*/
     }
     if(find_mcro_body(mcro_head,label) != NULL) {
+        printf("Error: Label '%s' is a macro name.\n", label);
         return 0; /* Label is a macro  שגיאה*/
     }
+
     return 1; /* Valid label */
 }
 
