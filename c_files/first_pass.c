@@ -16,27 +16,27 @@ int first_pass (char *file_name) {
     char trimmed_line[MAX_LINE];
     char label[MAX_LABEL_LENGTH];
     /*open file*/
-    char *am_file = create_extension(file_name,".ob");
-    FILE *f = fopen(am_file, "w+");
+    char *am_file = create_extension(file_name,".am");
+    FILE *f = fopen(am_file, "r");
     FILE *input = fopen(file_name,"r");
     if (!input || !f) {
         perror("File error");/*שגיאת קובץ להוסיף שגיאה*/
         return 1;
     }
-    
-    while (fgets(line, sizeof(line), input)) {
+    while (fgets(line, sizeof(line), f)) {
         /*הסרת רווחים מיותרים*/
         strcpy(trimmed_line, line);
         trim(trimmed_line);
         /*בדיקה אם יש לייבל*/
+        printf("1");
         if (is_label_start(line)) {
-        
+            printf("2");
             /*האם הלייבל חוקי - פירוט בהערות */
             strncpy(label, strtok(trimmed_line, ":"), MAX_LABEL_LENGTH);
             is_label = 1;
-            printf("Label found: %s\n", label);
             if (valid_label(label) !=1) {
                 /* לעשדות שגיאה*/
+                printf("3");
                 continue; /*continue to next line*/
 
             }
@@ -63,7 +63,8 @@ int first_pass (char *file_name) {
     add_symbol(&symbols, &count_labels, "LOOP", REGULAR, CODE, 0);
     add_symbol(&symbols, &count_labels, "DATA", REGULAR, DATA, 1);
     add_symbol(&symbols, &count_labels, "END", REGULAR, CODE, 0);
-    printf("%d",is_label_exists(symbols, count_labels, "END"));
+    print_symbols(symbols, count_labels);
+    printf("%d\n",is_label_exists(symbols, count_labels, "END"));
 
 
     fclose(input);

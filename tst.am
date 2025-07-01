@@ -9,10 +9,9 @@ START_PROGRAM:
     SUB R4, R1, #5
     ; Another line inside the macro
     LDR R0, [SP, #4]
-    CALCULATESUM: sss
+
+s
 
     NOP
-
-    LDR R7, [R8, #0]
 
     UNKNOWN_MACRO_CALL

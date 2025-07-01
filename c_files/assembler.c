@@ -18,7 +18,6 @@ int main(int argc, char *argv[]) {
             continue;
         }
         preproc(argv[i]);
-        
         first_pass(argv[i]);
         fclose(file);
     }
