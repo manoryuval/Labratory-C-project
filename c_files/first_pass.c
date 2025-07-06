@@ -6,15 +6,18 @@
 #include "../header_files/preproc.h"
 #include "../header_files/labels.h"
 #include "../header_files/first_pass.h"
+#include "../header_files/analyse.h"
 
 
+Symbol *symbols = NULL;
+int count_labels = 0;
 int first_pass (char *file_name) {
-    Symbol *symbols = NULL;
-    int count_labels = 0,IC = 0,DC = 0, is_label = 0;
+    int IC = 0,DC = 0, is_label = 0,line_count = 0;
     char line[MAX_LINE];
     char copy_line[MAX_LINE];
     char trimmed_line[MAX_LINE];
     char label[MAX_LABEL_LENGTH];
+    char *token1, *token2, *arg1;
     /*open file*/
     char *am_file = create_extension(file_name,".am");
     FILE *f = fopen(am_file, "r");
@@ -24,51 +27,99 @@ int first_pass (char *file_name) {
         return 1;
     }
     while (fgets(line, sizeof(line), f)) {
+        is_label = 0; /*reset label flag for each line*/
+        line_count++;
         /*הסרת רווחים מיותרים*/
         strcpy(trimmed_line, line);
         trim(trimmed_line);
+        if(trimmed_line[0] == '\0' || line[0] == COMMENT) {
+            continue; /*skip empty lines*/
+        }
         /*בדיקה אם יש לייבל*/
-        printf("1");
-        if (is_label_start(line)) {
-            printf("2");
+        token1 = strtok(trimmed_line, " \t\n"); 
+        printf("Token1: %s\t", token1);
+        if (is_label_start(token1)) {
+            printf("label\t");
             /*האם הלייבל חוקי - פירוט בהערות */
-            strncpy(label, strtok(trimmed_line, ":"), MAX_LABEL_LENGTH);
-            is_label = 1;
+            strncpy(label,token1, MAX_LABEL_LENGTH);
+            is_label = 1; 
             if (valid_label(label) !=1) {
                 /* לעשדות שגיאה*/
                 printf("3");
                 continue; /*continue to next line*/
 
             }
-            
-            
+            token2 = strtok(NULL, " \t\n"); 
+            token1 = token2;
         }
-            /*האם הנחיה לאחסון נתונים*/
-                /*אם זה לייבל*/
-                    /*לבדוק שהלייבל לא קיים ולהכניס לטבלה*/        
-                /*זיהוי סוג הנתונים והגודל ולקדם את DC בהתאם*/
-            /*האם extern או entry*/
-                /*אם אנטרי - continue*/
-                /*אם אקסטרן - להכניס לטבלת סמלים עם הערך 0 ו מאפיין אקסטרן. continue*/
-            /*שורת הוראה - אם יש סמל */
-                /*אם יש כבר אז שגיאה)להכניס אותו לטבלת הסמלים עם )code וIC*/
-                /*לחפש בטבלת שמות הפעולה*/
-                /*להבין כמות אופרנדים ולשים בL*/
-                /*לבנות קוד בינארי של מיעון מיידי*/            
+        printf("Token2: %s\t", token1);
+        switch(scan_word(token1)) {
+            case DATA:{ /*האם הנחיה לאחסון נתונים*/
+                printf("DATA\n");
+                if(is_label) {
+                    printf("DATA with label\n");
+                    if(!is_label_exists(symbols, count_labels, label)) {
+                        printf("Adding label %s to symbols table with DC \n", label);
+                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, DATA, DC);
+                    }else {
+                        /*שגיאה - הלייבל כבר קיים*/
+                        printf("Error: Label %s already exists.\n", label);
+                        continue; /*continue to next line*/
+                    }
+                    
+                    /*זיהוי סוג הנתונים והגודל ולקדם את DC בהתאם*/
 
+                }
+                break;
+            }  
+            case ENTRY:{  /*האם entry*/
+                break;
+            }
+            case EXTERN:
+            {
+                printf("EXTERN\t");
+                arg1 = strtok(NULL, " \t\n");
+                printf("Arg1: %s\t", arg1);
+                /*אם אקסטרן - להכניס לטבלת סמלים עם הערך 0 ו מאפיין אקסטרן. continue*/
+                if (arg1 && valid_label(arg1)) {
+                    printf("Adding extern label %s to symbols table with value 0\n", arg1);
+                    add_symbol(&symbols, &count_labels, arg1, LABEL_EXTERN, EXTERN, 0);
+                } else {
+                    printf("Error: Invalid extern label %s\n", arg1);
+                }
+            break;
+            }    
+            case CODE:
+            {/*שורת הוראה - אם יש סמל */ 
+                printf("CODE\n");
+                if (is_label) {
+                    printf("CODE with label\n");
+                    if(!is_label_exists(symbols, count_labels, label)) {
+                        printf("Adding label %s to symbols table with IC \n", label);
+                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, CODE, IC);
+                    }else {
+                        /*שגיאה - הלייבל כבר קיים*/
+                        printf("Error: Label %s already exists.\n", label);
+                        continue; /*continue to next line*/
+                    }
+                }
+                arg1 = strtok(NULL, " \t\n");
+                /*שורה 12 באלגוריתם - לבדוק האם הוראה חוקית*/
+            break;
+            }
+            default: break;
         
+        }
     }
     /*אם יש לייבל*/
-    add_symbol(&symbols, &count_labels, "START", REGULAR, CODE, 0);
-    add_symbol(&symbols, &count_labels, "LOOP", REGULAR, CODE, 0);
-    add_symbol(&symbols, &count_labels, "DATA", REGULAR, DATA, 1);
-    add_symbol(&symbols, &count_labels, "END", REGULAR, CODE, 0);
+    /*
     print_symbols(symbols, count_labels);
     printf("%d\n",is_label_exists(symbols, count_labels, "END"));
-
+    */
+        print_symbols(symbols, count_labels);
 
     fclose(input);
     fclose(f);
-    free(symbols);
     return 1;
-}
+    }
+

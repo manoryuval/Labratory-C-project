@@ -62,8 +62,9 @@ char *find_mcro_body(Mcro *head, char *name) {
 
 int is_mcro_start(char *line) {
     char line_copy[MAX_LINE];
+    char *first;
     strcpy(line_copy, line);
-    char *first = strtok(line_copy, " ");
+    first = strtok(line_copy, " ");
     /* Check if the first token is "mcro" */
     if (first && strcmp(first, "mcro") == 0) return 1;
     return 0;
@@ -79,13 +80,13 @@ int preproc(char *file_name) {
     FILE *f = fopen(output, "w+");/*create output file*/
     FILE *input = fopen(file_name,"r");/*open input file*/
     char line[MAX_LINE];
-    char mcro_name[MAX_NAME] ;
-    mcro_name[0] = '\0';
-    char mcro_body[MAX_MCRO_BODY] ;
-    mcro_body[0] = '\0';
+    char mcro_name[MAX_NAME];
+    char mcro_body[MAX_MCRO_BODY];
     char *body;/*body of the macro*/
     int in_mcro = 0;/*in macro flag*/
     char *name;/*name of the macro*/
+    mcro_name[0] = '\0';
+    mcro_body[0] = '\0';
     /* Check if the file was opened successfully */
     if (!input || !f) {
         perror("File error");/*שגיאת קובץ להוסיף שגיאה*/
@@ -94,9 +95,9 @@ int preproc(char *file_name) {
     /* Read the input file line by line */
     while (fgets(line, sizeof(line), input)) {
         char trim_line[MAX_LINE];
+        char line_copy[MAX_LINE];
         strcpy(trim_line, line);
         trim(trim_line);
-        char line_copy[MAX_LINE];
         strcpy(line_copy, line);
         /* Tokenize the line */
         strtok(line_copy, " ");
@@ -140,7 +141,6 @@ int preproc(char *file_name) {
             }
     }
     }
-    print_mcro_list(mcro_head);
     fclose(f);/* Close the output file */
     fclose(input);/* Close the input file */
     free(output);/* Free the output file name */

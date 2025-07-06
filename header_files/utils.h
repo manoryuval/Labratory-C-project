@@ -10,3 +10,4 @@ Trims leading and trailing whitespace from a line.
 @param line The line to be trimmed.
  */
 void trim(char *line);
+

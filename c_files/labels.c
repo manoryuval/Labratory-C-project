@@ -9,7 +9,7 @@
 #include "../header_files/labels.h"
 
 
-int add_symbol(Symbol **symbols, int *count, const char *label, Type type, Address address, int is_data) {
+int add_symbol(Symbol **symbols, int *count, const char *label, Type type, Mode mode, int address) {
     Symbol *temp = realloc(*symbols, (*count + 1) * sizeof(Symbol));
     if (temp == NULL) {
         perror("malloc failed"); /*להוסיף שגיאה*/
@@ -23,8 +23,7 @@ int add_symbol(Symbol **symbols, int *count, const char *label, Type type, Addre
     (*symbols)[*count].label[30] = '\0'; 
     (*symbols)[*count].type = type;
     (*symbols)[*count].address = address;
-    (*symbols)[*count].is_data = is_data;
-
+    (*symbols)[*count].mode = mode;
     /* Increment the symbol count */
     (*count)++;
     return 1; 
@@ -73,10 +72,10 @@ int valid_label(char *label) {
 
 void print_symbols(Symbol *symbols, int count) {
     int i;
-    printf("Symbols:\n");
+    printf("Symbols table:\n");
     for (i = 0; i < count; i++) {
-        printf("Label: %s, Type: %d, Address: %d, Is Data: %d\n",
-               symbols[i].label, symbols[i].type, symbols[i].address, symbols[i].is_data);
+        printf("Label: %s, Type: %d, Address: %d, data: %d\n",
+               symbols[i].label, symbols[i].type, symbols[i].address, symbols[i].mode);
     }
 }
 

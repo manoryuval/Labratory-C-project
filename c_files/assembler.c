@@ -6,7 +6,24 @@
 #include "../header_files/utils.h"
 #include "../header_files/labels.h"
 #include "../header_files/first_pass.h"
-
+#include "../header_files/analyse.h"
+/*int printword(char *token){
+    switch (scan_word(token)) {
+        case DATA:    return printf("DATA\n");
+        case CODE:    return printf("CODE\n");
+        case ENTRY:   return printf("ENTRY\n");
+        case EXTERN:  return printf("EXTERN\n");
+        case ARG_NUM: return printf("ARG_NUM\n");
+        case ARG_REG: return printf("ARG_REG\n");
+        case ARG_MAT: return printf("ARG_MAT\n");
+        case LABEL:   return printf("LABEL\n");
+        case STRING:  return printf("STRING\n");
+        case NUMBER:  return printf("NUMBER\n");
+        case MAT:     return printf("MAT\n");
+        case UNKNOWN: return printf("UNKNOWN\n");
+        default:      return printf("INVALID_TYPE\n");
+    }
+}*/
 
 int main(int argc, char *argv[]) {
     int i;
@@ -17,10 +34,16 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "Error: Could not open file %s\n", argv[i]);
             continue;
         }
+        printf("Processing file: %s\n", argv[i]);
         preproc(argv[i]);
+        printf("Macros:\n");
+        print_mcro_list(mcro_head);
+        printf("Running first pass on %s\n", argv[i]);
         first_pass(argv[i]);
+        print_symbols(symbols, count_labels);
         fclose(file);
     }
-    /*first_pass(argv[1]);*/
+   
+
     return 0;
 }
