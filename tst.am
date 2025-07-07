@@ -1,5 +1,4 @@
 ; קובץ בדיקה עם מאקרו ולייבלים
- LOOP[2][3]
 .extern MAINjj
 pTEND:        stop
 
