@@ -1,33 +1,25 @@
-mcro     PRINT_DEBUG
-    MOV R0, #0xAA
-    BL print_hex_val
-    ; This is an inline comment within the macro body
-    PUSH {LR}
+; קובץ בדיקה עם מאקרו ולייבלים
+.extern MAINjj
+MAIN:       .data     r3,  LENGTH
+            add     r2,  STR
+            prn     #5
+            jsr     LOOP
+            stop
+
+LOOP:       .data     r3,  #0
+            bne     END
+            sub     r1,  r4
+            bne     LOOP
+            rts
+
+END:        stop
+
+STR:        .string "abcdef"
+LENGTH:     .data   6
+
+mcro M1
+    mov r1, r2
+    add r1, #1
 mcroend
 
-mcro CALCULATE_SUM
-    ADD R1, R2, R3
-    SUB R4, R1, #5
-    ; Another line inside the macro
-    LDR R0, [SP, #4]
-mcroend
-
-mcro EMPTY_MACRO
-mcroend
-
-mcro SHORT_MACRO
-    NOP
-mcroend
-
-START_PROGRAM:
-    PRINT_DEBUG
-    
-    CALCULATE_SUM
-
-    EMPTY_MACRO
-
-    SHORT_MACRO
-
-    LDR R7, [R8, #0]
-
-    UNKNOWN_MACRO_CALL
+            M1
