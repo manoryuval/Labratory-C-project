@@ -54,3 +54,6 @@ check if string is in matrix definition format.
 @return 1 if format matching. 0 otherwise.
 */
 int is_matrix_definition(const char *str);
+
+
+int get_opcode_arg(char *token);

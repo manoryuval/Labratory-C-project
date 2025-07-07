@@ -155,3 +155,14 @@ int is_matrix_definition(const char *str) {
 
     return 1;
 }
+
+int get_opcode_arg(char *token) {
+    int i;
+    for (i = 0; i < sizeof(OPCODES) / sizeof(OPCODES[0]); i++) {
+        if (strcmp(token, OPCODES[i].opcode) == 0) {
+            /*if opcode found, return opcode name*/
+            return OPCODES[i].arg_num;
+        }
+    }
+    return -1;
+}

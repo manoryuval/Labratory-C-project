@@ -17,7 +17,13 @@ int first_pass (char *file_name) {
     char copy_line[MAX_LINE];
     char trimmed_line[MAX_LINE];
     char label[MAX_LABEL_LENGTH];
-    char *token1, *token2, *arg1;
+    char *token1, *token2, *arg, *opcode_name;
+    WordType arg_type;
+    int L = 0; /* מספר הארגומנטים */
+    int count_arg = 0; /* מספר הארגומנטים */
+    int i;
+
+
     /*open file*/
     char *am_file = create_extension(file_name,".am");
     FILE *f = fopen(am_file, "r");
@@ -36,7 +42,7 @@ int first_pass (char *file_name) {
             continue; /*skip empty lines*/
         }
         /*בדיקה אם יש לייבל*/
-        token1 = strtok(trimmed_line, " \t\n"); 
+        token1 = strtok(trimmed_line, " \t"); 
         printf("Token1: %s\t", token1);
         if (is_label_start(token1)) {
             printf("label\t");
@@ -49,13 +55,14 @@ int first_pass (char *file_name) {
                 continue; /*continue to next line*/
 
             }
-            token2 = strtok(NULL, " \t\n"); 
+            /*remove label from line*/
+            token2 = strtok(NULL, " \t"); 
             token1 = token2;
         }
         printf("Token2: %s\t", token1);
         switch(scan_word(token1)) {
             case DATA:{ /*האם הנחיה לאחסון נתונים*/
-                printf("DATA\n");
+                printf("DATA\t");
                 if(is_label) {
                     printf("DATA with label\n");
                     if(!is_label_exists(symbols, count_labels, label)) {
@@ -66,8 +73,7 @@ int first_pass (char *file_name) {
                         printf("Error: Label %s already exists.\n", label);
                         continue; /*continue to next line*/
                     }
-                    
-                    /*זיהוי סוג הנתונים והגודל ולקדם את DC בהתאם*/
+                    /*שורה 7 באלגוריתם - זיהוי סוג הנתונים והגודל ולקדם את DC בהתאם*/
 
                 }
                 break;
@@ -78,22 +84,22 @@ int first_pass (char *file_name) {
             case EXTERN:
             {
                 printf("EXTERN\t");
-                arg1 = strtok(NULL, " \t\n");
-                printf("Arg1: %s\t", arg1);
+                arg = strtok(NULL, " \t");
+                printf("Arg1: %s\t", arg);
                 /*אם אקסטרן - להכניס לטבלת סמלים עם הערך 0 ו מאפיין אקסטרן. continue*/
-                if (arg1 && valid_label(arg1)) {
-                    printf("Adding extern label %s to symbols table with value 0\n", arg1);
-                    add_symbol(&symbols, &count_labels, arg1, LABEL_EXTERN, EXTERN, 0);
+                if (arg && valid_label(arg)) {
+                    printf("Adding extern label %s to symbols table with value 0\n", arg);
+                    add_symbol(&symbols, &count_labels, arg, LABEL_EXTERN, EXTERN, 0);
                 } else {
-                    printf("Error: Invalid extern label %s\n", arg1);
+                    printf("Error: Invalid extern label %s\n", arg);
                 }
             break;
             }    
             case CODE:
             {/*שורת הוראה - אם יש סמל */ 
-                printf("CODE\n");
+                printf("CODE\t");
                 if (is_label) {
-                    printf("CODE with label\n");
+                    printf("CODE with label\t");
                     if(!is_label_exists(symbols, count_labels, label)) {
                         printf("Adding label %s to symbols table with IC \n", label);
                         add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, CODE, IC);
@@ -103,20 +109,61 @@ int first_pass (char *file_name) {
                         continue; /*continue to next line*/
                     }
                 }
-                arg1 = strtok(NULL, " \t\n");
-                /*שורה 12 באלגוריתם - לבדוק האם הוראה חוקית*/
+                L += 1; 
+                opcode_name = get_opcode_name(token1);
+                printf("Opcode Name: %s\t", opcode_name);
+                if (!opcode_name) {
+                    printf("Error: Invalid opcode %s\n", token1);/*שגיאה*/
+                    continue; /*continue to next line*/
+                }
+                count_arg = get_opcode_arg(token1);
+                i = 0; /*reset argument index*/
+                /*לקודד את הפקודה*/
+                /*read the arguments*/
+                while ((arg = strtok(NULL, ", \t")) && i < count_arg) {
+
+                    printf("Arg1: %s\t", arg);
+                    switch ((arg_type = scan_word(arg))) {
+                    case ARG_NUM: 
+                        printf("ARG_NUM\t");
+                        /*לקודד מספרים  בic+i*/
+                        L += 1;
+                        break;
+                    case ARG_REG: 
+                        printf("ARG_REG\t");
+                        /*לקודד רישומים ic + i*/
+                        L += 1;
+                        break;
+                    case LABEL: 
+                        printf("LABEL\t");
+                        L += 1;
+                        break;
+                    case ARG_MAT:
+                        printf("ARG_MAT\t");
+                        /*לקודד ארגומנט מטריצה ic + i*/
+                        L += 2;
+                    default:
+                        break;
+                    }
+
+                    i++;
+                }
+                IC += L; 
+
+
             break;
             }
             default: break;
         
         }
+        printf("\n");
     }
     /*אם יש לייבל*/
     /*
     print_symbols(symbols, count_labels);
     printf("%d\n",is_label_exists(symbols, count_labels, "END"));
     */
-        print_symbols(symbols, count_labels);
+        /*print_symbols(symbols, count_labels);*/
 
     fclose(input);
     fclose(f);
