@@ -1,7 +1,12 @@
 ; קובץ בדיקה עם מאקרו ולייבלים
 .extern MAINjj
+pTEND:        stop
+
 MAIN:       .data     r3,  LENGTH
-            add     r2,  STR
+
+            add     LOOP[2][3],  STR
+            pEND:        stop
+
             prn     #5
             jsr     LOOP
             stop

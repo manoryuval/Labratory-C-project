@@ -142,6 +142,7 @@ int first_pass (char *file_name) {
                         printf("ARG_MAT\t");
                         /*לקודד ארגומנט מטריצה ic + i*/
                         L += 2;
+                        break;
                     default:
                         break;
                     }
@@ -149,6 +150,7 @@ int first_pass (char *file_name) {
                     i++;
                 }
                 IC += L; 
+                L = 0; /*reset L for next line*/
 
 
             break;

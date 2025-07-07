@@ -133,7 +133,7 @@ int is_matrix_operand(const char *str) {
         return 0; 
     }
     /* Check for valid registers */
-    if (!get_register_name(reg1) || !get_register_name(reg2)) {
+    if (get_register_name(reg1) || get_register_name(reg2)) {
         return 0;
     }
 
