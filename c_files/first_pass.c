@@ -48,7 +48,7 @@ int first_pass (char *file_name) {
             printf("label\t");
             /*האם הלייבל חוקי - פירוט בהערות */
             strncpy(label,token1, MAX_LABEL_LENGTH);
-            is_label = 1; 
+            is_label = 1; /*אחרי בדיקת ולידציה*/
             if (valid_label(label) !=1) {
                 /* לעשדות שגיאה*/
                 printf("3");
@@ -56,9 +56,10 @@ int first_pass (char *file_name) {
 
             }
             /*remove label from line*/
-            token2 = strtok(NULL, " \t"); 
-            token1 = token2;
+            token1 =  strtok(NULL, " \t"); 
         }
+
+
         printf("Token2: %s\t", token1);
         switch(scan_word(token1)) {
             case DATA:{ /*האם הנחיה לאחסון נתונים*/
@@ -73,9 +74,9 @@ int first_pass (char *file_name) {
                         printf("Error: Label %s already exists.\n", label);
                         continue; /*continue to next line*/
                     }
-                    /*שורה 7 באלגוריתם - זיהוי סוג הנתונים והגודל ולקדם את DC בהתאם*/
-
+                    
                 }
+                    /*שורה 7 באלגוריתם - זיהוי סוג הנתונים והגודל ולקדם את DC בהתאם*/
                 break;
             }  
             case ENTRY:{  /*האם entry*/
@@ -109,6 +110,7 @@ int first_pass (char *file_name) {
                         continue; /*continue to next line*/
                     }
                 }
+
                 L += 1; 
                 opcode_name = get_opcode_name(token1);
                 printf("Opcode Name: %s\t", opcode_name);
@@ -120,7 +122,7 @@ int first_pass (char *file_name) {
                 i = 0; /*reset argument index*/
                 /*לקודד את הפקודה*/
                 /*read the arguments*/
-                while ((arg = strtok(NULL, ", \t")) && i < count_arg) {
+                while ((arg = strtok(NULL, ", \t")) && i < count_arg) {/*תיקון - להפריד טוקנים לפי פסיקים בלבד (ואז להוריד רווחים)*/
 
                     printf("Arg1: %s\t", arg);
                     switch ((arg_type = scan_word(arg))) {
@@ -149,6 +151,7 @@ int first_pass (char *file_name) {
 
                     i++;
                 }
+                /*תיקון - לבדוק i ביחס ל לארגומנטים*/
                 IC += L; 
                 L = 0; /*reset L for next line*/
 

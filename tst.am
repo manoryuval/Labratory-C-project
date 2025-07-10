@@ -1,11 +1,15 @@
 ; קובץ בדיקה עם מאקרו ולייבלים
+END:        stop
+
 .extern MAINjj
 pTEND:        stop
 
 MAIN:       .data     r3,  LENGTH
+EEND:        stop
 
             add     LOOP[2][3],  STR
-            pEND:        stop
+pEND:        stop
+            .data     r3,  LENGTH
 
             prn     #5
             jsr     LOOP
@@ -17,7 +21,6 @@ LOOP:       .data     r3,  #0
             bne     LOOP
             rts
 
-END:        stop
 
 STR:        .string "abcdef"
 LENGTH:     .data   6
