@@ -17,8 +17,14 @@ typedef enum {
 /* Structure representing an opcode and its associated information */
 typedef struct op_code {
     char *opcode;    /* The opcode corresponding to the operation */
-    int arg_num;     /* The number of arguments for the operation */
+    int arg_num;  /* The number of arguments for the operation */
+    char *code;    /* The machine code representation of the operation */
 } op_code;
+
+typedef struct regs_code {
+    char *opcode;    /* The opcode corresponding to the operation */
+    char *code;    /* The machine code representation of the operation */
+} regs_code;
 
 /*
  Scans a token and determines its type.
