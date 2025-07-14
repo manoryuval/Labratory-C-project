@@ -63,6 +63,8 @@ int valid_label(char *label);
 */
 void print_symbols(Symbol *symbols, int count);
 
+int update_symbol_address(Symbol *symbols, int count, int ICF);
+
 /* Free the symbol table.
 @param symbols Pointer to the symbol table
 */

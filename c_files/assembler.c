@@ -43,8 +43,6 @@ int main(int argc, char *argv[]) {
         print_symbols(symbols, count_labels);
         fclose(file);
     }
-    
    
-
     return 0;
 }

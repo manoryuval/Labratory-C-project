@@ -143,7 +143,7 @@ int is_matrix_operand(const char *str) {
         return 0; 
     }
     /* Check for valid registers */
-    if (get_register_name(reg1) || get_register_name(reg2)) {
+    if (!get_register_name(reg1) || !get_register_name(reg2)) {
         return 0;
     }
 
@@ -240,4 +240,16 @@ void num_code(int num) /* מניח שהמספר שמתקבל בין -512 ל513 �
    {
       printf("%c", finalcode[i]);
    }
+}
+
+
+DataType get_data_kind(char *token) {
+    if (strcmp(token, ".data") == 0) {
+        return DATA_;
+    } else if (strcmp(token, ".string") == 0) {
+        return STRING_;
+    } else if (strcmp(token, ".mat") == 0) {
+        return MAT_;
+    }
+    return UNKNOWN_;
 }

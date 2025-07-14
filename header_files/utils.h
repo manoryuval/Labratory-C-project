@@ -7,7 +7,10 @@ Changes the extension of a file name.
 char *create_extension(char *filename, char *extension);
 /*
 Trims leading and trailing whitespace from a line.
-@param line The line to be trimmed.
+@param line The line to betrimmed.
  */
 void trim(char *line);
+
+int alpha_count(char *token);
+
 

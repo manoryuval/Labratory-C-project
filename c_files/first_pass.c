@@ -12,16 +12,17 @@
 Symbol *symbols = NULL;
 int count_labels = 0;
 int first_pass (char *file_name) {
-    int IC = 0,DC = 0, is_label = 0,line_count = 0;
+    int IC = 100,DC = 0, is_label = 0,line_count = 0,ICF,DCF;
     char line[MAX_LINE];
     char copy_line[MAX_LINE];
     char trimmed_line[MAX_LINE];
     char label[MAX_LABEL_LENGTH];
-    char *token1, *token2, *arg, *opcode_name;
+    char *token1, *token2 , *arg, *opcode_name;
     WordType arg_type;
     int L = 0; /* מספר הארגומנטים */
     int count_arg = 0; /* מספר הארגומנטים */
-    int i;
+    int i, num;
+    int two_reg_arg = 0; /*דגל*/
 
 
     /*open file*/
@@ -60,24 +61,55 @@ int first_pass (char *file_name) {
         }
 
 
-        printf("Token2: %s\t", token1);
+        printf("Token1: %s\t", token1);
         switch(scan_word(token1)) {
             case DATA:{ /*האם הנחיה לאחסון נתונים*/
                 printf("DATA\t");
                 if(is_label) {
                     printf("DATA with label\n");
                     if(!is_label_exists(symbols, count_labels, label)) {
-                        printf("Adding label %s to symbols table with DC \n", label);
-                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, DATA, DC);
+                        printf("Adding label %s to symbols table with DC %d \n", label, DC);
+                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_DATA, DC);
                     }else {
                         /*שגיאה - הלייבל כבר קיים*/
                         printf("Error: Label %s already exists.\n", label);
                         continue; /*continue to next line*/
+                    }   
+                }
+
+                switch (get_data_kind(token1))
+                {
+                case DATA_:
+                    while((token2 = strtok(NULL, ", \t"))) { /*next token should be the data*/
+                        num = atoi(token2); /*convert to integer*/
+                        printf("Token2: %s\t", token2);
                     }
+
+                    /*קודד מספר*/
+                    break;
+                case STRING_:
+                    token2 = strtok(NULL, " \t"); /*next token should be the string*/
+                    trim(token2); /*trim the string*/
+                    printf("Token2: %s\t", token2);
+                    L += alpha_count(token2)+1; /*count the number of characters in the string*/
+                    printf("String length: %d\t, L=%d", alpha_count(token2), L);
+                    /*קודד סטרינג - עבור אות אות וקודד אותה*/
+                    /*for (i = 0; i < alpha_count(token2); i++) {
+                        code_char(token2[i]);
+                    }*/
+                    break;
+                case MAT_:
+
                     
+                    /* code */
+                    break;
+                default:
+                    break;
                 }
                     /*שורה 7 באלגוריתם - זיהוי סוג הנתונים והגודל ולקדם את DC בהתאם*/
-                break;
+                
+                DC += L; /*עדכון DC*/
+                L=0;
             }  
             case ENTRY:{  /*האם entry*/
                 break;
@@ -90,7 +122,7 @@ int first_pass (char *file_name) {
                 /*אם אקסטרן - להכניס לטבלת סמלים עם הערך 0 ו מאפיין אקסטרן. continue*/
                 if (arg && valid_label(arg)) {
                     printf("Adding extern label %s to symbols table with value 0\n", arg);
-                    add_symbol(&symbols, &count_labels, arg, LABEL_EXTERN, EXTERN, 0);
+                    add_symbol(&symbols, &count_labels, arg, LABEL_EXTERN, LABEL_TBD, 0);
                 } else {
                     printf("Error: Invalid extern label %s\n", arg);
                 }
@@ -103,7 +135,7 @@ int first_pass (char *file_name) {
                     printf("CODE with label\t");
                     if(!is_label_exists(symbols, count_labels, label)) {
                         printf("Adding label %s to symbols table with IC \n", label);
-                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, CODE, IC);
+                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_CODE, IC);
                     }else {
                         /*שגיאה - הלייבל כבר קיים*/
                         printf("Error: Label %s already exists.\n", label);
@@ -134,6 +166,10 @@ int first_pass (char *file_name) {
                     case ARG_REG: 
                         printf("ARG_REG\t");
                         /*לקודד רישומים ic + i*/
+                        if (two_reg_arg == 1){
+                            continue;
+                        }
+                        two_reg_arg++;
                         L += 1;
                         break;
                     case LABEL: 
@@ -142,7 +178,7 @@ int first_pass (char *file_name) {
                         break;
                     case ARG_MAT:
                         printf("ARG_MAT\t");
-                        /*לקודד ארגומנט מטריצה ic + i*/
+                        /*לקודד ארגומנט מטריצה ic + i+1*/
                         L += 2;
                         break;
                     default:
@@ -152,18 +188,25 @@ int first_pass (char *file_name) {
                     i++;
                 }
                 /*תיקון - לבדוק i ביחס ל לארגומנטים*/
+                printf(">>>>>----------L: %d\t", L);
                 IC += L; 
                 L = 0; /*reset L for next line*/
+                two_reg_arg = 0; /*reset two_reg_arg for next line*/
 
 
             break;
             }
             default: break;
+
         
         }
         printf("\n");
     }
-    /*אם יש לייבל*/
+
+    ICF = IC;
+    DCF = DC;
+    printf("ICF: %d, DCF: %d\n", ICF, DCF);
+    update_symbol_address(symbols, count_labels, ICF);
     /*
     print_symbols(symbols, count_labels);
     printf("%d\n",is_label_exists(symbols, count_labels, "END"));

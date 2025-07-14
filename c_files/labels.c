@@ -74,9 +74,20 @@ void print_symbols(Symbol *symbols, int count) {
     int i;
     printf("Symbols table:\n");
     for (i = 0; i < count; i++) {
-        printf("Label: %s, Type: %d, Address: %d, data: %d\n",
+        printf("Label: %s, Type: %d, Address: %d, mode: %d\n",
                symbols[i].label, symbols[i].type, symbols[i].address, symbols[i].mode);
     }
+}
+
+int update_symbol_address(Symbol *symbols, int count, int ICF) {
+    int i;
+    /* Find the symbol in the table and update its address */
+    for (i = 0; i < count; i++) {
+        if (symbols[i].mode == LABEL_DATA) {
+            symbols[i].address += ICF;
+        }
+    }
+    return 1; 
 }
 
 void free_symbols(Symbol *symbols) {

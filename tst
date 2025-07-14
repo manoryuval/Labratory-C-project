@@ -1,33 +1,14 @@
-; קובץ בדיקה עם מאקרו ולייבלים
-END:        stop
+MAIN: mov M1[r2][r7],LENGTH
+ add r2,STR
+LOOP: jmp END
+ prn #-5
+ sub r1, r4
+ inc K
 
-.extern MAINjj
-pTEND:        stop
-
-MAIN:       .data     r3,  LENGTH
-EEND:        stop
-
-            add     LOOP[2][3],  STR
-pEND:        stop
-            .data     r3,  LENGTH
-
-            prn     #5
-            jsr     LOOP
-            stop
-
-LOOP:       .data     r3,  #0
-            bne     END
-            sub     r1,  r4
-            bne     LOOP
-            rts
-
-
-STR:        .string "abcdef"
-LENGTH:     .data   6
-
-mcro M1
-    mov r1, r2
-    add r1, #1
-mcroend
-
-            M1
+ mov M1[r3][r3],r3
+ bne LOOP
+END: stop
+STR: .string "abcdef"
+LENGTH: .data 6,-9,15
+K: .data 22
+M1: .mat [2][2] 1,2,3,4

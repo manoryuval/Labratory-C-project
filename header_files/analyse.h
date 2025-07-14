@@ -14,6 +14,13 @@ typedef enum {
     UNKNOWN
 } WordType;
 
+typedef enum {
+    DATA_,
+    STRING_,
+    MAT_,
+    UNKNOWN_
+} DataType;
+
 /* Structure representing an opcode and its associated information */
 typedef struct op_code {
     char *opcode;    /* The opcode corresponding to the operation */
@@ -25,6 +32,8 @@ typedef struct regs_code {
     char *opcode;    /* The opcode corresponding to the operation */
     char *code;    /* The machine code representation of the operation */
 } regs_code;
+
+extern regs_code REGS[];
 
 /*
  Scans a token and determines its type.
@@ -63,3 +72,7 @@ int is_matrix_definition(const char *str);
 
 
 int get_opcode_arg(char *token);
+
+void num_code(int num);
+
+DataType get_data_kind(char *token);

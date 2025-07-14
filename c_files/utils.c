@@ -4,6 +4,7 @@
 #include <ctype.h>
 #include "../header_files/preproc.h"
 #include "../header_files/utils.h"
+#include "../header_files/assembler.h"
 
 char *create_extension(char *filename, char *extension) {
 
@@ -47,4 +48,53 @@ void trim(char *line) {
     /* Move the trimmed line to the beginning of the original line */
     memmove(line, start, len);
     line[len] = '\0';
+}
+
+
+int alpha_count(char *token){
+    int len = strlen(token);
+    int i;
+    int count = 0;
+    if (len < 2) return 0; 
+
+    if (token[0] != '"' || token[len-1] != '"') {
+        return 0; 
+    }
+
+    for (i = 1; i < len - 1; i++) {
+        char c = token[i];
+        if (!isalpha((unsigned char)c)) {
+            return 0;
+        }
+        if (c == ' ' || c == '\t' ) {
+            continue;
+        }
+        count++;    
+    }
+
+    return count; 
+}
+
+int valid_mat(char *token) {
+    int len = strlen(token);
+    int i;
+    int count = 0;
+    if (len < 2) return 0;
+
+    if (token[0] != '[' || token[len-1] != ']') {
+        return 0;
+    }
+
+    for (i = 1; i < len - 1; i++) {
+        char c = token[i];
+        if (!isdigit((unsigned char)c)) {
+            return 0;
+        }
+        if (c == ' ' || c == '\t' ) {
+            continue;
+        }
+        count++;
+    }
+
+    return count;
 }
