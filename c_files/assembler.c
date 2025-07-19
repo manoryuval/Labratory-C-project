@@ -7,6 +7,7 @@
 #include "../header_files/labels.h"
 #include "../header_files/first_pass.h"
 #include "../header_files/analyse.h"
+#include "../header_files/coding.h"
 /*int printword(char *token){
     switch (scan_word(token)) {
         case DATA:    return printf("DATA\n");

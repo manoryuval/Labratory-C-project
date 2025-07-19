@@ -7,6 +7,7 @@
 #include "../header_files/utils.h"
 #include "../header_files/labels.h"
 #include "../header_files/first_pass.h"
+#include "../header_files/coding.h"
 
 
 Mcro *mcro_head = NULL; /* Initialize the global macro head pointer */

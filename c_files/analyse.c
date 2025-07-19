@@ -8,6 +8,7 @@
 #include "../header_files/labels.h"
 #include "../header_files/first_pass.h"
 #include "../header_files/analyse.h"
+#include "../header_files/coding.h"
 
 /* array of opcodes */
 op_code OPCODES[] = {
@@ -177,70 +178,6 @@ int get_opcode_arg(char *token) {
     return -1;
 }
 
-void num_code(int num) /* מניח שהמספר שמתקבל בין -512 ל513 ושמתקבל מספר ולא משהו לא תקין*/
-{
-    char finalcode[5];
-    int i;
-    int flag = 0;
-
-    if (num < 0)
-    {
-         num = -num;
-         flag = 1;
-    }
-
-    
-   for (i = 4; i >= 0; i--)
-   {
-      switch (num%4) 
-      {
-         case 0:
-            finalcode[i] = 'A';
-            break;
-         case 1:
-            finalcode[i] = 'B';
-            break;
-         case 2:
-            finalcode[i] = 'C';
-            break;
-         case 3:
-            finalcode[i] = 'D';
-            break;
-      }
-      num /= 4;
-   }
-
-   if (flag == 1) /* נהפוך את הסיביות אם המספר היה שלילי ונוסיף אחד */
-   {
-      for (i = 0; i < 5; i++)
-      {
-         switch (finalcode[i])
-         {
-            case 'A': finalcode[i] = 'D'; break;
-            case 'B': finalcode[i] = 'C'; break;
-            case 'C': finalcode[i] = 'B'; break;
-            case 'D': finalcode[i] = 'A'; break;
-         }
-      }
-   }
-
-   i = 4; /* נתחיל מהאחרון */
-   while (flag && i >=0)
-   {      
-      switch (finalcode[i])
-      {
-         case 'A': finalcode[i] = 'B'; flag = 0; break;
-         case 'B': finalcode[i] = 'C'; flag = 0; break;
-         case 'C': finalcode[i] = 'D'; flag = 0; break;
-         case 'D': finalcode[i] = 'A'; i--; break;
-      }
-   }
-
-   for (i = 0; i < 5; i++)
-   {
-      printf("%c", finalcode[i]);
-   }
-}
 
 
 DataType get_data_kind(char *token) {

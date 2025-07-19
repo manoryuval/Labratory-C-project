@@ -1,3 +1,4 @@
+
 /*type of known words*/
 typedef enum {
     DATA,
@@ -34,6 +35,8 @@ typedef struct regs_code {
 } regs_code;
 
 extern regs_code REGS[];
+
+
 
 /*
  Scans a token and determines its type.
@@ -73,6 +76,6 @@ int is_matrix_definition(const char *str);
 
 int get_opcode_arg(char *token);
 
-void num_code(int num);
+
 
 DataType get_data_kind(char *token);

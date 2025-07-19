@@ -8,14 +8,97 @@
 #include "../header_files/labels.h"
 #include "../header_files/first_pass.h"
 #include "../header_files/analyse.h"
+#include "../header_files/coding.h"
 
 
 
-
-/*char *REGS[] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};*/
-
-
-int coding_command (char *token, int token_place)/*מקבל את המילה והמיקום שלה בשורות הפקודות, אולי גם את המתשנה שבו שומרים את הקוד כאילו במערך*/
+void num_to_code(int num, int line, char type) /* מניח שהמספר שמתקבל בין -512 ל513 ושמתקבל מספר ולא משהו לא תקין*/
 {
-    return 0;
+    char code[5];
+    int i;
+    int flag = 0;
+
+    if (num < 0)
+    {
+         num = -num;
+         flag = 1;
+    }
+
+    
+   for (i = 4; i >= 0; i--)
+   {
+      switch (num%4) 
+      {
+         case 0:
+            code[i] = 'A';
+            break;
+         case 1:
+            code[i] = 'B';
+            break;
+         case 2:
+            code[i] = 'C';
+            break;
+         case 3:
+            code[i] = 'D';
+            break;
+      }
+      num /= 4;
+   }
+
+   if (flag == 1) /* נהפוך את הסיביות אם המספר היה שלילי ונוסיף אחד */
+   {
+      for (i = 0; i < 5; i++)
+      {
+         switch (code[i])
+         {
+            case 'A': code[i] = 'D'; break;
+            case 'B': code[i] = 'C'; break;
+            case 'C': code[i] = 'B'; break;
+            case 'D': code[i] = 'A'; break;
+         }
+      }
+   }
+
+   i = 4; /* נתחיל מהאחרון */
+   while (flag && i >=0)
+   {
+      switch (code[i])
+      {
+         case 'A': code[i] = 'B'; flag = 0; break;
+         case 'B': code[i] = 'C'; flag = 0; break;
+         case 'C': code[i] = 'D'; flag = 0; break;
+         case 'D': code[i] = 'A'; i--; break;
+      }
+   }
+
+   switch (type)
+   {
+    case 'I': /* Instruction */
+      strcpy(IC[line], code); /* נעתיק את הקוד למערך ה-IC */
+      break;
+    case 'D': /* Data */
+       strcpy(DC[line], code); /* נעתיק את הקוד למערך ה-DC */
+    break;
+   default: break;
+   }
+}
+
+void two_reg_code (int reg1, int reg2, int line, char type)
+{
+    char code[5];
+    strcpy(code, REGS[reg1].code);
+    strcat(code, REGS[reg2].code);
+    strcat(code, "A");/* חסר להוסיף את האות האחרונה ARE*/
+    switch (type)
+    {
+        case 'I': /* Instruction */
+            strcpy(IC[line], code);
+            break;
+        case 'D': /* Data */
+            strcpy(DC[line], code);
+            break;
+        default:
+            fprintf(stderr, "Error: Invalid type for two_reg_code function.\n");
+            exit(EXIT_FAILURE);
+    }
 }

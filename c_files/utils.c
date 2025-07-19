@@ -5,6 +5,7 @@
 #include "../header_files/preproc.h"
 #include "../header_files/utils.h"
 #include "../header_files/assembler.h"
+#include "../header_files/coding.h"
 
 char *create_extension(char *filename, char *extension) {
 
