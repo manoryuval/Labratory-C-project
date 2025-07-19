@@ -12,7 +12,7 @@
 Symbol *symbols = NULL;
 int count_labels = 0;
 int first_pass (char *file_name) {
-    int IC = 100,DC = 0, is_label = 0,line_count = 0,ICF,DCF;
+    int IC = 0,DC = 0, is_label = 0,line_count = 0,ICF,DCF;
     char line[MAX_LINE];
     char copy_line[MAX_LINE];
     char trimmed_line[MAX_LINE];
@@ -83,6 +83,7 @@ int first_pass (char *file_name) {
                     while((token2 = strtok(NULL, ", \t"))) { /*next token should be the data*/
                         num = atoi(token2); /*convert to integer*/
                         printf("Token2: %s\t", token2);
+                        /*קודד מספרים - עבור כל מספר*/
                     }
 
                     /*קודד מספר*/
@@ -203,7 +204,7 @@ int first_pass (char *file_name) {
         printf("\n");
     }
 
-    ICF = IC;
+    ICF = IC+100;
     DCF = DC;
     printf("ICF: %d, DCF: %d\n", ICF, DCF);
     update_symbol_address(symbols, count_labels, ICF);
