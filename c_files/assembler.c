@@ -44,7 +44,7 @@ int main(int argc, char *argv[]) {
         print_symbols(symbols, count_labels);
         
         printf("_____ print DCF__________\n");
-        print_DCF(15);
+        print_DCF(20);
         fclose(file);
     }
    

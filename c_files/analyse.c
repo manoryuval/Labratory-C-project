@@ -124,17 +124,38 @@ char *get_opcode_name(char *token) {
     return NULL;
 }
 
-char *get_register_name(char *token) {
+char *get_opcode_code(char *token) {
     int i;
-    for (i = 0; i < sizeof(REGS) / sizeof(REGS[0]); i++) {
-        if (strcmp(token, REGS[i].opcode) == 0) {
-            return REGS[i].opcode;
+    for (i = 0; i < sizeof(OPCODES) / sizeof(OPCODES[0]); i++) {
+        if (strcmp(token, OPCODES[i].opcode) == 0) {
+            /*if opcode found, return opcode code*/
+            return OPCODES[i].code;
         }
     }
     return NULL;
 }
 
-int is_matrix_operand(const char *str) {
+char *get_register_name(char *token) {
+    int i;
+    for (i = 0; i < sizeof(REGS) / sizeof(REGS[0]); i++) {
+        if (strcmp(token, REGS[i].reg) == 0) {
+            return REGS[i].reg;
+        }
+    }
+    return NULL;
+}
+
+char *get_register_code(char *token) {
+    int i;
+    for (i = 0; i < sizeof(REGS) / sizeof(REGS[0]); i++) {
+        if (strcmp(token, REGS[i].reg) == 0) {
+            return REGS[i].code;
+        }
+    }
+    return NULL;
+}
+
+int is_matrix_operand( char *str) {
     int matched;
     char name[31], reg1[4], reg2[4], extra;
     /* Check for matrix operand format */
@@ -149,6 +170,30 @@ int is_matrix_operand(const char *str) {
     }
 
     return 1;
+}
+
+char *get_reg1_matrix_operand( char *str) {
+    int matched;
+    char reg1[4];
+    /* Check for matrix operand format */
+    matched = sscanf(str, "[%3[^]]]", reg1);
+    /* Check for valid register */
+    if (matched != 1 || !get_register_name(reg1)) {
+        return NULL; 
+    }
+    return get_register_code(reg1); /* Return the register name */
+}
+
+char *get_reg2_matrix_operand( char *str) {
+    int matched;
+    char reg2[4];
+    /* Check for matrix operand format */
+    matched = sscanf(str, "[%*[^]]][%3[^]]]", reg2);
+    /* Check for valid register */
+    if (matched != 1 || !get_register_name(reg2)) {
+        return NULL; 
+    }
+    return get_register_code(reg2); /* Return the register name */
 }
 
 int is_matrix_definition(const char *str) {
@@ -189,4 +234,10 @@ DataType get_data_kind(char *token) {
         return MAT_;
     }
     return UNKNOWN_;
+}
+
+int num_to_int(char *token) {
+    char *ptr = token;
+    ptr++;
+    return atoi(ptr);
 }

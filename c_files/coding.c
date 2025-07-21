@@ -83,11 +83,11 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
    default: break;
    }
 }
-void two_reg_code (int reg1, int reg2, int line, char type)
+void two_reg_code (char *reg1, char *reg2, int line, char type)
 {
     char code[5];
-    strcpy(code, REGS[reg1].code);
-    strcat(code, REGS[reg2].code);
+    strcpy(code, get_register_code(reg1));
+    strcat(code, get_register_code(reg2));
     strcat(code, "A");/* A - ARE*/
     switch (type)
     {
@@ -109,13 +109,12 @@ void char_to_code(char c, int line, char type)
    num_to_code(i, line, type); /* נשתמש בפונקציה num_to_code כדי להמיר את התו לקוד */ 
 
 }
-void op_to_code(op_code op, char type1, char type2, int line, char type)
+void op_to_code(char* op, char type1, char type2, int line, char type)
 {
       char code[5];
-   
       /* נעתיק את הקוד של האופרטור */
-      strcpy(code, op.code);
-   
+      strcpy(code, get_opcode_code(op));
+
       /* נוסיף את סוגי מיון האופרנדים */
       switch (type1)
       {
