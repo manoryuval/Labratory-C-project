@@ -9,8 +9,8 @@
 #include "../header_files/analyse.h"
 #include "../header_files/coding.h"
 
-
 Symbol *symbols = NULL;
+
 int count_labels = 0;
 int first_pass (char *file_name) {
     int ic = 0,dc = 0, is_label = 0,line_count = 0,ICF,DCF;
