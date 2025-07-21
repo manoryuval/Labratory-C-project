@@ -54,26 +54,29 @@ void trim(char *line) {
 
 int alpha_count(char *token){
     int len = strlen(token);
-    printf("len: %d\n", len);
-    printf("Token: %s\n", token);
+    printf("Alpha count: %d\n", len);
     int i;
     int count = 0;
+    if (len < 2) return 0; 
+
+    if (token[0] != '"' || token[len-1] != '"') {
+        return 0; 
+    }
 
     for (i = 1; i < len - 1; i++) {
         char c = token[i];
         if (!isalpha((unsigned char)c)) {
-            printf("Invalid character: %d\n", c);
             return 0;
         }
         if (c == ' ' || c == '\t' ) {
             continue;
         }
-        count++;  
-        printf("ok\n");  
+        count++;    
     }
 
     return count; 
 }
+
 
 int valid_mat(char *token) {
     int len = strlen(token);
