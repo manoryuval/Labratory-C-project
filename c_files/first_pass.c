@@ -200,7 +200,6 @@ int first_pass (char *file_name) {
                         else type2 = 'D'; 
                         /*לקודד רישומים ic + i*/
                         if (two_reg_arg == 1){
-                            /*L--;*/
                             two_reg_code(reg1, arg, ic + L, 'I'); /*convert register to code*/
                             continue;
                         }

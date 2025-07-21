@@ -71,11 +71,11 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
          case 'D': code[i] = 'A'; i--; break;
       }
    }
-
    switch (type)
    {
     case 'I': /* Instruction */
       strcpy(IC[line], code); /* נעתיק את הקוד למערך ה-IC */
+         printf("\n\n%s\n\n", IC[line]);
       break;
     case 'D': /* Data */
        strcpy(DC[line], code); /* נעתיק את הקוד למערך ה-DC */
@@ -199,33 +199,37 @@ void extern_to_code(int line)
 {
    strcpy(IC[line], "AAAAB"); 
 }
-void print_DCF(int dcf)
+void print_DCF(char *file_name, int dcf)
 {
+   char *ob_file = create_extension(file_name,".ob");
+   FILE *f = fopen(ob_file, "w+");
    int i = 0;
    int j = 0;
    for (i = 0; i < dcf; i++)
    {
-      printf("DC[%d]: ", i);
+      fprintf(f, "DC[%d]: ", i);
       for (j = 0; j < WORD_SIZE; j++)
       {
-            printf("%c", DC[i][j]);
+            fprintf(f, "%c", DC[i][j]);
       }
-      printf("\n");
+      fprintf(f, "\n");
    }
 }
 
-void print_ICF(int icf)
+void print_ICF(char *file_name, int icf)
 {
+   char *ob_file = create_extension(file_name,".ob");
+   FILE *f = fopen(ob_file, "w");
    int i = 0;
    int j = 0;
    for (i = 0; i < icf; i++)
    {
-      printf("IC[%d]: ", i);
+      fprintf(f, "IC[%d]: ", i);
       for (j = 0; j < WORD_SIZE; j++)
       {
-            printf("%c", IC[i][j]);
+            fprintf(f, "%c", IC[i][j]);
       }
-      printf("\n");
+      fprintf(f, "\n");
    }
 }
 void dcf_to_icf(int icf,int dcf)
