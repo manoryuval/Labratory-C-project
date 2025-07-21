@@ -219,6 +219,7 @@ int first_pass (char *file_name) {
                         printf("LABEL\t");
                         if (i == 0 && count_arg > 1) type1 = 'B'; /*label*/
                         else type2 = 'B'; 
+                        add_missing_line(ic + L, arg, &missing_lines); /*add missing line*/
                         L += 1;
                         break;
                     case ARG_MAT:
@@ -264,6 +265,7 @@ int first_pass (char *file_name) {
      צריך פה להעתיק את הDCF ל ICF גם בשורות קוד וגם בלייבלים
     */
     dcf_to_icf(ICF,DCF);
+    print_missing_lines(missing_lines);
     fclose(input);
     fclose(f);
     return 1;
