@@ -83,13 +83,12 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
    default: break;
    }
 }
-
 void two_reg_code (int reg1, int reg2, int line, char type)
 {
     char code[5];
     strcpy(code, REGS[reg1].code);
     strcat(code, REGS[reg2].code);
-    strcat(code, "A");/* חסר להוסיף את האות האחרונה ARE*/
+    strcat(code, "A");/* A - ARE*/
     switch (type)
     {
         case 'I': /* Instruction */
@@ -103,7 +102,6 @@ void two_reg_code (int reg1, int reg2, int line, char type)
             exit(EXIT_FAILURE);
     }
 }
-
 void char_to_code(char c, int line, char type)
 {
 
@@ -111,14 +109,14 @@ void char_to_code(char c, int line, char type)
    num_to_code(i, line, type); /* נשתמש בפונקציה num_to_code כדי להמיר את התו לקוד */ 
 
 }
-void op_to_code(op_code op,int type1, int type2, int line, char type)
+void op_to_code(op_code op, char type1, char type2, int line, char type)
 {
       char code[5];
    
       /* נעתיק את הקוד של האופרטור */
       strcpy(code, op.code);
    
-      /* נוסיף את סוגי האופרנדים */
+      /* נוסיף את סוגי מיון האופרנדים */
       switch (type1)
       {
       case 0:
@@ -162,4 +160,84 @@ void op_to_code(op_code op,int type1, int type2, int line, char type)
                strcpy(DC[line], code);
                break;
       }
+}
+void line_to_code(int num, int line, char type)
+{
+    char code[5];
+    int i;
+    
+   for (i = 3; i >= 0; i--)
+   {
+      switch (num%4) 
+      {
+         case 0:
+            code[i] = 'A';
+            break;
+         case 1:
+            code[i] = 'B';
+            break;
+         case 2:
+            code[i] = 'C';
+            break;
+         case 3:
+            code[i] = 'D';
+            break;
+      }
+      num /= 4;
+   }
+   code[4] = 'C'; /*ARE - always 10 (E) */
+
+   switch (type)
+   {
+    case 'I': /* Instruction */
+      strcpy(IC[line], code); /* נעתיק את הקוד למערך ה-IC */
+      break;
+    case 'D': /* Data */
+       strcpy(DC[line], code); /* נעתיק את הקוד למערך ה-DC */
+    break;
+   default: break;
+   }
+}
+void line_print(int num) /* הפונקצייה צריכה להדפיס לתוך הקובץ הוצאה &&&&&&&   */
+{
+   /*int i;
+   
+   for (i = 3; i >= 0; i--)
+   {
+      switch (num%4) 
+      {
+         case 0:
+            fprintf(ob, "A");
+            break;
+         case 1:
+            fprintf(ob, "B");
+            break;
+         case 2:
+            fprintf(ob, "C");
+            break;
+         case 3:
+            fprintf(ob, "D");
+            break;
+      }
+      num /= 4;
+   }
+   printf("\t"); */
+} 
+void extern_to_code(int line)
+{
+   strcpy(IC[line], "AAAAB"); 
+}
+void print_DCF(int dcf)
+{
+   int i = 0;
+   int j = 0;
+   for (i = 0; i < dcf; i++)
+   {
+      printf("DC[%d]: ", i);
+      for (j = 0; j < WORD_SIZE; j++)
+      {
+            printf("%c", DC[i][j]);
+      }
+      printf("\n");
+   }
 }

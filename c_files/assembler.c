@@ -42,6 +42,9 @@ int main(int argc, char *argv[]) {
         printf("Running first pass on %s--------------------\n", argv[i]);
         first_pass(argv[i]);
         print_symbols(symbols, count_labels);
+        
+        printf("_____ print DCF__________\n");
+        print_DCF(15);
         fclose(file);
     }
    
