@@ -249,3 +249,66 @@ int num_to_int(char *token) {
     printf("\n\n%s\n\n", ptr);
     return atoi(ptr);
 }
+
+int is_number(char *token) 
+{
+    int i;
+    if (token[0] == MINUS || token[0] == PLUS || isdigit(token[0])) 
+    {
+        for(i = 1; i < strlen(token); i++) {
+            if(!isdigit(token[i])) 
+            {
+                return 0;
+            }
+        }
+        return 1;
+    }
+    return 0;
+}
+
+void add_missing_line(int line, char *label, missing_line **head)
+{
+    /*check if label exists*/
+    if(!is_label_exists(symbols, count_labels, label))
+    {
+        printf("Error: Label %s does not exist.\n", label);
+        return; /*if label does not exist, return*/
+    }
+    if(head == NULL)
+    {
+        /*create new missing line*/
+        *head = (missing_line *)malloc(sizeof(missing_line));
+        (*head)->line = line;
+        strcpy((*head)->label, label);
+        (*head)->next = NULL;
+    }
+    else
+    {
+        /*add to the end of the list*/
+        missing_line *current = *head;
+        while (current->next != NULL) 
+        {
+            current = current->next;
+        }
+        /*create new missing line*/
+        current->next = (missing_line *)malloc(sizeof(missing_line));
+        current->next->line = line;
+        strcpy(current->next->label, label);
+        current->next->next = NULL;
+    }
+
+}
+
+void print_missing_lines(missing_line *head)
+{
+    missing_line *current = head;
+    if(current == NULL) {
+        printf("No missing lines.\n");
+        return;
+    }
+    printf("Missing lines:\n");
+    while (current != NULL) {
+        printf("Line: %d, Label: %s\n", current->line, current->label);
+        current = current->next;
+    }
+}

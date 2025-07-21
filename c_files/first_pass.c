@@ -24,6 +24,7 @@ int first_pass (char *file_name) {
     int count_arg = 0; /* מספר הארגומנטים */
     int i, num, mat_arg; /* האם ארגומנט מטריצה */
     int two_reg_arg = 0; /*דגל*/
+    missing_line *missing_lines = NULL; /* linked list of missing lines */
 
 
     /*open file*/
@@ -31,7 +32,7 @@ int first_pass (char *file_name) {
     FILE *f = fopen(am_file, "r");
     FILE *input = fopen(file_name,"r");
     if (!input || !f) {
-        perror("File error");/*שגיאת קובץ להוסיף שגיאה*/
+        printf("File error");/*שגיאת קובץ להוסיף שגיאה*/
         return 1;
     }
     while (fgets(line, sizeof(line), f)) {
@@ -88,7 +89,13 @@ int first_pass (char *file_name) {
                 switch (get_data_kind(token1))
                 {
                 case DATA_:
-                    while((token2 = strtok(NULL, ", \t"))) { /*next token should be the data*/
+                    while((token2 = strtok(NULL, ", \t")))  /*next token should be the data*/
+                    {
+                        if (!is_number(token2)) 
+                        {
+                            printf("Error: Invalid number %s\n", token2); /*שגיאה*/
+                            continue; /*continue to next line*/
+                        }
                         num = atoi(token2); /*convert to integer*/
                         printf("Token2: %s\t", token2);
                         num_to_code(num, dc, 'D'); 
@@ -173,11 +180,11 @@ int first_pass (char *file_name) {
                 }
                 L += 1; 
                 opcode_name = get_opcode_name(token1);
-                printf("Opcode Name: %s\t", opcode_name);
                 if (!opcode_name) {
                     printf("Error: Invalid opcode %s\n", token1);/*שגיאה*/
                     continue; /*continue to next line*/
                 }
+                printf("Opcode Name: %s\t", opcode_name);
                 count_arg = get_opcode_arg(token1);
                 i = 0; /*reset argument index*/
                 /*לקודד את הפקודה*/
