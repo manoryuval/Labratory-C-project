@@ -179,8 +179,9 @@ char *get_reg1_matrix_operand( char *str) {
     int matched;
     char reg1[4];
     remove_spaces(str); /* Remove spaces from the string */
+    printf("\n\n%s\n\n", str);
     /* Check for matrix operand format */
-    matched = sscanf(str, "[%3[^]]]", reg1);
+    matched = sscanf(str, "%*[^[][%3[^]]]", reg1);
     /* Check for valid register */
     printf("get_reg1_matrix_operand: %s\n", reg1);
     if (matched != 1 || !get_register_name(reg1)) {
@@ -193,7 +194,7 @@ char *get_reg2_matrix_operand( char *str) {
     int matched;
     char reg2[4];
     /* Check for matrix operand format */
-    matched = sscanf(str, "[%*[^]]][%3[^]]]", reg2);
+    matched = sscanf(str, "%*[^[][%*[^]]][%3[^]]]", reg2);/*לא עובד*/
     printf("get_reg2_matrix_operand: %s\n", reg2);
     /* Check for valid register */
     if (matched != 1 )

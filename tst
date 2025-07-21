@@ -1,4 +1,4 @@
-MAIN: mov M1[r3][r5],LENGTH
+MAIN: mov M1[r3][r0],LENGTH
  add r2,STR
 LOOP: jmp END
  prn #-5
