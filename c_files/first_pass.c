@@ -256,7 +256,7 @@ int first_pass (char *file_name) {
     /*
      צריך פה להעתיק את הDCF ל ICF גם בשורות קוד וגם בלייבלים
     */
-
+    dcf_to_icf(ICF,DCF);
     fclose(input);
     fclose(f);
     return 1;

@@ -18,3 +18,4 @@ void extern_to_code(int line); /* convert an extern label into code */
 void line_print(int num); /* print a line number into the output file */
 void print_DCF(int icf); /* לבדיקה בלבד!*/
 void print_ICF(int icf);
+void dcf_to_icf(int icf,int dcf);
