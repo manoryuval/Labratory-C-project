@@ -147,6 +147,9 @@ char *get_register_name(char *token) {
 
 char *get_register_code(char *token) {
     int i;
+    if (!token || strlen(token) == 0) {
+        return NULL; /* Check for NULL or empty token */
+    }
     for (i = 0; i < sizeof(REGS) / sizeof(REGS[0]); i++) {
         if (strcmp(token, REGS[i].reg) == 0) {
             return REGS[i].code;
@@ -175,9 +178,11 @@ int is_matrix_operand( char *str) {
 char *get_reg1_matrix_operand( char *str) {
     int matched;
     char reg1[4];
+    remove_spaces(str); /* Remove spaces from the string */
     /* Check for matrix operand format */
     matched = sscanf(str, "[%3[^]]]", reg1);
     /* Check for valid register */
+    printf("get_reg1_matrix_operand: %s\n", reg1);
     if (matched != 1 || !get_register_name(reg1)) {
         return NULL; 
     }
@@ -189,10 +194,13 @@ char *get_reg2_matrix_operand( char *str) {
     char reg2[4];
     /* Check for matrix operand format */
     matched = sscanf(str, "[%*[^]]][%3[^]]]", reg2);
+    printf("get_reg2_matrix_operand: %s\n", reg2);
     /* Check for valid register */
-    if (matched != 1 || !get_register_name(reg2)) {
+    if (matched != 1 )
+        return NULL;
+    if(!get_register_name(reg2))             
         return NULL; 
-    }
+    
     return get_register_code(reg2); /* Return the register name */
 }
 

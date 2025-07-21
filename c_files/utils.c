@@ -99,3 +99,14 @@ int valid_mat(char *token) {
 
     return count;
 }
+
+void remove_spaces(char *str) {
+    char *src = str, *dst = str;
+    while (*src) {
+        if (!isspace((unsigned char)*src)) {
+            *dst++ = *src;
+        }
+        src++;
+    }
+    *dst = '\0'; /* Null-terminate the string */
+}

@@ -38,6 +38,8 @@ int first_pass (char *file_name) {
         is_label = 0; /*reset label flag for each line*/
         line_count++;
         reg1 = "r1"; /*default register*/
+        type1 = 'A'; /*default type*/
+        type2 = 'A'; /*default type*/
         /*הסרת רווחים מיותרים*/
         strcpy(trimmed_line, line);
         trim(trimmed_line);
@@ -186,7 +188,7 @@ int first_pass (char *file_name) {
                     switch ((arg_type = scan_word(arg))) {
                     case ARG_NUM: 
                         printf("ARG_NUM\t");
-                        if (i == 0) type1 = 'A'; /*immediate*/
+                        if (i == 0 && count_arg > 1) type1 = 'A'; /*immediate*/
                         else type2 = 'A'; 
                         num_to_code(num_to_int(arg), ic + L, 'I'); /*convert number to code*/
                         /*לקודד מספרים  בic+i*/
@@ -194,7 +196,7 @@ int first_pass (char *file_name) {
                         break;
                     case ARG_REG: 
                         printf("ARG_REG\t");
-                        if (i == 0) type1 = 'D'; /*register*/
+                        if (i == 0 && count_arg > 1) type1 = 'D'; /*register*/
                         else type2 = 'D'; 
                         /*לקודד רישומים ic + i*/
                         if (two_reg_arg == 1){
@@ -209,15 +211,19 @@ int first_pass (char *file_name) {
                         break;
                     case LABEL: 
                         printf("LABEL\t");
-                        if (i == 0) type1 = 'B'; /*label*/
+                        if (i == 0 && count_arg > 1) type1 = 'B'; /*label*/
                         else type2 = 'B'; 
                         L += 1;
                         break;
                     case ARG_MAT:
                         printf("ARG_MAT\t");
-                        if (i == 0) type1 = 'C'; /*matrix*/
+                        if (i == 0 && count_arg > 1) type1 = 'C'; /*matrix*/
                         else type2 = 'C'; 
-                        two_reg_code(get_reg1_matrix_operand(arg), get_reg2_matrix_operand(arg), ic + L + 1, 'I'); /*convert matrix to code*/
+                        if(scan_word(get_reg1_matrix_operand(arg)) == ARG_REG && scan_word(get_reg2_matrix_operand(arg)) == ARG_REG) {
+                            two_reg_code(get_reg1_matrix_operand(arg), get_reg2_matrix_operand(arg), ic + L + 1, 'I'); /*convert matrix to code*/
+                        } else {
+                            printf("Error: Invalid matrix operand %s\n", arg); /*שגיאה*/
+                        }
                         L += 2;
                         break;
                     default:
@@ -226,7 +232,7 @@ int first_pass (char *file_name) {
 
                     i++;
                 }
-                op_to_code(opcode_name, type1, type2, ic + L, 'I'); /*convert opcode to code*/
+                op_to_code(opcode_name, type1, type2, ic, 'I'); /*convert opcode to code*/
                 /*תיקון - לבדוק i ביחס ל לארגומנטים*/
                 printf(">>>>>----------L: %d\t", L);
                 ic += L; 

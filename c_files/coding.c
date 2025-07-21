@@ -116,40 +116,10 @@ void op_to_code(char* op, char type1, char type2, int line, char type)
       strcpy(code, get_opcode_code(op));
 
       /* נוסיף את סוגי מיון האופרנדים */
-      switch (type1)
-      {
-      case 0:
-         code[3] = 'A';
-         break;
-      case 1: 
-         code[3] = 'B';
-         break;
-      case 2:
-         code[3] = 'C';
-         break;
-      case 3:
-         code[3] = 'D';
-         break;
-      }
-      
-       switch (type2)
-      {
-      case 0:
-         code[4] = 'A';
-         break;
-      case 1: 
-         code[4] = 'B';
-         break;
-      case 2:
-         code[4] = 'C';
-         break;
-      case 3:
-         code[4] = 'D';
-         break;
-      }
-
+      code[2] = type1;
+      code[3] = type2;
       /* נוסיף את ה-ARE */
-      code[5] = 'A';
+      code[4] = 'A';
       switch (type)
       {
          case 'I': /* Instruction */
@@ -236,6 +206,21 @@ void print_DCF(int dcf)
       for (j = 0; j < WORD_SIZE; j++)
       {
             printf("%c", DC[i][j]);
+      }
+      printf("\n");
+   }
+}
+
+void print_ICF(int icf)
+{
+   int i = 0;
+   int j = 0;
+   for (i = 0; i < icf; i++)
+   {
+      printf("IC[%d]: ", i);
+      for (j = 0; j < WORD_SIZE; j++)
+      {
+            printf("%c", IC[i][j]);
       }
       printf("\n");
    }
