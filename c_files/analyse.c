@@ -183,11 +183,10 @@ char *get_reg1_matrix_operand( char *str) {
     /* Check for matrix operand format */
     matched = sscanf(str, "%*[^[][%3[^]]]", reg1);
     /* Check for valid register */
-    printf("get_reg1_matrix_operand: %s\n", reg1);
     if (matched != 1 || !get_register_name(reg1)) {
         return NULL; 
     }
-    return get_register_code(reg1); /* Return the register name */
+    return get_register_name(reg1); /* Return the register name */
 }
 
 char *get_reg2_matrix_operand( char *str) {
@@ -195,14 +194,13 @@ char *get_reg2_matrix_operand( char *str) {
     char reg2[4];
     /* Check for matrix operand format */
     matched = sscanf(str, "%*[^[][%*[^]]][%3[^]]]", reg2);/*לא עובד*/
-    printf("get_reg2_matrix_operand: %s\n", reg2);
     /* Check for valid register */
     if (matched != 1 )
         return NULL;
     if(!get_register_name(reg2))             
         return NULL; 
     
-    return get_register_code(reg2); /* Return the register name */
+    return get_register_name(reg2); /* Return the register name */
 }
 
 int is_matrix_definition(const char *str) {

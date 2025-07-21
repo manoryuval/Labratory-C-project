@@ -207,7 +207,7 @@ int first_pass (char *file_name) {
                         else type2 = 'D'; 
                         /*לקודד רישומים ic + i*/
                         if (two_reg_arg == 1){
-                            L--;
+                            /*L--;*/
                             two_reg_code(reg1, arg, ic + L, 'I'); /*convert register to code*/
                             continue;
                         }
@@ -226,10 +226,11 @@ int first_pass (char *file_name) {
                         printf("ARG_MAT\t");
                         if (i == 0 && count_arg > 1) type1 = 'C'; /*matrix*/
                         else type2 = 'C'; 
-                        if(scan_word(get_reg1_matrix_operand(arg)) == ARG_REG && scan_word(get_reg2_matrix_operand(arg)) == ARG_REG) {
-                            two_reg_code(get_reg1_matrix_operand(arg), get_reg2_matrix_operand(arg), ic + L + 1, 'I'); /*convert matrix to code*/
-                        } else {
-                            printf("Error: Invalid matrix operand %s\n", arg); /*שגיאה*/
+                        if(get_reg1_matrix_operand(arg) && get_reg2_matrix_operand(arg)) {
+
+                            two_reg_code( get_reg1_matrix_operand(arg), get_reg2_matrix_operand(arg), ic + L + 1, 'I'); /*convert matrix to code*/
+                            } else {
+                                printf("Error: Invalid matrix operand %s\n", arg); /*שגיאה*/
                         }
                         L += 2;
                         break;
