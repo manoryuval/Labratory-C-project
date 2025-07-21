@@ -103,7 +103,7 @@ int first_pass (char *file_name) {
                     }
                     break;
                 case STRING_:
-                    token2 = strtok(NULL, " \t"); /*next token should be the string*/
+                    token2 = strtok(NULL," \t"); /*next token should be the string*/
                     trim(token2); /*trim the string*/
                     printf("Token2: %s\t", token2);
                     printf("String length: %d\t", alpha_count(token2));

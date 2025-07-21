@@ -102,7 +102,7 @@ int num_to_int(char *token);
 
 int is_number(char *token);
 
-void add_missing_line(int line, char *label, missing_line **head);
+void add_missing_line(int line, char *label, missing_line *head);
 
 void print_missing_lines(missing_line *head);
 

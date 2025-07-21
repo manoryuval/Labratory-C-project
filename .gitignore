@@ -9,3 +9,6 @@ labels.o
 preproc.o
 tst.am
 utils.o
+analyse.o
+first_pass.o
+
