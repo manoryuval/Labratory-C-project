@@ -30,7 +30,8 @@ int add_symbol(Symbol **symbols, int *count, const char *label, Type type, Mode 
     return 1; 
 }
 
-int is_label_exists(Symbol *symbols, int count, char *label) {
+int is_label_exists(Symbol *symbols, int count, char *label) 
+{
     int i;
     /* Check if the label exists in the symbol table */
     for ( i = 0; i < count; i++) {

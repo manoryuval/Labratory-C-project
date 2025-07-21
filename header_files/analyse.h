@@ -36,6 +36,12 @@ typedef struct regs_code {
     char *code;    /* The machine code representation of the register */
 } regs_code;
 
+typedef struct missing_line {
+    int line; /* The line number where the missing label is found */
+    char *label; /* The label that is missing */
+    struct missing_line *next; /* Pointer to the next missing line */
+} missing_line;
+
 extern regs_code REGS[];
 
 
@@ -93,5 +99,11 @@ int get_opcode_arg(char *token);
 DataType get_data_kind(char *token);
 
 int num_to_int(char *token);
+
+int is_number(char *token);
+
+void add_missing_line(int line, char *label, missing_line **head);
+
+void print_missing_lines(missing_line *head);
 
 #endif 
