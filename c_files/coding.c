@@ -227,3 +227,17 @@ void extern_to_code(int line)
 {
    strcpy(IC[line], "AAAAB"); 
 }
+void print_DCF(int dcf)
+{
+   int i = 0;
+   int j = 0;
+   for (i = 0; i < dcf; i++)
+   {
+      printf("DC[%d]: ", i);
+      for (j = 0; j < WORD_SIZE; j++)
+      {
+            printf("%c", DC[i][j]);
+      }
+      printf("\n");
+   }
+}
