@@ -1,8 +1,6 @@
 assembler.o
 assembler
-<<<<<<< HEAD
 *.o
-=======
 .0
 analyse.o
 coding.o
@@ -11,4 +9,3 @@ labels.o
 preproc.o
 tst.am
 utils.o
->>>>>>> 59e864702b4429b3b47226de7b1d2f31530924bc
