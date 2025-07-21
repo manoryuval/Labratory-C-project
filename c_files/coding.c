@@ -10,7 +10,8 @@
 #include "../header_files/analyse.h"
 #include "../header_files/coding.h"
 
-
+char IC[MAX_INPUT][WORD_SIZE];
+char DC[MAX_INPUT][WORD_SIZE];
 
 void num_to_code(int num, int line, char type) /* מניח שהמספר שמתקבל בין -512 ל513 ושמתקבל מספר ולא משהו לא תקין*/
 {
@@ -101,4 +102,65 @@ void two_reg_code (int reg1, int reg2, int line, char type)
             fprintf(stderr, "Error: Invalid type for two_reg_code function.\n");
             exit(EXIT_FAILURE);
     }
+}
+
+void char_to_code(char c, int line, char type)
+{
+
+   int i = (int)c;
+   num_to_code(i, line, type); /* נשתמש בפונקציה num_to_code כדי להמיר את התו לקוד */ 
+
+}
+void op_to_code(op_code op,int type1, int type2, int line, char type)
+{
+      char code[5];
+      int i;
+   
+      /* נעתיק את הקוד של האופרטור */
+      strcpy(code, op.code);
+   
+      /* נוסיף את סוגי האופרנדים */
+      switch (type1)
+      {
+      case 0:
+         code[3] = 'A';
+         break;
+      case 1: 
+         code[3] = 'B';
+         break;
+      case 2:
+         code[3] = 'C';
+         break;
+      case 3:
+         code[3] = 'D';
+         break;
+      }
+      
+       switch (type2)
+      {
+      case 0:
+         code[4] = 'A';
+         break;
+      case 1: 
+         code[4] = 'B';
+         break;
+      case 2:
+         code[4] = 'C';
+         break;
+      case 3:
+         code[4] = 'D';
+         break;
+      }
+
+      /* נוסיף את ה-ARE */
+      code[5] = 'A';
+      switch (type)
+      {
+         case 'I': /* Instruction */
+               strcpy(IC[line], code);
+               break;
+         case 'D': /* Data */
+               strcpy(DC[line], code);
+               break;
+      }
 }
