@@ -28,7 +28,7 @@ labels.o: $(SRC_DIR)/labels.c $(INC_DIR)/labels.h $(INC_DIR)/utils.h
 analyse.o: $(SRC_DIR)/analyse.c $(INC_DIR)/analyse.h
 	$(CC) -c $(CFLAGS) $(SRC_DIR)/analyse.c -o analyse.o
 
-coding.o: $(SRC_DIR)/coding.c $(INC_DIR)/coding.h
+coding.o: $(SRC_DIR)/coding.c $(INC_DIR)/coding.h 
 	$(CC) -c $(CFLAGS) $(SRC_DIR)/coding.c -o coding.o
 
 #על כל קובץ חדש יש להוסיף  לOBJ

@@ -1,3 +1,5 @@
+#ifndef ANALYSE_H
+#define ANALYSE_H
 
 /*type of known words*/
 typedef enum {
@@ -79,3 +81,5 @@ int get_opcode_arg(char *token);
 
 
 DataType get_data_kind(char *token);
+
+#endif 

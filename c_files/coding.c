@@ -114,7 +114,6 @@ void char_to_code(char c, int line, char type)
 void op_to_code(op_code op,int type1, int type2, int line, char type)
 {
       char code[5];
-      int i;
    
       /* נעתיק את הקוד של האופרטור */
       strcpy(code, op.code);
