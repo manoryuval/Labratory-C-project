@@ -31,7 +31,7 @@ int first_pass (char *file_name) {
     FILE *f = fopen(am_file, "r");
     FILE *input = fopen(file_name,"r");
     if (!input || !f) {
-        perror("File error");/*שגיאת קובץ להוסיף שגיאה*/
+        printf("File error");/*שגיאת קובץ להוסיף שגיאה*/
         return 1;
     }
     while (fgets(line, sizeof(line), f)) {
@@ -48,9 +48,9 @@ int first_pass (char *file_name) {
         }
         /*בדיקה אם יש לייבל*/
         token1 = strtok(trimmed_line, " \t"); 
-        printf("Token1: %s\t", token1);
+        
         if (is_label_start(token1)) {
-            printf("label\t");
+            
             /*האם הלייבל חוקי - פירוט בהערות */
             strncpy(label,token1, MAX_LABEL_LENGTH);
             is_label = 1; /*אחרי בדיקת ולידציה*/
@@ -63,24 +63,20 @@ int first_pass (char *file_name) {
             /*remove label from line*/
             token1 =  strtok(NULL, " \t"); 
         }
-
-
-        printf("Token1: %s\t", token1);
         
         switch(scan_word(token1)) 
         {
             case DATA: /*האם הנחיה לאחסון נתונים*/
             { 
-                printf("DATA\t");
                 if(is_label) 
                 {
-                    printf("DATA with label\n");
-                    if(!is_label_exists(symbols, count_labels, label)) {
-                        printf("Adding label %s to symbols table with DC %d \n", label, dc);
+                    if(!is_label_exists(symbols, count_labels, label)) 
+                    {   
                         add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_DATA, dc);
-                    }else {
-                        /*שגיאה - הלייבל כבר קיים*/
-                        printf("Error: Label %s already exists.\n", label);
+                    }
+                    else 
+                    {
+                        printf("Error: Label %s already exists.\n", label); /*שגיאה - הלייבל כבר קיים*/
                         continue; /*continue to next line*/
                     }   
                 }
@@ -88,9 +84,13 @@ int first_pass (char *file_name) {
                 switch (get_data_kind(token1))
                 {
                 case DATA_:
-                    while((token2 = strtok(NULL, ", \t"))) { /*next token should be the data*/
+                    while((token2 = strtok(NULL, ", \t")))  /*next token should be the data*/
+                    {
+                        if (!is_number(token2)) {
+                            printf("Error: Invalid number %s\n", token2);
+                            continue; /*continue to next line*/
+                        }
                         num = atoi(token2); /*convert to integer*/
-                        printf("Token2: %s\t", token2);
                         num_to_code(num, dc, 'D'); 
                         dc ++; /*increment DC for each number*/
                     }
@@ -98,8 +98,6 @@ int first_pass (char *file_name) {
                 case STRING_:
                     token2 = strtok(NULL, " \t"); /*next token should be the string*/
                     trim(token2); /*trim the string*/
-                    printf("Token2: %s\t", token2);
-                    printf("String length: %d\t", alpha_count(token2));
                     for (i = 1; i < alpha_count(token2) + 1; i++)
                     {
                         char_to_code(token2[i], dc,'D');
@@ -111,7 +109,6 @@ int first_pass (char *file_name) {
                 case MAT_:
                     token2 = strtok(NULL, " \t"); /*next token should be the matrix*/
                     trim(token2); /*trim the matrix*/
-                    printf("Token2: %s\t", token2); 
                     mat_arg = is_matrix_definition(token2); /*check if matrix definition*/
                     if (!mat_arg) 
                     {
@@ -238,8 +235,6 @@ int first_pass (char *file_name) {
                 ic += L; 
                 L = 0; /*reset L for next line*/
                 two_reg_arg = 0; /*reset two_reg_arg for next line*/
-
-
             break;
             }
             default: break;

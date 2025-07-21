@@ -83,14 +83,7 @@ WordType scan_word(char *token) {
         }
     }
     /* Check for number */
-    if(token[0] == MINUS || token[0] == PLUS || isdigit(token[0])) {
-            for(i = 1; i < token_length; i++) {
-                if(!isdigit(token[i])) {
-                    return UNKNOWN;
-                }
-            }
-            return NUMBER;
-        }
+    
     /* Check for string */
     if(token[0] == '"' && token[token_length - 1] == '"') {
         return STRING;
@@ -248,4 +241,22 @@ int num_to_int(char *token) {
     char *ptr = token;
     ptr++;
     return atoi(ptr);
+}
+
+int is_number(char *token) 
+{
+    int i;
+    int token_length = strlen(token);
+    if(token[0] == MINUS || token[0] == PLUS || isdigit(token[0])) 
+    {
+        for(i = 1; i < token_length; i++) 
+        {
+            if(!isdigit(token[i])) 
+            {
+                return 0;
+            }
+        }
+        return 1;
+    }
+    return 0;
 }

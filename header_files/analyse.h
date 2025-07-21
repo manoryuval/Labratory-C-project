@@ -94,4 +94,6 @@ DataType get_data_kind(char *token);
 
 int num_to_int(char *token);
 
+int is_number(char *token) ;
+
 #endif 
