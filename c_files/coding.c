@@ -83,13 +83,12 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
    default: break;
    }
 }
-
 void two_reg_code (int reg1, int reg2, int line, char type)
 {
     char code[5];
     strcpy(code, REGS[reg1].code);
     strcat(code, REGS[reg2].code);
-    strcat(code, "A");/* חסר להוסיף את האות האחרונה ARE*/
+    strcat(code, "A");/* A - ARE*/
     switch (type)
     {
         case 'I': /* Instruction */
@@ -103,7 +102,6 @@ void two_reg_code (int reg1, int reg2, int line, char type)
             exit(EXIT_FAILURE);
     }
 }
-
 void char_to_code(char c, int line, char type)
 {
 
@@ -118,7 +116,7 @@ void op_to_code(op_code op,int type1, int type2, int line, char type)
       /* נעתיק את הקוד של האופרטור */
       strcpy(code, op.code);
    
-      /* נוסיף את סוגי האופרנדים */
+      /* נוסיף את סוגי מיון האופרנדים */
       switch (type1)
       {
       case 0:
@@ -162,4 +160,8 @@ void op_to_code(op_code op,int type1, int type2, int line, char type)
                strcpy(DC[line], code);
                break;
       }
+}
+int line_to_code(int num, int line, char type)
+{
+      
 }
