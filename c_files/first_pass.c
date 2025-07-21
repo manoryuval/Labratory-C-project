@@ -63,10 +63,14 @@ int first_pass (char *file_name) {
 
 
         printf("Token1: %s\t", token1);
-        switch(scan_word(token1)) {
-            case DATA:{ /*האם הנחיה לאחסון נתונים*/
+        
+        switch(scan_word(token1)) 
+        {
+            case DATA: /*האם הנחיה לאחסון נתונים*/
+            { 
                 printf("DATA\t");
-                if(is_label) {
+                if(is_label) 
+                {
                     printf("DATA with label\n");
                     if(!is_label_exists(symbols, count_labels, label)) {
                         printf("Adding label %s to symbols table with DC %d \n", label, dc);
@@ -86,39 +90,38 @@ int first_pass (char *file_name) {
                         printf("Token2: %s\t", token2);
                         num_to_code(num, dc, 'D'); 
                         dc ++; /*increment DC for each number*/
-                        /*קודד מספרים - עבור כל מספר*/
-                        num_to_code(num, dc + L + 1, 'D'); /*קודד מספרים*/
-                        L += 1; /*increment L for each number*/
                     }
                     break;
                 case STRING_:
                     token2 = strtok(NULL, " \t"); /*next token should be the string*/
                     trim(token2); /*trim the string*/
                     printf("Token2: %s\t", token2);
-                    L += alpha_count(token2)+1; /*count the number of characters in the string*/
-                    printf("String length: %d\t, L=%d", alpha_count(token2), L);
-                    
-                    /* קודד סטרינג - עבור אות אות וקודד אותה - פתרון מאוד מכוער*/
+                    printf("String length: %d\t", alpha_count(token2));
                     for (i = 1; i < alpha_count(token2) + 1; i++)
                     {
-                        char_to_code(token2[i], dc + i - 1 ,'D');
+                        char_to_code(token2[i], dc,'D');
+                        dc ++; /*increment DC for each character*/
                     }
-                    char_to_code(0,alpha_count(token2) + 1 + dc, 'D');  /*קודד אפס לסיום המחרוזת*/
-                    
+                    char_to_code(0, dc, 'D');  /*קודד אפס לסיום המחרוזת*/
+                    dc ++; /*increment DC for the null terminator*/
                     break;
                 case MAT_:
                     token2 = strtok(NULL, " \t"); /*next token should be the matrix*/
                     trim(token2); /*trim the matrix*/
                     printf("Token2: %s\t", token2); 
-                    mat_arg= is_matrix_definition(token2); /*check if matrix definition*/
-                    if (!mat_arg) {
+                    mat_arg = is_matrix_definition(token2); /*check if matrix definition*/
+                    if (!mat_arg) 
+                    {
                         printf("Error: Invalid matrix definition %s\n", token2);/*שגיאה*/
                         continue; /*continue to next line*/
                     }                    /* code */
                     for (i = 0; i < mat_arg; i++) {
-                        token3 = strtok(NULL, ", \t"); /*next token should be the matrix data*/
-                        if (!token3) {
-                            L += 1;
+                        token3 = strtok(NULL, ","); /*next token should be the matrix data*/
+                        trim(token3); /*trim the matrix data*/
+                        if (!token3) 
+                        {
+                            num_to_code(0, dc, 'D'); /*קודד אפס אם אין נתונים*/
+                            dc++; /*increment DC for the null terminator*/
                             continue; /*continue to next line*/
                         }
                         num = atoi(token3); /*convert to integer*/
@@ -133,9 +136,6 @@ int first_pass (char *file_name) {
                     break;
                 }
                     /*שורה 7 באלגוריתם - זיהוי סוג הנתונים והגודל ולקדם את DC בהתאם*/
-                
-                dc += L; /*עדכון DC*/
-                L=0;
             }  
             case ENTRY:{  /*האם entry*/
                 break;
@@ -229,15 +229,13 @@ int first_pass (char *file_name) {
         printf("\n");
     }
 
-    ICF = ic + 100;
+    ICF = ic;
     DCF = dc;
     printf("ICF: %d, DCF: %d\n", ICF, DCF);
     update_symbol_address(symbols, count_labels, ICF);
     /*
-    print_symbols(symbols, count_labels);
-    printf("%d\n",is_label_exists(symbols, count_labels, "END"));
+     צריך פה להעתיק את הDCF ל ICF גם בשורות קוד וגם בלייבלים
     */
-        /*print_symbols(symbols, count_labels);*/
 
     fclose(input);
     fclose(f);

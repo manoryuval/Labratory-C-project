@@ -41,13 +41,14 @@ int is_label_exists(Symbol *symbols, int count, char *label) {
     return 0;
 }
 
-int is_label_start(char *line) {
+int is_label_start(char *line) 
+{
     char *ptr = line;/*pointer to the current position in the line*/
     /* Skip whitespace */
     while (*ptr == ' ' || *ptr == '\t')
         ptr++;
     /* Check for label name */
-    while (isalpha(*ptr))
+    while (isalpha(*ptr) || isdigit(*ptr))
         ptr++;
     /* Check if the next character is a colon. if true, it's a label */
     if (*(ptr) == COLON)
