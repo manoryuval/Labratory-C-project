@@ -228,3 +228,11 @@ void print_ICF(int icf)
       printf("\n");
    }
 }
+void dcf_to_icf(int icf,int dcf)
+{
+   int i;
+   for (i = 0; i < dcf; i++)
+   {
+      strcpy(IC[icf + i], DC[i]); /* נעתיק את ה-DC ל-IC */
+   }
+}
