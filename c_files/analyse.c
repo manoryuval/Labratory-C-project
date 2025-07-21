@@ -246,6 +246,7 @@ DataType get_data_kind(char *token) {
 int num_to_int(char *token) {
     char *ptr = token;
     ptr++;
+    printf("\n\n%s\n\n", ptr);
     return atoi(ptr);
 }
 
