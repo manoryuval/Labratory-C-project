@@ -83,11 +83,11 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
    default: break;
    }
 }
-void two_reg_code (int reg1, int reg2, int line, char type)
+void two_reg_code (char *reg1, char *reg2, int line, char type)
 {
     char code[5];
-    strcpy(code, REGS[reg1].code);
-    strcat(code, REGS[reg2].code);
+    strcpy(code, get_register_code(reg1));
+    strcat(code, get_register_code(reg2));
     strcat(code, "A");/* A - ARE*/
     switch (type)
     {
@@ -109,48 +109,17 @@ void char_to_code(char c, int line, char type)
    num_to_code(i, line, type); /* נשתמש בפונקציה num_to_code כדי להמיר את התו לקוד */ 
 
 }
-void op_to_code(op_code op, char type1, char type2, int line, char type)
+void op_to_code(char* op, char type1, char type2, int line, char type)
 {
       char code[5];
-   
       /* נעתיק את הקוד של האופרטור */
-      strcpy(code, op.code);
-   
-      /* נוסיף את סוגי מיון האופרנדים */
-      switch (type1)
-      {
-      case 0:
-         code[3] = 'A';
-         break;
-      case 1: 
-         code[3] = 'B';
-         break;
-      case 2:
-         code[3] = 'C';
-         break;
-      case 3:
-         code[3] = 'D';
-         break;
-      }
-      
-       switch (type2)
-      {
-      case 0:
-         code[4] = 'A';
-         break;
-      case 1: 
-         code[4] = 'B';
-         break;
-      case 2:
-         code[4] = 'C';
-         break;
-      case 3:
-         code[4] = 'D';
-         break;
-      }
+      strcpy(code, get_opcode_code(op));
 
+      /* נוסיף את סוגי מיון האופרנדים */
+      code[2] = type1;
+      code[3] = type2;
       /* נוסיף את ה-ARE */
-      code[5] = 'A';
+      code[4] = 'A';
       switch (type)
       {
          case 'I': /* Instruction */
@@ -237,6 +206,21 @@ void print_DCF(int dcf)
       for (j = 0; j < WORD_SIZE; j++)
       {
             printf("%c", DC[i][j]);
+      }
+      printf("\n");
+   }
+}
+
+void print_ICF(int icf)
+{
+   int i = 0;
+   int j = 0;
+   for (i = 0; i < icf; i++)
+   {
+      printf("IC[%d]: ", i);
+      for (j = 0; j < WORD_SIZE; j++)
+      {
+            printf("%c", IC[i][j]);
       }
       printf("\n");
    }

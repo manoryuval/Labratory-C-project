@@ -32,8 +32,8 @@ typedef struct op_code {
 } op_code;
 
 typedef struct regs_code {
-    char *opcode;    /* The opcode corresponding to the operation */
-    char *code;    /* The machine code representation of the operation */
+    char *reg;    /* The register name */
+    char *code;    /* The machine code representation of the register */
 } regs_code;
 
 extern regs_code REGS[];
@@ -54,6 +54,8 @@ serch token from the opcodes array and return the opcode name.
 */
 char *get_opcode_name(char *token);
 
+char *get_opcode_code(char *token);
+
 /*
 serch token from the register array and return the register name.
 @param token a word to search.
@@ -61,12 +63,20 @@ serch token from the register array and return the register name.
 */
 char *get_register_name(char *token);
 
+char *get_register_code(char *token);
+
+
+
 /*
 check if string is in matrix operand format.
 @param str a string to check if in matrix format.
 @return 1 if format matching. 0 otherwise.
 */
-int is_matrix_operand(const char *str);
+int is_matrix_operand( char *str);
+
+char *get_reg1_matrix_operand( char *str);
+
+char *get_reg2_matrix_operand( char *str);
 
 /*
 check if string is in matrix definition format.
@@ -81,5 +91,7 @@ int get_opcode_arg(char *token);
 
 
 DataType get_data_kind(char *token);
+
+int num_to_int(char *token);
 
 #endif 

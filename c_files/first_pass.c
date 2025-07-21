@@ -18,7 +18,7 @@ int first_pass (char *file_name) {
     char copy_line[MAX_LINE];
     char trimmed_line[MAX_LINE];
     char label[MAX_LABEL_LENGTH];
-    char *token1, *token2, *token3, *arg, *opcode_name;
+    char *token1, *token2, *token3, *arg, *reg1, *opcode_name, type1, type2;
     WordType arg_type;
     int L = 0; /* מספר הארגומנטים */
     int count_arg = 0; /* מספר הארגומנטים */
@@ -37,6 +37,9 @@ int first_pass (char *file_name) {
     while (fgets(line, sizeof(line), f)) {
         is_label = 0; /*reset label flag for each line*/
         line_count++;
+        reg1 = "r1"; /*default register*/
+        type1 = 'A'; /*default type*/
+        type2 = 'A'; /*default type*/
         /*הסרת רווחים מיותרים*/
         strcpy(trimmed_line, line);
         trim(trimmed_line);
@@ -168,7 +171,6 @@ int first_pass (char *file_name) {
                         continue; /*continue to next line*/
                     }
                 }
-
                 L += 1; 
                 opcode_name = get_opcode_name(token1);
                 printf("Opcode Name: %s\t", opcode_name);
@@ -180,31 +182,48 @@ int first_pass (char *file_name) {
                 i = 0; /*reset argument index*/
                 /*לקודד את הפקודה*/
                 /*read the arguments*/
-                while ((arg = strtok(NULL, ", \t")) && i < count_arg) {/*תיקון - להפריד טוקנים לפי פסיקים בלבד (ואז להוריד רווחים)*/
-
+                while ((arg = strtok(NULL, ",\t")) && i < count_arg) {/*, עשיתי לוודא שעובד טוב. תיקון - להפריד טוקנים לפי פסיקים בלבד (ואז להוריד רווחים)*/
+                    trim(arg); /*trim the argument*/
                     printf("Arg1: %s\t", arg);
                     switch ((arg_type = scan_word(arg))) {
                     case ARG_NUM: 
                         printf("ARG_NUM\t");
+                        if (i == 0 && count_arg > 1) type1 = 'A'; /*immediate*/
+                        else type2 = 'A'; 
+                        num_to_code(num_to_int(arg), ic + L, 'I'); /*convert number to code*/
                         /*לקודד מספרים  בic+i*/
                         L += 1;
                         break;
                     case ARG_REG: 
                         printf("ARG_REG\t");
+                        if (i == 0 && count_arg > 1) type1 = 'D'; /*register*/
+                        else type2 = 'D'; 
                         /*לקודד רישומים ic + i*/
                         if (two_reg_arg == 1){
+                            L--;
+                            two_reg_code(reg1, arg, ic + L, 'I'); /*convert register to code*/
                             continue;
                         }
+                        reg1=arg;
+                        two_reg_code(reg1, "r0", ic + L, 'I'); /*convert register to code*/
                         two_reg_arg++;
                         L += 1;
                         break;
                     case LABEL: 
                         printf("LABEL\t");
+                        if (i == 0 && count_arg > 1) type1 = 'B'; /*label*/
+                        else type2 = 'B'; 
                         L += 1;
                         break;
                     case ARG_MAT:
                         printf("ARG_MAT\t");
-                        /*לקודד ארגומנט מטריצה ic + i+1*/
+                        if (i == 0 && count_arg > 1) type1 = 'C'; /*matrix*/
+                        else type2 = 'C'; 
+                        if(scan_word(get_reg1_matrix_operand(arg)) == ARG_REG && scan_word(get_reg2_matrix_operand(arg)) == ARG_REG) {
+                            two_reg_code(get_reg1_matrix_operand(arg), get_reg2_matrix_operand(arg), ic + L + 1, 'I'); /*convert matrix to code*/
+                        } else {
+                            printf("Error: Invalid matrix operand %s\n", arg); /*שגיאה*/
+                        }
                         L += 2;
                         break;
                     default:
@@ -213,6 +232,7 @@ int first_pass (char *file_name) {
 
                     i++;
                 }
+                op_to_code(opcode_name, type1, type2, ic, 'I'); /*convert opcode to code*/
                 /*תיקון - לבדוק i ביחס ל לארגומנטים*/
                 printf(">>>>>----------L: %d\t", L);
                 ic += L; 
