@@ -164,7 +164,7 @@ int is_matrix_definition(const char *str) {
         return 0;
     }
 
-    return 1;
+    return num1*num2;
 }
 
 int get_opcode_arg(char *token) {

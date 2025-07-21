@@ -13,16 +13,16 @@
 Symbol *symbols = NULL;
 int count_labels = 0;
 int first_pass (char *file_name) {
-    int IC = 0,DC = 0, is_label = 0,line_count = 0,ICF,DCF;
+    int ic = 0,dc = 0, is_label = 0,line_count = 0,ICF,DCF;
     char line[MAX_LINE];
     char copy_line[MAX_LINE];
     char trimmed_line[MAX_LINE];
     char label[MAX_LABEL_LENGTH];
-    char *token1, *token2 , *arg, *opcode_name;
+    char *token1, *token2, *token3, *arg, *opcode_name;
     WordType arg_type;
     int L = 0; /* מספר הארגומנטים */
     int count_arg = 0; /* מספר הארגומנטים */
-    int i, num;
+    int i, num, mat_arg; /* האם ארגומנט מטריצה */
     int two_reg_arg = 0; /*דגל*/
 
 
@@ -69,8 +69,8 @@ int first_pass (char *file_name) {
                 if(is_label) {
                     printf("DATA with label\n");
                     if(!is_label_exists(symbols, count_labels, label)) {
-                        printf("Adding label %s to symbols table with DC %d \n", label, DC);
-                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_DATA, DC);
+                        printf("Adding label %s to symbols table with DC %d \n", label, dc);
+                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_DATA, dc);
                     }else {
                         /*שגיאה - הלייבל כבר קיים*/
                         printf("Error: Label %s already exists.\n", label);
@@ -101,16 +101,33 @@ int first_pass (char *file_name) {
                     }*/
                     break;
                 case MAT_:
+                    token2 = strtok(NULL, " \t"); /*next token should be the matrix*/
+                    trim(token2); /*trim the matrix*/
+                    printf("Token2: %s\t", token2); 
+                    mat_arg= is_matrix_definition(token2); /*check if matrix definition*/
+                    if (!mat_arg) {
+                        printf("Error: Invalid matrix definition %s\n", token2);/*שגיאה*/
+                        continue; /*continue to next line*/
+                    }                    /* code */
+                    for (i = 0; i < mat_arg; i++) {
+                        token3 = strtok(NULL, ", \t"); /*next token should be the matrix data*/
+                        if (!token3) {
+                            L += 1;
+                            continue; /*continue to next line*/
+                        }
+                        num = atoi(token3); /*convert to integer*/
+                        printf("Token3: %s\t", token3);
+                        /*קודד מספרים - עבור כל מספר*/
+                        L += 1; /*increment L for each number*/
+                    }
 
-                    
-                    /* code */
                     break;
                 default:
                     break;
                 }
                     /*שורה 7 באלגוריתם - זיהוי סוג הנתונים והגודל ולקדם את DC בהתאם*/
                 
-                DC += L; /*עדכון DC*/
+                dc += L; /*עדכון DC*/
                 L=0;
             }  
             case ENTRY:{  /*האם entry*/
@@ -137,7 +154,7 @@ int first_pass (char *file_name) {
                     printf("CODE with label\t");
                     if(!is_label_exists(symbols, count_labels, label)) {
                         printf("Adding label %s to symbols table with IC \n", label);
-                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_CODE, IC);
+                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_CODE, ic);
                     }else {
                         /*שגיאה - הלייבל כבר קיים*/
                         printf("Error: Label %s already exists.\n", label);
@@ -191,7 +208,7 @@ int first_pass (char *file_name) {
                 }
                 /*תיקון - לבדוק i ביחס ל לארגומנטים*/
                 printf(">>>>>----------L: %d\t", L);
-                IC += L; 
+                ic += L; 
                 L = 0; /*reset L for next line*/
                 two_reg_arg = 0; /*reset two_reg_arg for next line*/
 
@@ -205,8 +222,8 @@ int first_pass (char *file_name) {
         printf("\n");
     }
 
-    ICF = IC+100;
-    DCF = DC;
+    ICF = ic + 100;
+    DCF = dc;
     printf("ICF: %d, DCF: %d\n", ICF, DCF);
     update_symbol_address(symbols, count_labels, ICF);
     /*
