@@ -84,6 +84,8 @@ int first_pass (char *file_name) {
                     while((token2 = strtok(NULL, ", \t"))) { /*next token should be the data*/
                         num = atoi(token2); /*convert to integer*/
                         printf("Token2: %s\t", token2);
+                        num_to_code(num, dc, 'D'); 
+                        dc ++; /*increment DC for each number*/
                         /*קודד מספרים - עבור כל מספר*/
                     }
 
@@ -96,9 +98,9 @@ int first_pass (char *file_name) {
                     L += alpha_count(token2)+1; /*count the number of characters in the string*/
                     printf("String length: %d\t, L=%d", alpha_count(token2), L);
                     /*קודד סטרינג - עבור אות אות וקודד אותה*/
-                    /*for (i = 0; i < alpha_count(token2); i++) {
-                        code_char(token2[i]);
-                    }*/
+                    for (i = 0; i < alpha_count(token2); i++) {
+                        char_to_code(token2[i], dc + i, 'D'); /*קודד תו*/
+                    }
                     break;
                 case MAT_:
                     token2 = strtok(NULL, " \t"); /*next token should be the matrix*/
@@ -118,7 +120,8 @@ int first_pass (char *file_name) {
                         num = atoi(token3); /*convert to integer*/
                         printf("Token3: %s\t", token3);
                         /*קודד מספרים - עבור כל מספר*/
-                        L += 1; /*increment L for each number*/
+                        num_to_code(num, dc, 'D');
+                        dc ++; /*increment DC for each number*/
                     }
 
                     break;
