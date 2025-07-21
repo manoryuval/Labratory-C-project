@@ -88,11 +88,14 @@ void two_reg_code (char *reg1, char *reg2, int line, char type)
     char code[5];
     strcpy(code, get_register_code(reg1));
     strcat(code, get_register_code(reg2));
+
     strcat(code, "A");/* A - ARE*/
+\
     switch (type)
     {
         case 'I': /* Instruction */
             strcpy(IC[line], code);
+\
             break;
         case 'D': /* Data */
             strcpy(DC[line], code);
