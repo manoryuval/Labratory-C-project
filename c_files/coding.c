@@ -216,20 +216,20 @@ void print_DCF(char *file_name, int dcf)
    }
 }
 
-void print_ICF(char *file_name, int icf)
+void print_ICF( int icf)
 {
-   char *ob_file = create_extension(file_name,".ob");
-   FILE *f = fopen(ob_file, "w");
+   /*char *ob_file = create_extension(file_name,".ob");
+   FILE *f = fopen(ob_file, "w");*/
    int i = 0;
    int j = 0;
    for (i = 0; i < icf; i++)
    {
-      fprintf(f, "IC[%d]: ", i);
+      printf( "IC[%d]: ", i);
       for (j = 0; j < WORD_SIZE; j++)
       {
-            fprintf(f, "%c", IC[i][j]);
+            printf( "%c", IC[i][j]);
       }
-      fprintf(f, "\n");
+      printf( "\n");
    }
 }
 void dcf_to_icf(int icf,int dcf)
