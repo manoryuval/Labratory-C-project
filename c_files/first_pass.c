@@ -267,7 +267,7 @@ int first_pass (char *file_name) {
     update_symbol_address(symbols, count_labels, ICF);
     dcf_to_icf(ICF,DCF);
     /*plus 100*/
-    print_missing_lines(missing_lines);
+    /*print_missing_lines(missing_lines);*/
     fclose(input);
     fclose(f);
     return 1;
