@@ -267,38 +267,31 @@ int is_number(char *token)
 }
 
 void add_missing_line(int line, char *label, missing_line **head)
+
 {
     /*check if label exists*/
-    if(!is_label_exists(symbols, count_labels, label))
+    
+    if (*head == NULL)
     {
-        printf("Error: Label %s does not exist.\n", label);
-        return; /*if label does not exist, return*/
-    }
-    if(head == NULL)
-    {
-        /*create new missing line*/
-        (*head) = (missing_line *)malloc(sizeof(missing_line));
+        *head = malloc(sizeof(missing_line));
         (*head)->line = line;
-        (*head)->label = (char *)malloc(strlen(label) + 1);
+        (*head)->label = malloc(strlen(label) + 1);
         strcpy((*head)->label, label);
         (*head)->next = NULL;
     }
     else
     {
-        /*add to the end of the list*/
         missing_line *current = *head;
         while (current->next != NULL) 
         {
             current = current->next;
         }
-        /*create new missing line*/
-        current->next = (missing_line *)malloc(sizeof(missing_line));
+        current->next = malloc(sizeof(missing_line));
         current->next->line = line;
-        current->next->label = (char *)malloc(strlen(label) + 1);
+        current->next->label = malloc(strlen(label) + 1);
         strcpy(current->next->label, label);
         current->next->next = NULL;
     }
-
 }
 
 void print_missing_lines(missing_line *head)
@@ -314,3 +307,4 @@ void print_missing_lines(missing_line *head)
         current = current->next;
     }
 }
+
