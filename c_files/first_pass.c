@@ -49,10 +49,10 @@ int first_pass (char *file_name) {
         }
         /*בדיקה אם יש לייבל*/
         token1 = strtok(trimmed_line, " \t"); 
-        printf("Token1: %s\t", token1);
+        /* printf("Token1: %s\t", token1); */
         if (is_label_start(token1)) {
-            printf("label\t");
-            /*האם הלייבל חוקי - פירוט בהערות */
+            /* printf("label\t"); */
+            /* האם הלייבל חוקי - פירוט בהערות */
             strncpy(label,token1, MAX_LABEL_LENGTH);
             is_label = 1; /*אחרי בדיקת ולידציה*/
             if (valid_label(label) !=1) {
@@ -66,22 +66,22 @@ int first_pass (char *file_name) {
         }
 
 
-        printf("Token1: %s\t", token1);
+        /* printf("Token1: %s\t", token1); */
         
         switch(scan_word(token1)) 
         {
             case DATA: /*האם הנחיה לאחסון נתונים*/
             { 
-                printf("DATA\t");
+                /* printf("DATA\t"); */
                 if(is_label) 
                 {
-                    printf("DATA with label\n");
+                    /* printf("DATA with label\n"); */
                     if(!is_label_exists(symbols, count_labels, label)) {
-                        printf("Adding label %s to symbols table with DC %d \n", label, dc);
+                        /* printf("Adding label %s to symbols table with DC %d \n", label, dc); */
                         add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_DATA, dc);
                     }else {
                         /*שגיאה - הלייבל כבר קיים*/
-                        printf("Error: Label %s already exists.\n", label);
+                        /* printf("Error: Label %s already exists.\n", label); */
                         continue; /*continue to next line*/
                     }   
                 }
@@ -93,11 +93,11 @@ int first_pass (char *file_name) {
                     {
                         if (!is_number(token2)) 
                         {
-                            printf("Error: Invalid number %s\n", token2); /*שגיאה*/
+                            /* printf("Error: Invalid number %s\n", token2); */ /*שגיאה*/
                             continue; /*continue to next line*/
                         }
                         num = atoi(token2); /*convert to integer*/
-                        printf("Token2: %s\t", token2);
+                        /* printf("Token2: %s\t", token2); */
                         num_to_code(num, dc, 'D'); 
                         dc ++; /*increment DC for each number*/
                     }
@@ -105,8 +105,8 @@ int first_pass (char *file_name) {
                 case STRING_:
                     token2 = strtok(NULL," \t"); /*next token should be the string*/
                     trim(token2); /*trim the string*/
-                    printf("Token2: %s\t", token2);
-                    printf("String length: %d\t", alpha_count(token2));
+                    /* printf("Token2: %s\t", token2); */
+                    /* printf("String length: %d\t", alpha_count(token2)); */
                     for (i = 1; i < alpha_count(token2) + 1; i++)
                     {
                         char_to_code(token2[i], dc,'D');
@@ -118,11 +118,11 @@ int first_pass (char *file_name) {
                 case MAT_:
                     token2 = strtok(NULL, " \t"); /*next token should be the matrix*/
                     trim(token2); /*trim the matrix*/
-                    printf("Token2: %s\t", token2); 
+                    /* printf("Token2: %s\t", token2);  */
                     mat_arg = is_matrix_definition(token2); /*check if matrix definition*/
                     if (!mat_arg) 
                     {
-                        printf("Error: Invalid matrix definition %s\n", token2);/*שגיאה*/
+                        /* printf("Error: Invalid matrix definition %s\n", token2);*/ /*שגיאה*/
                         continue; /*continue to next line*/
                     }                    /* code */
                     for (i = 0; i < mat_arg; i++) {
@@ -135,7 +135,7 @@ int first_pass (char *file_name) {
                             continue; /*continue to next line*/
                         }
                         num = atoi(token3); /*convert to integer*/
-                        printf("Token3: %s\t", token3);
+                        /* printf("Token3: %s\t", token3); */
                         /*קודד מספרים - עבור כל מספר*/
                         num_to_code(num, dc, 'D');
                         dc ++; /*increment DC for each number*/
@@ -152,49 +152,49 @@ int first_pass (char *file_name) {
             }
             case EXTERN:
             {
-                printf("EXTERN\t");
+                /* printf("EXTERN\t"); */
                 arg = strtok(NULL, " \t");
-                printf("Arg1: %s\t", arg);
+                /* printf("Arg1: %s\t", arg); */
                 /*אם אקסטרן - להכניס לטבלת סמלים עם הערך 0 ו מאפיין אקסטרן. continue*/
                 if (arg && valid_label(arg)) {
-                    printf("Adding extern label %s to symbols table with value 0\n", arg);
+                    /* printf("Adding extern label %s to symbols table with value 0\n", arg); */
                     add_symbol(&symbols, &count_labels, arg, LABEL_EXTERN, LABEL_TBD, 0);
                 } else {
-                    printf("Error: Invalid extern label %s\n", arg);
+                    /* printf("Error: Invalid extern label %s\n", arg); */
                 }
             break;
             }    
             case CODE:
             {/*שורת הוראה - אם יש סמל */ 
-                printf("CODE\t");
+                /* printf("CODE\t"); */
                 if (is_label) {
-                    printf("CODE with label\t");
+                    /* printf("CODE with label\t"); */
                     if(!is_label_exists(symbols, count_labels, label)) {
-                        printf("Adding label %s to symbols table with IC \n", label);
+                        /* printf("Adding label %s to symbols table with IC \n", label); */
                         add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_CODE, ic);
                     }else {
                         /*שגיאה - הלייבל כבר קיים*/
-                        printf("Error: Label %s already exists.\n", label);
+                        /* printf("Error: Label %s already exists.\n", label); */
                         continue; /*continue to next line*/
                     }
                 }
                 L += 1; 
                 opcode_name = get_opcode_name(token1);
                 if (!opcode_name) {
-                    printf("Error: Invalid opcode %s\n", token1);/*שגיאה*/
+                    /* printf("Error: Invalid opcode %s\n", token1);*/ /*שגיאה*/
                     continue; /*continue to next line*/
                 }
-                printf("Opcode Name: %s\t", opcode_name);
+                /* printf("Opcode Name: %s\t", opcode_name); */
                 count_arg = get_opcode_arg(token1);
                 i = 0; /*reset argument index*/
                 /*לקודד את הפקודה*/
                 /*read the arguments*/
                 while ((arg = strtok(NULL, ",\t")) && i < count_arg) {/*, עשיתי לוודא שעובד טוב. תיקון - להפריד טוקנים לפי פסיקים בלבד (ואז להוריד רווחים)*/
                     trim(arg); /*trim the argument*/
-                    printf("Arg1: %s\t", arg);
+                    /* printf("Arg1: %s\t", arg); */
                     switch ((arg_type = scan_word(arg))) {
                     case ARG_NUM: 
-                        printf("ARG_NUM\t");
+                        /* printf("ARG_NUM\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'A'; /*immediate*/
                         else type2 = 'A'; 
                         num_to_code(num_to_int(arg), ic + L, 'I'); /*convert number to code*/
@@ -202,7 +202,7 @@ int first_pass (char *file_name) {
                         L += 1;
                         break;
                     case ARG_REG: 
-                        printf("ARG_REG\t");
+                        /* printf("ARG_REG\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'D'; /*register*/
                         else type2 = 'D'; 
                         /*לקודד רישומים ic + i*/
@@ -211,26 +211,30 @@ int first_pass (char *file_name) {
                             continue;
                         }
                         reg1=arg;
+                        if(type2 == 'D'){
+                            two_reg_code("r0",reg1, ic + L, 'I'); /*convert register to code*/
+                            continue;
+                        }
                         two_reg_code(reg1, "r0", ic + L, 'I'); /*convert register to code*/
                         two_reg_arg++;
                         L += 1;
                         break;
                     case LABEL: 
-                        printf("LABEL\t");
+                        /* printf("LABEL\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'B'; /*label*/
                         else type2 = 'B'; 
                         add_missing_line(ic + L, arg, &missing_lines); /*add missing line*/
                         L += 1;
                         break;
                     case ARG_MAT:
-                        printf("ARG_MAT\t");
+                        /* printf("ARG_MAT\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'C'; /*matrix*/
                         else type2 = 'C'; 
                         if(get_reg1_matrix_operand(arg) && get_reg2_matrix_operand(arg)) {
 
                             two_reg_code( get_reg1_matrix_operand(arg), get_reg2_matrix_operand(arg), ic + L + 1, 'I'); /*convert matrix to code*/
                             } else {
-                                printf("Error: Invalid matrix operand %s\n", arg); /*שגיאה*/
+                                /* printf("Error: Invalid matrix operand %s\n", arg); */ /*שגיאה*/
                         }
                         L += 2;
                         break;
@@ -242,7 +246,7 @@ int first_pass (char *file_name) {
                 }
                 op_to_code(opcode_name, type1, type2, ic, 'I'); /*convert opcode to code*/
                 /*תיקון - לבדוק i ביחס ל לארגומנטים*/
-                printf(">>>>>----------L: %d\t", L);
+                /* printf(">>>>>----------L: %d\t", L); */
                 ic += L; 
                 L = 0; /*reset L for next line*/
                 two_reg_arg = 0; /*reset two_reg_arg for next line*/
@@ -259,9 +263,10 @@ int first_pass (char *file_name) {
 
     ICF = ic;
     DCF = dc;
-    printf("ICF: %d, DCF: %d\n", ICF, DCF);
+    /* printf("ICF: %d, DCF: %d\n", ICF, DCF); */
     update_symbol_address(symbols, count_labels, ICF);
     dcf_to_icf(ICF,DCF);
+    /*plus 100*/
     print_missing_lines(missing_lines);
     fclose(input);
     fclose(f);

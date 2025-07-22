@@ -75,7 +75,7 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
    {
     case 'I': /* Instruction */
       strcpy(IC[line], code); /* נעתיק את הקוד למערך ה-IC */
-         printf("\n\n%s\n\n", IC[line]);
+         /* printf("\n\n%s\n\n", IC[line]); */
       break;
     case 'D': /* Data */
        strcpy(DC[line], code); /* נעתיק את הקוד למערך ה-DC */
@@ -227,7 +227,7 @@ void print_ICF( int icf)
       printf( "IC[%d]: ", i);
       for (j = 0; j < WORD_SIZE; j++)
       {
-            printf( "%c", IC[i][j]);
+            printf( "j%d:%c\t", j, IC[i][j]);
       }
       printf( "\n");
    }

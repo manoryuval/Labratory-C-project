@@ -179,7 +179,7 @@ char *get_reg1_matrix_operand( char *str) {
     int matched;
     char reg1[4];
     remove_spaces(str); /* Remove spaces from the string */
-    printf("\n\n%s\n\n", str);
+    /* printf("\n\n%s\n\n", str); */
     /* Check for matrix operand format */
     matched = sscanf(str, "%*[^[][%3[^]]]", reg1);
     /* Check for valid register */
@@ -246,7 +246,7 @@ DataType get_data_kind(char *token) {
 int num_to_int(char *token) {
     char *ptr = token;
     ptr++;
-    printf("\n\n%s\n\n", ptr);
+    /* printf("\n\n%s\n\n", ptr); */
     return atoi(ptr);
 }
 
