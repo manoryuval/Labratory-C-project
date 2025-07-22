@@ -103,7 +103,7 @@ int first_pass (char *file_name) {
                     }
                     break;
                 case STRING_:
-                    token2 = strtok(NULL, " \t"); /*next token should be the string*/
+                    token2 = strtok(NULL," \t"); /*next token should be the string*/
                     trim(token2); /*trim the string*/
                     printf("Token2: %s\t", token2);
                     printf("String length: %d\t", alpha_count(token2));
@@ -261,9 +261,6 @@ int first_pass (char *file_name) {
     DCF = dc;
     printf("ICF: %d, DCF: %d\n", ICF, DCF);
     update_symbol_address(symbols, count_labels, ICF);
-    /*
-     צריך פה להעתיק את הDCF ל ICF גם בשורות קוד וגם בלייבלים
-    */
     dcf_to_icf(ICF,DCF);
     print_missing_lines(missing_lines);
     fclose(input);

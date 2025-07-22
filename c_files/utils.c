@@ -54,6 +54,7 @@ void trim(char *line) {
 
 int alpha_count(char *token){
     int len = strlen(token);
+    printf("Alpha count: %d\n", len);
     int i;
     int count = 0;
     if (len < 2) return 0; 
@@ -75,6 +76,7 @@ int alpha_count(char *token){
 
     return count; 
 }
+
 
 int valid_mat(char *token) {
     int len = strlen(token);

@@ -277,8 +277,9 @@ void add_missing_line(int line, char *label, missing_line **head)
     if(head == NULL)
     {
         /*create new missing line*/
-        *head = (missing_line *)malloc(sizeof(missing_line));
+        (*head) = (missing_line *)malloc(sizeof(missing_line));
         (*head)->line = line;
+        (*head)->label = (char *)malloc(strlen(label) + 1);
         strcpy((*head)->label, label);
         (*head)->next = NULL;
     }
@@ -293,6 +294,7 @@ void add_missing_line(int line, char *label, missing_line **head)
         /*create new missing line*/
         current->next = (missing_line *)malloc(sizeof(missing_line));
         current->next->line = line;
+        current->next->label = (char *)malloc(strlen(label) + 1);
         strcpy(current->next->label, label);
         current->next->next = NULL;
     }
