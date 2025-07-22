@@ -36,7 +36,8 @@ typedef struct regs_code {
     char *code;    /* The machine code representation of the register */
 } regs_code;
 
-typedef struct missing_line {
+typedef struct missing_line 
+{
     int line; /* The line number where the missing label is found */
     char *label; /* The label that is missing */
     struct missing_line *next; /* Pointer to the next missing line */
