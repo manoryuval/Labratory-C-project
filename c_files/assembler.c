@@ -35,13 +35,13 @@ int main(int argc, char *argv[]) {
             fprintf(stderr, "Error: Could not open file %s\n", argv[i]);
             continue;
         }
-        printf("Processing file>>>>>: %s\n", argv[i]);
+        /*printf("Processing file>>>>>: %s\n", argv[i]);*/
         preproc(argv[i]);
-        printf("Macros>>>>>:\n");
+        /*printf("Macros>>>>>:\n");
         print_mcro_list(mcro_head);
-        printf("Running first pass on %s--------------------\n", argv[i]);
+        printf("Running first pass on %s--------------------\n", argv[i]);*/
         first_pass(argv[i]);
-        print_symbols(symbols, count_labels);
+        /*print_symbols(symbols, count_labels);*/
 
         printf("_____ print ICF__________\n");
         print_ICF(11);
