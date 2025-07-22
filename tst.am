@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 MAIN: mov M1[r2][r7],LENGTH
  add STR,r2
+=======
+MAIN: mov K,LENGTH
+ add MAIN,STR
+>>>>>>> 4d9dd4f902c5862a68e8c8dc02aca635b80ff678
 LOOP: jmp END
  prn #-5
  sub r1, r4
