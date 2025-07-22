@@ -115,6 +115,7 @@ void char_to_code(char c, int line, char type)
 void op_to_code(char* op, char type1, char type2, int line, char type)
 {
       char code[5];
+      int i;
       /* נעתיק את הקוד של האופרטור */
       strcpy(code, get_opcode_code(op));
 
@@ -126,7 +127,9 @@ void op_to_code(char* op, char type1, char type2, int line, char type)
       switch (type)
       {
          case 'I': /* Instruction */
-               strcpy(IC[line], code);
+               for( i = 0; i < WORD_SIZE; i++) {
+                   IC[line][i] = code[i]; /* Copy the code to the IC array */
+               }
                break;
          case 'D': /* Data */
                strcpy(DC[line], code);
@@ -227,7 +230,7 @@ void print_ICF( int icf)
       printf( "IC[%d]: ", i);
       for (j = 0; j < WORD_SIZE; j++)
       {
-            printf( "j%d:%c\t", j, IC[i][j]);
+            printf( "%c", IC[i][j]);
       }
       printf( "\n");
    }

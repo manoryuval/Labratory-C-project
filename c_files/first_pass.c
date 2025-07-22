@@ -208,11 +208,13 @@ int first_pass (char *file_name) {
                         /*לקודד רישומים ic + i*/
                         if (two_reg_arg == 1){
                             two_reg_code(reg1, arg, ic + L, 'I'); /*convert register to code*/
+                            L += 1;
                             continue;
                         }
                         reg1=arg;
                         if(type2 == 'D'){
                             two_reg_code("r0",reg1, ic + L, 'I'); /*convert register to code*/
+                            L += 1;
                             continue;
                         }
                         two_reg_code(reg1, "r0", ic + L, 'I'); /*convert register to code*/
