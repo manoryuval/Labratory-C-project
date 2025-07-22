@@ -85,7 +85,8 @@ void print_symbols(Symbol *symbols, int count) {
 int update_symbol_address(Symbol *symbols, int count, int ICF) {
     int i;
     /* Find the symbol in the table and update its address */
-    for (i = 0; i < count; i++) {
+    for (i = 0; i < count; i++) 
+    {
         if (symbols[i].mode == LABEL_DATA) {
             symbols[i].address += ICF;
         }

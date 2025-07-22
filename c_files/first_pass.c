@@ -261,9 +261,6 @@ int first_pass (char *file_name) {
     DCF = dc;
     printf("ICF: %d, DCF: %d\n", ICF, DCF);
     update_symbol_address(symbols, count_labels, ICF);
-    /*
-     צריך פה להעתיק את הDCF ל ICF גם בשורות קוד וגם בלייבלים
-    */
     dcf_to_icf(ICF,DCF);
     print_missing_lines(missing_lines);
     fclose(input);
