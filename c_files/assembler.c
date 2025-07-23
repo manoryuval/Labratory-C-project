@@ -53,6 +53,7 @@ int main(int argc, char *argv[]) {
         second_pass(as_name);
         /*print_ICF(ICF+DCF);*/
         fprint_ICF(argv[i], ICF+DCF);
+        
         print_symbols(symbols, count_labels);
 
 

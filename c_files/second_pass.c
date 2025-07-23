@@ -15,6 +15,7 @@ int second_pass(char *file_name) {
     char line[MAX_LINE];
     char *token1, *token2;
     missing_line *current = missing_lines;
+    extern_line *extern_lines = NULL;
     int i;
 
     char *am_file = create_extension(file_name,".am");
@@ -60,7 +61,7 @@ int second_pass(char *file_name) {
     }
     while (current != NULL)
     {
-        int updated = update_missing_lines(current, symbols, count_labels);
+        int updated = update_missing_lines(current, &extern_lines, symbols, count_labels);
         if (updated == 0) {
             printf("No missing lines were updated.\n");
             break; /* שגיאה */
@@ -78,6 +79,19 @@ int second_pass(char *file_name) {
                 fprintf(f, "\n");
             }
         }
+    }
+    if(extern_lines != NULL) 
+    {
+        char *extern_file = create_extension(file_name, ".ext");
+        FILE *f = fopen(extern_file, "w+");
+        extern_line *current = extern_lines;
+        while (current != NULL) {
+            fprintf(f, "%s\t", current->label);
+            line_print(f, current->line);
+            fprintf(f, "\n");
+            current = current->next;
+        }
+        fclose(f);
     }
 
     fclose(f);

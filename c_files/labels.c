@@ -129,14 +129,25 @@ int entry_count(Symbol *symbols, int count) {
     return entry_count;
 }
 
-
+void add100(Symbol *symbols, int count_labels)
+{
+    int i;
+    /* Add 100 to the address of each symbol */
+    for (i = 0; i < count_labels; i++) {
+        symbols[i].address += 100;
+    }
+ }
+ 
 
 
 void free_symbols(Symbol *symbols,int count_labels) {
 
     int i;
-    for(i = 0; i < count_labels; i++) {
-        free(symbols); /* Free the label string */
+    for (i = 0; i < count_labels; i++) {
+        free(symbols[i].label); /* Free the label string */
     }
+    
+
 }
+
 

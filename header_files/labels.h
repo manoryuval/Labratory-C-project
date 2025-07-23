@@ -71,6 +71,8 @@ int update_symbol_type(Symbol *symbols, int count,char *label,  Type type);
 
 int entry_count(Symbol *symbols, int count);
 
+void add100(Symbol *symbols, int count_labels);
+
 
 
 /* Free the symbol table.

@@ -351,8 +351,10 @@ void remove_node(missing_line **head_ref, missing_line *current) {
 }
 
 
-int update_missing_lines(missing_line *head, Symbol *symbols, int count){
+int update_missing_lines(missing_line *head,extern_line **extern_lines , Symbol *symbols, int count)
+{
     missing_line *current = head;
+    
     int i, updated = 0;
     while (current != NULL) {
         if (is_label_exists(symbols, count, current->label)) {
@@ -360,7 +362,8 @@ int update_missing_lines(missing_line *head, Symbol *symbols, int count){
             for (i = 0; i < count; i++) {
                 if (strcmp(symbols[i].label, current->label) == 0) {
                     if( symbols[i].type == LABEL_EXTERN) {
-                        extern_to_code(current->line); 
+                        extern_to_code(current->line);
+                        add_extern_line(current->line, current->label, extern_lines); /* Add to extern lines */
                     } else {
                     line_to_code(symbols[i].address, current->line,'I'); /* Update the address in IC */
                     }
@@ -378,4 +381,32 @@ int update_missing_lines(missing_line *head, Symbol *symbols, int count){
         printf("No missing lines were updated.\n");/*שגיאה*/
     }
     return updated; /* Return the number of updated labels */
+}
+
+void add_extern_line(int line, char *label, extern_line **head)
+{
+    if (*head == NULL)
+    {
+        *head = malloc(sizeof(extern_line));
+        (*head)->line = line;
+        (*head)->label = malloc(strlen(label) + 1);
+        strcpy((*head)->label, label);
+        (*head)->next = NULL;
+        (*head)->prev = NULL; /* Initialize prev pointer to NULL */
+    }
+    else
+    {
+        extern_line *current = *head;
+        while (current->next != NULL) 
+        {
+            current = current->next;
+        }
+        current->next = malloc(sizeof(extern_line));
+        current->next->line = line;
+        current->next->label = malloc(strlen(label) + 1);
+        current->next->prev = current; 
+        strcpy(current->next->label, label);
+        current->next->next = NULL;
+    }
+    
 }
