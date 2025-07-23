@@ -5,6 +5,8 @@
 
 #define MAX_INPUT 256 /* !#$%^  צריך לוודא%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
 #define WORD_SIZE 5
+#define WORD_LINE_SIZE 4
+
 
 extern char IC[MAX_INPUT][WORD_SIZE]; /* Instruction Code */
 extern char DC[MAX_INPUT][WORD_SIZE]; /* Data Code */

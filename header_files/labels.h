@@ -51,6 +51,8 @@ Check if a line starts with a label.
  */
 int is_label_start(char *line);
 
+void copy_label(char *dest, const char *src);
+
 /* Check if a label is valid.
 @param label The label to check
 @return 1 if the label is valid, 0 otherwise
@@ -64,6 +66,8 @@ int valid_label(char *label);
 void print_symbols(Symbol *symbols, int count);
 
 int update_symbol_address(Symbol *symbols, int count, int ICF);
+
+int update_symbol_type(Symbol *symbols, int count,char *label,  Type type);
 
 /* Free the symbol table.
 @param symbols Pointer to the symbol table

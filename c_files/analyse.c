@@ -175,6 +175,23 @@ int is_matrix_operand( char *str) {
     return 1;
 }
 
+char *get_matrix_name(char *str) {
+    int matched;
+    char name[31];
+    char *result;
+    matched = sscanf(str, "%30[^[]", name);
+
+    if (matched != 1) {
+        return NULL;
+    }
+
+    /* הקצאת זיכרון חדש והחזרת עותק */
+    result = malloc(strlen(name) + 1);
+    if (!result) return NULL;
+    strcpy(result, name);
+    return result;
+}
+
 char *get_reg1_matrix_operand( char *str) {
     int matched;
     char reg1[4];
@@ -278,6 +295,7 @@ void add_missing_line(int line, char *label, missing_line **head)
         (*head)->label = malloc(strlen(label) + 1);
         strcpy((*head)->label, label);
         (*head)->next = NULL;
+        (*head)->prev = NULL; /* Initialize prev pointer to NULL */
     }
     else
     {
@@ -289,6 +307,7 @@ void add_missing_line(int line, char *label, missing_line **head)
         current->next = malloc(sizeof(missing_line));
         current->next->line = line;
         current->next->label = malloc(strlen(label) + 1);
+        current->next->prev = current; 
         strcpy(current->next->label, label);
         current->next->next = NULL;
     }
@@ -308,3 +327,52 @@ void print_missing_lines(missing_line *head)
     }
 }
 
+void remove_node(missing_line **head_ref, missing_line *current) {
+    if (current == NULL) return;
+
+    if (current->prev == NULL && current->next == NULL) {
+        /* צומת בודד ברשימה */
+        *head_ref = NULL;
+    } else if (current->prev == NULL) {
+        /* הסרה מראש הרשימה */
+        *head_ref = current->next;
+        (*head_ref)->prev = NULL;
+    } else if (current->next == NULL) {
+        /* הסרה מהסוף */
+        current->prev->next = NULL;
+    } else {
+        /* הסרה באמצע */
+        current->next->prev = current->prev;
+        current->prev->next = current->next;
+    }
+
+    free(current->label);
+    free(current);
+}
+
+
+int update_missing_lines(missing_line *head, Symbol *symbols, int count){
+    missing_line *current = head;
+    int i, updated = 0;
+    while (current != NULL) {
+        if (is_label_exists(symbols, count, current->label)) {
+            /* If the label exists, update the address */
+            for (i = 0; i < count; i++) {
+                if (strcmp(symbols[i].label, current->label) == 0) {
+                    printf("Updating line %d with label %s to address %d\n", current->line, current->label, symbols[i].address);
+                    line_to_code(symbols[i].address, current->line,'I'); /* Update the address in IC */
+                    updated++;
+                    break;
+                }
+            }
+        }
+        current = current->next;
+    }
+    if (updated > 0) {
+        
+        remove_node(&head, current); 
+    } else {
+        printf("No missing lines were updated.\n");/*שגיאה*/
+    }
+    return updated; /* Return the number of updated labels */
+}

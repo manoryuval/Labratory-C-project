@@ -8,6 +8,7 @@
 #include "../header_files/first_pass.h"
 #include "../header_files/analyse.h"
 #include "../header_files/coding.h"
+#include "../header_files/second_pass.h"
 /*int printword(char *token){
     switch (scan_word(token)) {
         case DATA:    return printf("DATA\n");
@@ -46,12 +47,14 @@ int main(int argc, char *argv[]) {
         print_mcro_list(mcro_head);
         printf("Running first pass on %s--------------------\n", argv[i]);*/
         first_pass(as_name);
-        /*print_symbols(symbols, count_labels);*/
+        print_symbols(symbols, count_labels);
 
         printf("_____ print ICF__________\n");
         printf("ICF: %d\n", ICF);
+        second_pass(as_name);
         print_ICF(ICF+DCF);
         fprint_ICF(argv[i], ICF+DCF);
+
 
         /*printf("_____ print DCF__________\n");
         print_DCF(20);*/

@@ -10,6 +10,7 @@
 #include "../header_files/coding.h"
 
 Symbol *symbols = NULL;
+missing_line *missing_lines = NULL; /* linked list of missing lines */
 int ICF = 0;
 int DCF = 0;
 int count_labels = 0;
@@ -24,7 +25,6 @@ int first_pass (char *file_name) {
     int count_arg = 0; /* מספר הארגומנטים */
     int i, num, mat_arg; /* האם ארגומנט מטריצה */
     int two_reg_arg = 0; /*דגל*/
-    missing_line *missing_lines = NULL; /* linked list of missing lines */
 
 
     /*open file*/
@@ -35,6 +35,8 @@ int first_pass (char *file_name) {
         printf("File error");/*שגיאת קובץ להוסיף שגיאה*/
         return 1;
     }
+
+    /*read file line by line*/
     while (fgets(line, sizeof(line), f)) {
         is_label = 0; /*reset label flag for each line*/
         line_count++;
@@ -53,14 +55,13 @@ int first_pass (char *file_name) {
         if (is_label_start(token1)) {
             /* printf("label\t"); */
             /* האם הלייבל חוקי - פירוט בהערות */
-            strncpy(label,token1, MAX_LABEL_LENGTH);
-            is_label = 1; /*אחרי בדיקת ולידציה*/
+            copy_label(label, token1); /*copy label to label variable*/
             if (valid_label(label) !=1) {
                 /* לעשדות שגיאה*/
-                printf("3");
                 continue; /*continue to next line*/
 
             }
+            is_label = 1; /*אחרי בדיקת ולידציה*/
             /*remove label from line*/
             token1 =  strtok(NULL, " \t"); 
         }
@@ -168,10 +169,11 @@ int first_pass (char *file_name) {
             {/*שורת הוראה - אם יש סמל */ 
                 /* printf("CODE\t"); */
                 if (is_label) {
+                    printf("Found label %s in code line\n", label);
                     /* printf("CODE with label\t"); */
                     if(!is_label_exists(symbols, count_labels, label)) {
                         /* printf("Adding label %s to symbols table with IC \n", label); */
-                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_CODE, ic);
+                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_CODE,100+ ic);
                     }else {
                         /*שגיאה - הלייבל כבר קיים*/
                         /* printf("Error: Label %s already exists.\n", label); */
@@ -231,7 +233,10 @@ int first_pass (char *file_name) {
                         /* printf("ARG_MAT\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'C'; /*matrix*/
                         else type2 = 'C'; 
-                        if(get_reg1_matrix_operand(arg) && get_reg2_matrix_operand(arg)) {
+                        printf("Matrix operand detected: %s\n", arg);
+                        printf("matrix name %s \n", get_matrix_name(arg));
+                        add_missing_line(ic + L, get_matrix_name(arg), &missing_lines); /*add missing line*/
+                        if (get_reg1_matrix_operand(arg) && get_reg2_matrix_operand(arg)) {
 
                             two_reg_code( get_reg1_matrix_operand(arg), get_reg2_matrix_operand(arg), ic + L + 1, 'I'); /*convert matrix to code*/
                             } else {
@@ -267,8 +272,9 @@ int first_pass (char *file_name) {
     /* printf("ICF: %d, DCF: %d\n", ICF, DCF); */
     update_symbol_address(symbols, count_labels, ICF);
     dcf_to_icf(ICF,DCF);
+    
     /*plus 100*/
-    /*print_missing_lines(missing_lines);*/
+    print_missing_lines(missing_lines);
     fclose(input);
     fclose(f);
     return 1;

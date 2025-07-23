@@ -41,11 +41,11 @@ typedef struct missing_line
     int line; /* The line number where the missing label is found */
     char *label; /* The label that is missing */
     struct missing_line *next; /* Pointer to the next missing line */
+    struct missing_line *prev; /* Pointer to the previous missing line */
 } missing_line;
 
 extern regs_code REGS[];
-
-
+extern missing_line *missing_lines; 
 
 /*
  Scans a token and determines its type.
@@ -81,6 +81,8 @@ check if string is in matrix operand format.
 */
 int is_matrix_operand( char *str);
 
+char *get_matrix_name( char *str);
+
 char *get_reg1_matrix_operand( char *str);
 
 char *get_reg2_matrix_operand( char *str);
@@ -106,5 +108,10 @@ int is_number(char *token);
 void add_missing_line(int line, char *label, missing_line **head);
 
 void print_missing_lines(missing_line *head);
+
+void remove_node(missing_line **head_ref, missing_line *current);
+
+
+int update_missing_lines(missing_line *head, Symbol *symbols, int count);
 
 #endif 

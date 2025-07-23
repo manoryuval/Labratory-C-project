@@ -57,6 +57,15 @@ int is_label_start(char *line)
     return 0;
 }
 
+void copy_label(char *dest, const char *src) {
+    char *ptr = src;
+    while (ptr != NULL && *ptr != COLON && *ptr != '\0') {
+        *dest++ = *ptr++;
+    }
+    *dest = '\0'; /* Null-terminate the destination string */
+   
+}
+
 int valid_label(char *label) {
     /*valid label length check*/
     if (strlen(label) > MAX_LABEL_LENGTH) {
@@ -92,6 +101,19 @@ int update_symbol_address(Symbol *symbols, int count, int ICF) {
         }
     }
     return 1; 
+}
+
+int update_symbol_type(Symbol *symbols, int count,char *label,  Type type) {
+    int i;
+    /* Find the symbol in the table and update its type */
+    for (i = 0; i < count; i++) 
+    {
+        if (strcmp(symbols[i].label, label) == 0) {
+            symbols[i].type = type;
+            return 1; /* Success */
+        }
+    }
+    return 0; 
 }
 
 void free_symbols(Symbol *symbols) {

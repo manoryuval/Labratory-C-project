@@ -236,7 +236,9 @@ void line_to_code(int num, int line, char type)
    switch (type)
    {
     case 'I': /* Instruction */
-      strcpy(IC[line], code); /* נעתיק את הקוד למערך ה-IC */
+      for( i = 0; i < WORD_SIZE; i++) {
+                   IC[line][i] = code[i]; /* Copy the code to the IC array */
+               }
       break;
     case 'D': /* Data */
        strcpy(DC[line], code); /* נעתיק את הקוד למערך ה-DC */
@@ -246,6 +248,7 @@ void line_to_code(int num, int line, char type)
 }
 void line_print(FILE *ob, int num) /* הפונקציה צריכה להדפיס לתוך הקובץ הוצאה &&&&&&&   */
 {
+   char line[WORD_LINE_SIZE];
    int i;
    if (!ob) {
       printf("Error opening file \n");/*שגיאה*/
@@ -256,20 +259,24 @@ void line_print(FILE *ob, int num) /* הפונקציה צריכה להדפיס �
       switch (num%4) 
       {
          case 0:
-            fprintf(ob, "A");
+            line[i] = 'A';
             break;
          case 1:
-            fprintf(ob, "B");
+            line[i] = 'B';
             break;
          case 2:
-            fprintf(ob, "C");
+            line[i] = 'C';
             break;
          case 3:
-            fprintf(ob, "D");
+            line[i] = 'D';
             break;
       }
       num /= 4;
    }
+   for (i = 0; i < WORD_LINE_SIZE; i++)
+      {
+            fprintf(ob, "%c", line[i]);
+      }
    fprintf(ob, "\t");
 } 
 void extern_to_code(int line)
@@ -326,7 +333,7 @@ void fprint_ICF(char *file_name, int icf)
    int j = 0;
    for (i = 0; i < icf; i++)
    {
-            line_print(f, i);
+            line_print(f,100+ i);
       
       for (j = 0; j < WORD_SIZE; j++)
       {
