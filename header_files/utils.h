@@ -14,3 +14,5 @@ void trim(char *line);
 int alpha_count(char *token);
 
 void remove_spaces(char *str);
+
+char lowercase(char c);

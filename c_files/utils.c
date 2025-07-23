@@ -1,10 +1,13 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
 #include <ctype.h>
-#include "../header_files/preproc.h"
-#include "../header_files/utils.h"
 #include "../header_files/assembler.h"
+#include "../header_files/utils.h"
+#include "../header_files/preproc.h"
+#include "../header_files/labels.h"
+#include "../header_files/first_pass.h"
+#include "../header_files/analyse.h"
 #include "../header_files/coding.h"
 
 char *create_extension(char *filename, char *extension) {
@@ -110,4 +113,20 @@ void remove_spaces(char *str) {
         src++;
     }
     *dst = '\0'; /* Null-terminate the string */
+}
+
+char lowercase(char c) 
+{
+    switch (c)
+    {
+    case 'A':
+        return 'a';
+    case 'B':
+        return 'b';
+    case 'C':
+        return 'c';
+    case 'D':
+        return 'd';
+    }
+    return 'E';
 }

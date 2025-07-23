@@ -12,35 +12,35 @@
 
 /* array of opcodes */
 op_code OPCODES[] = {
-        {"mov",  2, "AA"},
-        {"cmp",  2, "AB"},
-        {"add",  2, "AC"},
-        {"sub",  2, "AD"},
-        {"lea",  2, "BA"},
-        {"clr",  1, "BB"},
-        {"not",  1, "BC"},
-        {"inc",  1, "BD"},
-        {"dec",  1, "CA"},
-        {"jmp",  1, "CB"},
-        {"bne",  1, "CC"},
-        {"jsr",  1, "CD"},
-        {"red",  1, "DA"},
-        {"prn",  1, "DB"},
-        {"rts",  0, "DC"},
-        {"stop", 0, "DD"},
+        {"mov",  2, "aa"},
+        {"cmp",  2, "ab"},
+        {"add",  2, "ac"},
+        {"sub",  2, "ad"},
+        {"lea",  2, "ba"},
+        {"clr",  1, "bb"},
+        {"not",  1, "bc"},
+        {"inc",  1, "bd"},
+        {"dec",  1, "ca"},
+        {"jmp",  1, "cb"},
+        {"bne",  1, "cc"},
+        {"jsr",  1, "cd"},
+        {"red",  1, "da"},
+        {"prn",  1, "db"},
+        {"rts",  0, "dc"},
+        {"stop", 0, "dd"},
 };
 
 /* array of registers */
 regs_code REGS[] =
 {
-    {"r0", "AA"},
-    {"r1", "AB"},
-    {"r2", "AC"},
-    {"r3", "AD"},
-    {"r4", "BA"},
-    {"r5", "BB"},
-    {"r6", "BC"},
-    {"r7", "BD"}
+    {"r0", "aa"},
+    {"r1", "ab"},
+    {"r2", "ac"},
+    {"r3", "ad"},
+    {"r4", "ba"},
+    {"r5", "bb"},
+    {"r6", "bc"},
+    {"r7", "bd"}
 };
 
 WordType scan_word(char *token) {

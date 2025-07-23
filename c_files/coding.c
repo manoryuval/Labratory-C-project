@@ -31,16 +31,16 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
       switch (num%4) 
       {
          case 0:
-            code[i] = 'A';
+            code[i] = 'a';
             break;
          case 1:
-            code[i] = 'B';
+            code[i] = 'b';
             break;
          case 2:
-            code[i] = 'C';
+            code[i] = 'c';
             break;
          case 3:
-            code[i] = 'D';
+            code[i] = 'd';
             break;
       }
       num /= 4;
@@ -52,10 +52,10 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
       {
          switch (code[i])
          {
-            case 'A': code[i] = 'D'; break;
-            case 'B': code[i] = 'C'; break;
-            case 'C': code[i] = 'B'; break;
-            case 'D': code[i] = 'A'; break;
+            case 'a': code[i] = 'd'; break;
+            case 'b': code[i] = 'c'; break;
+            case 'c': code[i] = 'b'; break;
+            case 'd': code[i] = 'a'; break;
          }
       }
    }
@@ -65,10 +65,10 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
    {
       switch (code[i])
       {
-         case 'A': code[i] = 'B'; flag = 0; break;
-         case 'B': code[i] = 'C'; flag = 0; break;
-         case 'C': code[i] = 'D'; flag = 0; break;
-         case 'D': code[i] = 'A'; i--; break;
+         case 'a': code[i] = 'b'; flag = 0; break;
+         case 'b': code[i] = 'c'; flag = 0; break;
+         case 'c': code[i] = 'd'; flag = 0; break;
+         case 'd': code[i] = 'a'; i--; break;
       }
    }
    switch (type)
@@ -101,16 +101,16 @@ void num_to_code8(int num, int line, char type)
       switch (num%4) 
       {
          case 0:
-            code[i] = 'A';
+            code[i] = 'a';
             break;
          case 1:
-            code[i] = 'B';
+            code[i] = 'b';
             break;
          case 2:
-            code[i] = 'C';
+            code[i] = 'c';
             break;
          case 3:
-            code[i] = 'D';
+            code[i] = 'd';
             break;
       }
       num /= 4;
@@ -122,10 +122,10 @@ void num_to_code8(int num, int line, char type)
       {
          switch (code[i])
          {
-            case 'A': code[i] = 'D'; break;
-            case 'B': code[i] = 'C'; break;
-            case 'C': code[i] = 'B'; break;
-            case 'D': code[i] = 'A'; break;
+            case 'a': code[i] = 'd'; break;
+            case 'b': code[i] = 'c'; break;
+            case 'c': code[i] = 'b'; break;
+            case 'd': code[i] = 'a'; break;
          }
       }
    }
@@ -135,13 +135,13 @@ void num_to_code8(int num, int line, char type)
    {
       switch (code[i])
       {
-         case 'A': code[i] = 'B'; flag = 0; break;
-         case 'B': code[i] = 'C'; flag = 0; break;
-         case 'C': code[i] = 'D'; flag = 0; break;
-         case 'D': code[i] = 'A'; i--; break;
+         case 'a': code[i] = 'b'; flag = 0; break;
+         case 'b': code[i] = 'c'; flag = 0; break;
+         case 'c': code[i] = 'd'; flag = 0; break;
+         case 'd': code[i] = 'a'; i--; break;
       }
    }
-   code[4] = 'A';
+   code[4] = 'a';
    switch (type)
    {
     case 'I': /* Instruction */
@@ -160,7 +160,7 @@ void two_reg_code (char *reg1, char *reg2, int line, char type)
     strcpy(code, get_register_code(reg1));
     strcat(code, get_register_code(reg2));
 
-    strcat(code, "A");/* A - ARE*/
+    strcat(code, "a");/* a - ARE*/
 \
     switch (type)
     {
@@ -191,10 +191,10 @@ void op_to_code(char* op, char type1, char type2, int line, char type)
       strcpy(code, get_opcode_code(op));
 
       /* נוסיף את סוגי מיון האופרנדים */
-      code[2] = type1;
-      code[3] = type2;
+      code[2] = lowercase(type1);
+      code[3] = lowercase(type2);
       /* נוסיף את ה-ARE */
-      code[4] = 'A';
+      code[4] = 'a';
       switch (type)
       {
          case 'I': /* Instruction */
@@ -217,21 +217,21 @@ void line_to_code(int num, int line, char type)
       switch (num%4) 
       {
          case 0:
-            code[i] = 'A';
+            code[i] = 'a';
             break;
          case 1:
-            code[i] = 'B';
+            code[i] = 'b';
             break;
          case 2:
-            code[i] = 'C';
+            code[i] = 'c';
             break;
          case 3:
-            code[i] = 'D';
+            code[i] = 'd';
             break;
       }
       num /= 4;
    }
-   code[4] = 'C'; /*ARE - always 10 (E) */
+   code[4] = 'c'; /*ARE - always 10 (E) */
 
    switch (type)
    {
@@ -259,16 +259,16 @@ void line_print(FILE *ob, int num) /* הפונקציה צריכה להדפיס �
       switch (num%4) 
       {
          case 0:
-            line[i] = 'A';
+            line[i] = 'a';
             break;
          case 1:
-            line[i] = 'B';
+            line[i] = 'b';
             break;
          case 2:
-            line[i] = 'C';
+            line[i] = 'c';
             break;
          case 3:
-            line[i] = 'D';
+            line[i] = 'd';
             break;
       }
       num /= 4;
@@ -281,7 +281,7 @@ void line_print(FILE *ob, int num) /* הפונקציה צריכה להדפיס �
 } 
 void extern_to_code(int line)
 {
-   char code[WORD_SIZE]= "AAAAB"; 
+   char code[WORD_SIZE]= "aaaab"; 
    int i;
    for( i = 0; i < WORD_SIZE; i++) {
             IC[line][i] = code[i]; /* Copy the code to the IC array */
