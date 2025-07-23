@@ -173,10 +173,13 @@ void line_to_code(int num, int line, char type)
    default: break;
    }
 }
-void line_print(int num) /* הפונקצייה צריכה להדפיס לתוך הקובץ הוצאה &&&&&&&   */
+void line_print(FILE *ob, int num) /* הפונקציה צריכה להדפיס לתוך הקובץ הוצאה &&&&&&&   */
 {
-   /*int i;
-   
+   int i;
+   if (!ob) {
+      printf("Error opening file \n");/*שגיאה*/
+      return;
+   }
    for (i = 3; i >= 0; i--)
    {
       switch (num%4) 
@@ -196,7 +199,7 @@ void line_print(int num) /* הפונקצייה צריכה להדפיס לתוך 
       }
       num /= 4;
    }
-   printf("\t"); */
+   fprintf(ob, "\t");
 } 
 void extern_to_code(int line)
 {
@@ -242,4 +245,23 @@ void dcf_to_icf(int icf,int dcf)
    {
       strcpy(IC[icf + i], DC[i]); /* נעתיק את ה-DC ל-IC */
    }
+}
+
+void fprint_ICF(char *file_name, int icf)
+{
+   char *ob_file = create_extension(file_name,".ob");
+   FILE *f = fopen(ob_file, "w+");
+   int i = 0;
+   int j = 0;
+   for (i = 0; i < icf; i++)
+   {
+            line_print(f, i);
+      
+      for (j = 0; j < WORD_SIZE; j++)
+      {
+            fprintf(f, "%c", IC[i][j]);
+      }
+      fprintf(f, "\n");
+   }
+   fclose(f);
 }

@@ -45,6 +45,7 @@ int main(int argc, char *argv[]) {
 
         printf("_____ print ICF__________\n");
         print_ICF(36);
+        fprint_ICF(argv[i], 36);
         /*printf("_____ print DCF__________\n");
         print_DCF(20);*/
         fclose(file);

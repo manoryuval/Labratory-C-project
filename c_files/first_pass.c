@@ -31,7 +31,7 @@ int first_pass (char *file_name) {
     char *am_file = create_extension(file_name,".am");
     FILE *f = fopen(am_file, "r");
     FILE *input = fopen(file_name,"r");
-    if (!input || !f) {
+    if (!input || !f ) {
         printf("File error");/*שגיאת קובץ להוסיף שגיאה*/
         return 1;
     }
@@ -207,8 +207,7 @@ int first_pass (char *file_name) {
                         else type2 = 'D'; 
                         /*לקודד רישומים ic + i*/
                         if (two_reg_arg == 1){
-                            two_reg_code(reg1, arg, ic + L, 'I'); /*convert register to code*/
-                            L += 1;
+                            two_reg_code(reg1, arg, ic + L-1, 'I'); /*convert register to code*/
                             continue;
                         }
                         reg1=arg;

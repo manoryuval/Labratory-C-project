@@ -15,7 +15,8 @@ void char_to_code(char c, int line, char type); /* convert a char into code */
 void line_to_code(int num, int line, char type); /* convert a line number into code */
 void op_to_code(char *op, char type1, char type2, int line, char type); /* convert an operator into code */
 void extern_to_code(int line); /* convert an extern label into code */
-void line_print(int num); /* print a line number into the output file */
+void line_print(FILE *ob, int num); /* print a line number into the output file */
 void print_DCF(char *file_name, int dcf); /* לבדיקה בלבד!*/
 void print_ICF( int icf);
 void dcf_to_icf(int icf,int dcf);
+void fprint_ICF(char *file_name, int icf);
