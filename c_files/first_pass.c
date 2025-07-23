@@ -197,7 +197,7 @@ int first_pass (char *file_name) {
                         /* printf("ARG_NUM\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'A'; /*immediate*/
                         else type2 = 'A'; 
-                        num_to_code(num_to_int(arg), ic + L, 'I'); /*convert number to code*/
+                        num_to_code8(num_to_int(arg), ic + L, 'I'); /*convert number to code*/
                         /*לקודד מספרים  בic+i*/
                         L += 1;
                         break;

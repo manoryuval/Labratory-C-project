@@ -10,6 +10,7 @@ extern char IC[MAX_INPUT][WORD_SIZE]; /* Instruction Code */
 extern char DC[MAX_INPUT][WORD_SIZE]; /* Data Code */
 
 void num_to_code(int num, int line, char type); /* convert a number into code*/
+void num_to_code8(int num, int line, char type);
 void two_reg_code (char *reg1, char *reg2, int line, char type); /* convert two/one registers into code */
 void char_to_code(char c, int line, char type); /* convert a char into code */
 void line_to_code(int num, int line, char type); /* convert a line number into code */
