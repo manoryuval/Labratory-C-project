@@ -38,15 +38,17 @@ int second_pass(char *file_name) {
                 break;
             case ENTRY:
                 token2 = strtok(NULL, " \t");
+
                 if (!token2 || !valid_label(token2)) {
                     printf("Error: Invalid entry label %s\n", token2);/*שגיאה*/
                     continue; /*continue to next line*/
                 }
-                if (!is_label_exists(symbols, count_labels, token2)) {
+                if (is_label_exists(symbols, count_labels, token2)) {
                     printf("Error: Entry label %s does not exist in the symbol table\n", token2);/*שגיאה*/
                     continue; /*continue to next line*/
                 }
                 /* Update the symbol table entry for the entry label */
+                token2[strcspn(token2, "\r\n")] = '\0';
                 update_symbol_type(symbols, count_labels, token2, LABEL_ENTRY);
                 break;
             case CODE:

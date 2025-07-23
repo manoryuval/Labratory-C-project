@@ -105,7 +105,7 @@ WordType scan_word(char *token) {
     }
     /* Check for label */
     for(i = 0; i < token_length; i++) {
-        if(!isalpha(token[i])) {
+        if(!isalpha(token[i]) && !isdigit(token[i])) {
             return UNKNOWN;
         }
     } return LABEL;
@@ -359,8 +359,11 @@ int update_missing_lines(missing_line *head, Symbol *symbols, int count){
             /* If the label exists, update the address */
             for (i = 0; i < count; i++) {
                 if (strcmp(symbols[i].label, current->label) == 0) {
-                    printf("Updating line %d with label %s to address %d\n", current->line, current->label, symbols[i].address);
+                    if( symbols[i].type == LABEL_EXTERN) {
+                        extern_to_code(current->line); 
+                    } else {
                     line_to_code(symbols[i].address, current->line,'I'); /* Update the address in IC */
+                    }
                     updated++;
                     break;
                 }

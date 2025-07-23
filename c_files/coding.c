@@ -281,7 +281,12 @@ void line_print(FILE *ob, int num) /* הפונקציה צריכה להדפיס �
 } 
 void extern_to_code(int line)
 {
-   strcpy(IC[line], "AAAAB"); 
+   char code[WORD_SIZE]= "AAAAB"; 
+   int i;
+   for( i = 0; i < WORD_SIZE; i++) {
+            IC[line][i] = code[i]; /* Copy the code to the IC array */
+      }
+
 }
 void print_DCF(char *file_name, int dcf)
 {

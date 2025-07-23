@@ -51,7 +51,7 @@ Check if a line starts with a label.
  */
 int is_label_start(char *line);
 
-void copy_label(char *dest, const char *src);
+void copy_label(char *dest, char *src);
 
 /* Check if a label is valid.
 @param label The label to check

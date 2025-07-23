@@ -79,7 +79,7 @@ int first_pass (char *file_name) {
                     /* printf("DATA with label\n"); */
                     if(!is_label_exists(symbols, count_labels, label)) {
                         /* printf("Adding label %s to symbols table with DC %d \n", label, dc); */
-                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_DATA, dc);
+                        add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_DATA,100+ dc);
                     }else {
                         /*שגיאה - הלייבל כבר קיים*/
                         /* printf("Error: Label %s already exists.\n", label); */

@@ -47,13 +47,13 @@ int main(int argc, char *argv[]) {
         print_mcro_list(mcro_head);
         printf("Running first pass on %s--------------------\n", argv[i]);*/
         first_pass(as_name);
-        print_symbols(symbols, count_labels);
 
         printf("_____ print ICF__________\n");
-        printf("ICF: %d\n", ICF);
+        printf("ICF: %d ,DCF: %d\n", ICF, DCF);
         second_pass(as_name);
-        print_ICF(ICF+DCF);
+        /*print_ICF(ICF+DCF);*/
         fprint_ICF(argv[i], ICF+DCF);
+        print_symbols(symbols, count_labels);
 
 
         /*printf("_____ print DCF__________\n");

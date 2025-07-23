@@ -57,7 +57,7 @@ int is_label_start(char *line)
     return 0;
 }
 
-void copy_label(char *dest, const char *src) {
+void copy_label(char *dest, char *src) {
     char *ptr = src;
     while (ptr != NULL && *ptr != COLON && *ptr != '\0') {
         *dest++ = *ptr++;
