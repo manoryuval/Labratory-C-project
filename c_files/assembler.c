@@ -50,7 +50,7 @@ int main(int argc, char *argv[]) {
 
         printf("_____ print ICF__________\n");
         printf("ICF: %d\n", ICF);
-        /*print_ICF(ICF+DCF);*/
+        print_ICF(ICF+DCF);
         fprint_ICF(argv[i], ICF+DCF);
 
         /*printf("_____ print DCF__________\n");

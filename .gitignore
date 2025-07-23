@@ -12,3 +12,7 @@ utils.o
 analyse.o
 first_pass.o
 
+*.ob
+*.ent
+*.ext
+*.am
