@@ -10,12 +10,12 @@
 #include "../header_files/coding.h"
 
 Symbol *symbols = NULL;
-
+int ICF = 0;
+int DCF = 0;
 int count_labels = 0;
 int first_pass (char *file_name) {
-    int ic = 0,dc = 0, is_label = 0,line_count = 0,ICF,DCF;
+    int ic = 0,dc = 0, is_label = 0,line_count = 0;
     char line[MAX_LINE];
-    char copy_line[MAX_LINE];
     char trimmed_line[MAX_LINE];
     char label[MAX_LABEL_LENGTH];
     char *token1, *token2, *token3, *arg, *reg1, *opcode_name, type1, type2;

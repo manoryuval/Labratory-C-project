@@ -30,22 +30,29 @@ int main(int argc, char *argv[]) {
     int i;
     
     for(i = 1; i < argc; i++) {
-        FILE *file = fopen(argv[i], "r");
+        char *as_name=NULL;
+        FILE *file = NULL;
+        printf("file name: %s\n", argv[i]);
+        as_name = create_extension(argv[i], ".as");
+        printf("Processing file: %s\n", as_name);
+        file = fopen(as_name, "r");
         if (!file) {
-            fprintf(stderr, "Error: Could not open file %s\n", argv[i]);
+            fprintf(stderr, "Error: Could not open file %s\n", as_name);/*שגיאה*/
             continue;
         }
         /*printf("Processing file>>>>>: %s\n", argv[i]);*/
-        preproc(argv[i]);
+        preproc(as_name);
         /*printf("Macros>>>>>:\n");
         print_mcro_list(mcro_head);
         printf("Running first pass on %s--------------------\n", argv[i]);*/
-        first_pass(argv[i]);
+        first_pass(as_name);
         /*print_symbols(symbols, count_labels);*/
 
         printf("_____ print ICF__________\n");
-        print_ICF(36);
-        fprint_ICF(argv[i], 36);
+        printf("ICF: %d\n", ICF);
+        /*print_ICF(ICF+DCF);*/
+        fprint_ICF(argv[i], ICF+DCF);
+
         /*printf("_____ print DCF__________\n");
         print_DCF(20);*/
         fclose(file);

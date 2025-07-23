@@ -1,0 +1,17 @@
+
+
+
+
+START_PROGRAM:
+    PRINTDEBUG:
+    
+    ADD R1, R2
+    SUB R4, R1, #5
+    ; Another line inside the macro
+    LDR R0, [SP, #4]
+
+s
+
+    NOP
+
+    UNKNOWN_MACRO_CALL
