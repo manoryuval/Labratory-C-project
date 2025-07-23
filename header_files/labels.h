@@ -69,8 +69,12 @@ int update_symbol_address(Symbol *symbols, int count, int ICF);
 
 int update_symbol_type(Symbol *symbols, int count,char *label,  Type type);
 
+int entry_count(Symbol *symbols, int count);
+
+
+
 /* Free the symbol table.
 @param symbols Pointer to the symbol table
 */
-void free_symbols(Symbol *symbols);
+void free_symbols(Symbol *symbols, int count_labels);
 

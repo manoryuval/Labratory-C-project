@@ -15,6 +15,7 @@ int second_pass(char *file_name) {
     char line[MAX_LINE];
     char *token1, *token2;
     missing_line *current = missing_lines;
+    int i;
 
     char *am_file = create_extension(file_name,".am");
     FILE *f = fopen(am_file, "r");
@@ -65,6 +66,18 @@ int second_pass(char *file_name) {
             break; /* שגיאה */
         }
         current = current->next;
+    }
+
+    if(entry_count(symbols, count_labels)) {
+        char *entry_file = create_extension(file_name, ".ent");
+        FILE *f = fopen(entry_file, "w+");
+        for(i = 0; i < count_labels; i++) {
+            if (symbols[i].type == LABEL_ENTRY) {
+                fprintf(f, "%s\t", symbols[i].label);
+                line_print(f, symbols[i].address);
+                fprintf(f, "\n");
+            }
+        }
     }
 
     fclose(f);

@@ -87,9 +87,10 @@ void print_symbols(Symbol *symbols, int count) {
     printf("Symbols table:\n");
     for (i = 0; i < count; i++) {
         printf("Label: %s, Type: %d, Address: %d, mode: %d\n",
-               symbols[i].label, symbols[i].type, symbols[i].address, symbols[i].mode);
+            symbols[i].label, symbols[i].type, symbols[i].address, symbols[i].mode);
     }
 }
+
 
 int update_symbol_address(Symbol *symbols, int count, int ICF) {
     int i;
@@ -116,7 +117,26 @@ int update_symbol_type(Symbol *symbols, int count,char *label,  Type type) {
     return 0; 
 }
 
-void free_symbols(Symbol *symbols) {
-    free(symbols);
+int entry_count(Symbol *symbols, int count) {
+    int i;
+    int entry_count = 0;
+    /* Count the number of entryal symbols */
+    for (i = 0; i < count; i++) {
+        if (symbols[i].type == LABEL_ENTRY) {
+            entry_count++;
+        }
+    }
+    return entry_count;
+}
+
+
+
+
+void free_symbols(Symbol *symbols,int count_labels) {
+
+    int i;
+    for(i = 0; i < count_labels; i++) {
+        free(symbols); /* Free the label string */
+    }
 }
 
