@@ -381,32 +381,7 @@ int update_missing_lines(missing_line *head/*, extern_line **extern_lines*/ , Sy
     return updated; /* Return the number of updated labels */
 }
 
-void add_extern_line(int line, char *label, extern_line **head)
-{
-    if (*head == NULL)
-    {
-        *head = malloc(sizeof(extern_line));
-        (*head)->line = line;
-        (*head)->label = malloc(strlen(label) + 1);
-        strcpy((*head)->label, label);
-        (*head)->next = NULL;
-        (*head)->prev = NULL; /* Initialize prev pointer to NULL */
-    }
-    else
-    {
-        extern_line *current = *head;
-        while (current->next != NULL) 
-        {
-            current = current->next;
-        }
-        current->next = malloc(sizeof(extern_line));
-        current->next->line = line;
-        current->next->label = malloc(strlen(label) + 1);
-        current->next->prev = current; 
-        strcpy(current->next->label, label);
-        current->next->next = NULL;
-    } 
-}
+
 
 int is_valid_argument(char *cmd, int arg_num, WordType type) {
     
