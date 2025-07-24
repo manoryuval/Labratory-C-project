@@ -351,7 +351,7 @@ void remove_node(missing_line **head_ref, missing_line *current) {
 }
 
 
-int update_missing_lines(missing_line *head,extern_line **extern_lines , Symbol *symbols, int count)
+int update_missing_lines(missing_line *head/*, extern_line **extern_lines*/ , Symbol *symbols, int count)
 {
     missing_line *current = head;
     
@@ -363,7 +363,7 @@ int update_missing_lines(missing_line *head,extern_line **extern_lines , Symbol 
                 if (strcmp(symbols[i].label, current->label) == 0) {
                     if( symbols[i].type == LABEL_EXTERN) {
                         extern_to_code(current->line);
-                        add_extern_line(current->line, current->label, extern_lines); /* Add to extern lines */
+                        /*add_extern_line(current->line, current->label, extern_lines);  Add to extern lines */
                     } else {
                     line_to_code(symbols[i].address, current->line,'I'); /* Update the address in IC */
                     }

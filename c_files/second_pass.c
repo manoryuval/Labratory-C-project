@@ -15,7 +15,7 @@ int second_pass(char *file_name) {
     char line[MAX_LINE];
     char *token1, *token2;
     missing_line *current = missing_lines;
-    extern_line *extern_lines = NULL;
+    missing_line *current_extern = missing_lines;
     int i;
 
     char *am_file = create_extension(file_name,".am");
@@ -61,7 +61,7 @@ int second_pass(char *file_name) {
     }
     while (current != NULL)
     {
-        int updated = update_missing_lines(current, &extern_lines, symbols, count_labels);
+        int updated = update_missing_lines(current/*, &extern_lines*/, symbols, count_labels);
         if (updated == 0) {
             printf("No missing lines were updated.\n");
             break; /* שגיאה */
@@ -80,18 +80,23 @@ int second_pass(char *file_name) {
             }
         }
     }
-    if(extern_lines != NULL) 
+    if(extern_count(symbols, count_labels)) 
     {
         char *extern_file = create_extension(file_name, ".ext");
-        FILE *f = fopen(extern_file, "w+");
-        extern_line *current = extern_lines;
-        while (current != NULL) {
-            fprintf(f, "%s\t", current->label);
-            line_print(f, current->line);
-            fprintf(f, "\n");
-            current = current->next;
+        FILE *f1 = fopen(extern_file, "w+");
+        while (current_extern != NULL) {
+            for(i = 0; i < count_labels; i++) {
+                if ((strcmp(symbols[i].label, current_extern->label) == 0) && symbols[i].type == LABEL_EXTERN) {
+                    fprintf(f1, "%s\t", current_extern->label);
+                    line_print(f1, current_extern->line+100);
+                    fprintf(f1, "\n");
+                    break;
+                }
+            }
+            
+            current_extern = current_extern->next;
         }
-        fclose(f);
+        fclose(f1);
     }
 
     fclose(f);

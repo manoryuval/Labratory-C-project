@@ -129,6 +129,18 @@ int entry_count(Symbol *symbols, int count) {
     return entry_count;
 }
 
+int extern_count(Symbol *symbols, int count) {
+    int i;
+    int extern_count = 0;
+    /* Count the number of external symbols */
+    for (i = 0; i < count; i++) {
+        if (symbols[i].type == LABEL_EXTERN) {
+            extern_count++;
+        }
+    }
+    return extern_count;
+}
+
 void add100(Symbol *symbols, int count_labels)
 {
     int i;
