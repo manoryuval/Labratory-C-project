@@ -407,6 +407,36 @@ void add_extern_line(int line, char *label, extern_line **head)
         current->next->prev = current; 
         strcpy(current->next->label, label);
         current->next->next = NULL;
-    }
+    } 
+}
+
+int is_valid_argument(char *cmd, int arg_num, WordType type) {
     
+    switch(type) {
+        case ARG_NUM:
+            if (arg_num == 0 && (strcmp(cmd, "mov") == 0 || strcmp(cmd, "cmp") == 0 || strcmp(cmd, "add") == 0 || strcmp(cmd, "sub") == 0) || strcmp(cmd, "prn") == 0) {
+                return 1;
+            }
+            if (arg_num == 1 && (strcmp(cmd, "cmp") == 0 )) {
+                return 1;
+            }
+            break;
+        case ARG_REG:
+            if (arg_num == 0 && (strcmp(cmd, "lea") != 0 )) {
+                return 1;
+            }
+            if (arg_num == 1 && (strcmp(cmd, "cmp") == 0 )) {
+                return 1;
+            }
+            break;
+        case ARG_MAT:
+            return 1;            
+            break;
+        case LABEL:
+            return 1;
+            break;
+        default:
+            return 0; /* Invalid argument type */
+        }
+    return 0; /* Invalid argument type */
 }

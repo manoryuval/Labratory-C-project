@@ -123,4 +123,6 @@ void add_extern_line(int line, char *label, extern_line **head);
 
 int update_missing_lines(missing_line *head/*,extern_line **extern_lines*/ , Symbol *symbols, int count);
 
+int is_valid_argument(char *cmd, int arg_num, WordType type);
+
 #endif 
