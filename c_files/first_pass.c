@@ -197,7 +197,10 @@ int first_pass (char *file_name)
                     /* printf("Arg1: %s\t", arg); */
                     switch ((arg_type = scan_word(arg))) {
                     case ARG_NUM: 
-                        /* printf("ARG_NUM\t"); */
+                        if(!is_valid_argument(opcode_name, i, arg_type)){
+                            printf("Error in line[%d]: Invalid matrix operand %s\n", line_count, arg); /*שגיאה*/
+                            continue; /*continue to next line*/
+                        }                        /* printf("ARG_NUM\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'A'; /*immediate*/
                         else type2 = 'A'; 
                         num_to_code8(num_to_int(arg), ic + L, 'I'); /*convert number to code*/
@@ -205,7 +208,10 @@ int first_pass (char *file_name)
                         L += 1;
                         break;
                     case ARG_REG: 
-                        /* printf("ARG_REG\t"); */
+                        if(!is_valid_argument(opcode_name, i, arg_type)){
+                            printf("Error in line[%d]: Invalid register operand %s\n", line_count, arg); /*שגיאה*/
+                            continue; /*continue to next line*/
+                        }                        /* printf("ARG_REG\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'D'; /*register*/
                         else type2 = 'D'; 
                         /*לקודד רישומים ic + i*/
@@ -224,13 +230,20 @@ int first_pass (char *file_name)
                         L += 1;
                         break;
                     case LABEL: 
-                        /* printf("LABEL\t"); */
+                        if(!is_valid_argument(opcode_name, i, arg_type)){
+                            printf("Error in line[%d]: Invalid label operand %s\n", line_count, arg); /*שגיאה*/
+                            continue; /*continue to next line*/
+                        }                        /* printf("LABEL\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'B'; /*label*/
                         else type2 = 'B'; 
                         add_missing_line(ic + L, arg, &missing_lines); /*add missing line*/
                         L += 1;
                         break;
                     case ARG_MAT:
+                        if(!is_valid_argument(opcode_name, i, arg_type)){
+                            printf("Error in line[%d]: Invalid matrix operand %s\n", line_count, arg); /*שגיאה*/
+                            continue; /*continue to next line*/
+                        }
                         /* printf("ARG_MAT\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'C'; /*matrix*/
                         else type2 = 'C'; 

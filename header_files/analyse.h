@@ -121,4 +121,6 @@ void remove_node(missing_line **head_ref, missing_line *current);
 
 int update_missing_lines(missing_line *head/*,extern_line **extern_lines*/ , Symbol *symbols, int count);
 
+int is_valid_argument(char *cmd, int arg_num, WordType type);
+
 #endif 
