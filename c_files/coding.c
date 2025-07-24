@@ -246,8 +246,7 @@ void line_to_code(int num, int line, char type)
    default: break;
    }
 }
-void line_print(FILE *ob, int num) /* הפונקציה צריכה להדפיס לתוך הקובץ הוצאה &&&&&&&   */
-{
+void line_fprint(FILE *ob, int num) {
    char line[WORD_LINE_SIZE];
    int i;
    if (!ob) {
@@ -304,7 +303,6 @@ void print_DCF(char *file_name, int dcf)
       fprintf(f, "\n");
    }
 }
-
 void print_ICF( int icf)
 {
    /*char *ob_file = create_extension(file_name,".ob");
@@ -329,7 +327,6 @@ void dcf_to_icf(int icf,int dcf)
       strcpy(IC[icf + i], DC[i]); /* נעתיק את ה-DC ל-IC */
    }
 }
-
 void fprint_ICF(char *file_name, int icf)
 {
    char *ob_file = create_extension(file_name,".ob");
@@ -338,8 +335,8 @@ void fprint_ICF(char *file_name, int icf)
    int j = 0;
    for (i = 0; i < icf; i++)
    {
-            line_print(f,100+ i);
-      
+            line_fprint(f,FILE_LINE_VALUE + i);
+
       for (j = 0; j < WORD_SIZE; j++)
       {
             fprintf(f, "%c", IC[i][j]);

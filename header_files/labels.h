@@ -50,15 +50,17 @@ Check if a line starts with a label.
 @return 1 if the line starts with a label, 0 otherwise
  */
 int is_label_start(char *line);
-
+/*
+Copy a label from source to destination.
+@param dest The destination string
+@param src The source string
+*/
 void copy_label(char *dest, char *src);
-
 /* Check if a label is valid.
 @param label The label to check
 @return 1 if the label is valid, 0 otherwise
 */
 int valid_label(char *label);
-
 /* Print the symbol table. 
 @param symbols Pointer to the symbol table
 @param count Number of symbols in the table

@@ -75,7 +75,7 @@ int second_pass(char *file_name) {
         for(i = 0; i < count_labels; i++) {
             if (symbols[i].type == LABEL_ENTRY) {
                 fprintf(f, "%s\t", symbols[i].label);
-                line_print(f, symbols[i].address);
+                line_fprint(f, symbols[i].address);
                 fprintf(f, "\n");
             }
         }
@@ -88,7 +88,7 @@ int second_pass(char *file_name) {
             for(i = 0; i < count_labels; i++) {
                 if ((strcmp(symbols[i].label, current_extern->label) == 0) && symbols[i].type == LABEL_EXTERN) {
                     fprintf(f1, "%s\t", current_extern->label);
-                    line_print(f1, current_extern->line+100);
+                    line_fprint(f1, current_extern->line+100);
                     fprintf(f1, "\n");
                     break;
                 }

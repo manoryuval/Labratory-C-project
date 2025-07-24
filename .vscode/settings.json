@@ -5,6 +5,7 @@
         "utils.h": "c",
         "labels.h": "c",
         "first_pass.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "second_pass.h": "c"
     }
 }
