@@ -65,14 +65,48 @@ int valid_label(char *label);
 */
 void print_symbols(Symbol *symbols, int count);
 
+/*
+Find the data symbols in the table and update the address
+@param symbols Pointer to the symbol table
+@param count Number of symbols in the table
+@param ICF final row in ic array
+@return 1 when loop over
+*/
 int update_symbol_address(Symbol *symbols, int count, int ICF);
 
+/*
+Find the symbol in the table and update its type
+@param symbols Pointer to the symbol table
+@param count Number of symbols in the table
+@param label the name of label to update
+@param type the type to update to
+@return 1 if succssed (find label and update type), otherwise 0.
+*/
 int update_symbol_type(Symbol *symbols, int count,char *label,  Type type);
 
+
+/*
+count the label in entry type
+@param symbols Pointer to the symbol table
+@param count Number of symbols in the table
+@return sum of label with entry type
+*/
 int entry_count(Symbol *symbols, int count);
+
+/*
+count the label in extern type
+@param symbols Pointer to the symbol table
+@param count Number of symbols in the table
+@return sum of label with extern type
+*/
 
 int extern_count(Symbol *symbols, int count);
 
+/*
+add 100 to address of symbols tabel and missing lines
+@param symbols Pointer to the symbol table
+@param count Number of symbols in the table
+*/
 void add100(Symbol *symbols, int count_labels);
 
 

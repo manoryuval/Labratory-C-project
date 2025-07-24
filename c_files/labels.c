@@ -141,7 +141,7 @@ int extern_count(Symbol *symbols, int count) {
     return extern_count;
 }
 
-void add100(Symbol *symbols, int count_labels)
+void add100(Symbol *symbols, int count_labels)/*לעשות שתעלה 100 גם בשורות חסרות*/
 {
     int i;
     /* Add 100 to the address of each symbol */
@@ -157,6 +157,9 @@ void free_symbols(Symbol *symbols,int count_labels) {
     int i;
     for (i = 0; i < count_labels; i++) {
         free(symbols[i].label); /* Free the label string */
+        /*free(symbols[i].address);
+        free(symbols[i].mode);
+        free(symbols[i].type);*/
     }
     
 
