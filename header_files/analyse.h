@@ -44,17 +44,11 @@ typedef struct missing_line
     struct missing_line *prev; /* Pointer to the previous missing line */
 } missing_line;
 
-typedef struct extern_line
-{
-    int line; /* The line number where the missing label is found */
-    char *label; /* The label that is missing */
-    struct extern_line *next; /* Pointer to the next missing line */
-    struct extern_line *prev; /* Pointer to the previous missing line */
-} extern_line;
 
-extern regs_code REGS[];
+
+
 extern missing_line *missing_lines; /* Pointer to the head of the linked list of missing lines */
-extern extern_line *extern_lines; /* Pointer to the head of the linked list of extern lines */
+
 /*
  Scans a token and determines its type.
  @param token a word to scan.
@@ -109,9 +103,9 @@ int get_opcode_arg(char *token);
 
 DataType get_data_kind(char *token);
 
-int num_to_int(char *token);
 
-int is_number(char *token);
+
+
 
 void add_missing_line(int line, char *label, missing_line **head);
 
@@ -122,5 +116,7 @@ void remove_node(missing_line **head_ref, missing_line *current);
 int update_missing_lines(missing_line *head/*,extern_line **extern_lines*/ , Symbol *symbols, int count);
 
 int is_valid_argument(char *cmd, int arg_num, WordType type);
+
+void clear_missing_lines();
 
 #endif 

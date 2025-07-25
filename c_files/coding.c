@@ -347,3 +347,13 @@ void fprint_ICF(char *file_name, int icf)
    }
    fclose(f);
 }
+
+void clear_IC_DC()
+{
+   int i;
+   for (i = 0; i < MAX_INPUT; i++)
+   {
+      memset(IC[i], 0, WORD_SIZE);
+      memset(DC[i], 0, WORD_SIZE);
+   }
+}

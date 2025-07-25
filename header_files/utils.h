@@ -27,3 +27,15 @@ Converts a character to lowercase.
 @return The lowercase version of the character.
 */
 char lowercase(char c);
+/*
+Checks if a string is a valid number.
+@param token The string to check.
+@return 1 if the string is a valid number, 0 otherwise.
+*/
+int is_number(char *token);
+/*
+Converts a numeric string to an integer.
+@param token The string to convert.
+@return The integer value of the string.
+*/
+int num_to_int(char *token);

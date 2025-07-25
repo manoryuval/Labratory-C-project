@@ -54,6 +54,5 @@ void print_mcro_list(Mcro *head);
 
 /*
 Free the memory allocated for the macro list.
-@param head Pointer to the head of the macro list
 */
-void free_mcro_list(Mcro *head);
+void clear_macros();

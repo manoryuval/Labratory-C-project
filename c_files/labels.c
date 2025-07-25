@@ -152,17 +152,10 @@ void add100(Symbol *symbols, int count_labels)/*לעשות שתעלה 100 גם �
  
 
 
-void free_symbols(Symbol *symbols,int count_labels) {
-
-    int i;
-    for (i = 0; i < count_labels; i++) {
-        free(symbols[i].label); /* Free the label string */
-        /*free(symbols[i].address);
-        free(symbols[i].mode);
-        free(symbols[i].type);*/
-    }
-    
-
+void clear_symbols() {
+        free(symbols);
+        symbols = NULL; /* Set the pointer to NULL after freeing */
+        count_labels = 0; /* Reset the count of symbols */
 }
 
 

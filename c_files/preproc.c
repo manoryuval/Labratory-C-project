@@ -159,12 +159,15 @@ void print_mcro_list(Mcro *head) {
 }
 
 /* Frees all memory allocated for the Mcro linked list */
-void free_mcro_list(Mcro *head) {
-    Mcro *tmp;
-    while (head != NULL) {
-        tmp = head;
-        head = head->next;
-        if (tmp->body) free(tmp->body);
-        free(tmp);
+void clear_macros() {
+    Mcro *current = mcro_head;
+    Mcro *next_node;
+
+    while (current != NULL) {
+        next_node = current->next; /* Save the next node */
+        free(current->body); /* Free the body */
+        free(current); /* Free the current node */
+        current = next_node; /* Move to the next node */
     }
+    mcro_head = NULL; /* Reset the head pointer */
 }

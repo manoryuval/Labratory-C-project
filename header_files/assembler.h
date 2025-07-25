@@ -14,3 +14,5 @@ typedef struct instruction {
     char opcode[10];
     char operands[3][30];
 } Instruction;
+
+void clear();

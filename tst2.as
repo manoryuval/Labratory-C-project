@@ -27,7 +27,7 @@ LENGTH:     .data   6
 
 mcro M1
     mov r1, r2
-    add r1, #1
+    add r1, #0
 mcroend
 
             M1

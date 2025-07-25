@@ -261,28 +261,8 @@ DataType get_data_kind(char *token) {
     return UNKNOWN_;
 }
 
-int num_to_int(char *token) {
-    char *ptr = token;
-    ptr++;
-    /* printf("\n\n%s\n\n", ptr); */
-    return atoi(ptr);
-}
 
-int is_number(char *token) 
-{
-    int i;
-    if (token[0] == MINUS || token[0] == PLUS || isdigit(token[0])) 
-    {
-        for(i = 1; i < strlen(token); i++) {
-            if(!isdigit(token[i])) 
-            {
-                return 0;
-            }
-        }
-        return 1;
-    }
-    return 0;
-}
+
 
 void add_missing_line(int line, char *label, missing_line **head)
 
@@ -383,7 +363,17 @@ int update_missing_lines(missing_line *head/*, extern_line **extern_lines*/ , Sy
     return updated; /* Return the number of updated labels */
 }
 
-
+void clear_missing_lines()
+{
+    missing_line *current = missing_lines;
+    while (current != NULL) {
+        missing_line *temp = current;
+        current = current->next;
+        free(temp->label);
+        free(temp);
+    }
+    missing_lines = NULL; /* Reset the head pointer */
+}
 
 int is_valid_argument(char *cmd, int arg_num, WordType type) {
     

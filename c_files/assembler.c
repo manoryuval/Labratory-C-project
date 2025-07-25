@@ -13,6 +13,15 @@
 
 char *current_filename= NULL;
 
+void clear()
+{
+    clear_IC_DC();
+    clear_symbols();
+    clear_missing_lines();
+    clear_macros();
+    
+}
+
 int main(int argc, char *argv[]) {
     int i;
     
@@ -35,6 +44,7 @@ int main(int argc, char *argv[]) {
         second_pass(as_name);
         fprint_ICF(argv[i], ICF+DCF);
         print_symbols(symbols, count_labels);
+        clear();
         fclose(file);
     }
    

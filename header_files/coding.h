@@ -69,6 +69,9 @@ void dcf_to_icf(int icf,int dcf);
 @param icf the instruction code final value
 */
 void fprint_ICF(char *file_name, int icf); 
+/*Function to clear the instruction code and data code
+*/
+void clear_IC_DC(); 
 
 void print_DCF(char *file_name, int dcf); /* לבדיקה בלבד!*/
 void print_ICF( int icf); /* לבדיקה בלבד!*/

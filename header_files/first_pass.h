@@ -2,6 +2,7 @@ extern int count_labels;
 extern int ICF; 
 extern int DCF;
 
+
 /*
 reed the am file and coding data ...
 
