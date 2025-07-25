@@ -9,6 +9,9 @@
 #include "../header_files/analyse.h"
 #include "../header_files/coding.h"
 #include "../header_files/second_pass.h"
+#include "../header_files/errors.h"
+
+char *current_filename= NULL;
 
 int main(int argc, char *argv[]) {
     int i;
@@ -16,12 +19,13 @@ int main(int argc, char *argv[]) {
     for(i = 1; i < argc; i++) {
         char *as_name=NULL;
         FILE *file = NULL;
+        current_filename = argv[i];
         printf("file name: %s\n", argv[i]);
         as_name = create_extension(argv[i], ".as");
         printf("Processing file: %s\n", as_name);
         file = fopen(as_name, "r");
         if (!file) {
-            fprintf(stderr, "Error: Could not open file %s\n", as_name);  /*שגיאה*/
+            print_error(ERROR1, current_filename, 0); /*שגיאה*/
             continue;
         }
         preproc(as_name);

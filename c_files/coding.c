@@ -9,6 +9,8 @@
 #include "../header_files/first_pass.h"
 #include "../header_files/analyse.h"
 #include "../header_files/coding.h"
+#include "../header_files/errors.h"
+
 
 char IC[MAX_INPUT][WORD_SIZE];
 char DC[MAX_INPUT][WORD_SIZE];

@@ -9,6 +9,7 @@
 #include "../header_files/analyse.h"
 #include "../header_files/coding.h"
 #include "../header_files/second_pass.h"
+#include "../header_files/errors.h"
 
 
 int second_pass(char *file_name) {

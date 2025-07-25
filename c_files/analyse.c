@@ -9,6 +9,8 @@
 #include "../header_files/first_pass.h"
 #include "../header_files/analyse.h"
 #include "../header_files/coding.h"
+#include "../header_files/errors.h"
+
 
 /* array of opcodes */
 op_code OPCODES[] = {
@@ -387,18 +389,18 @@ int is_valid_argument(char *cmd, int arg_num, WordType type) {
     
     switch(type) {
         case ARG_NUM:
-            if (arg_num == 0 && (strcmp(cmd, "mov") == 0 || strcmp(cmd, "cmp") == 0 || strcmp(cmd, "add") == 0 || strcmp(cmd, "sub") == 0) || strcmp(cmd, "prn") == 0) {
+            if ((arg_num == 0) && (strcmp(cmd, "mov") == 0 || strcmp(cmd, "cmp") == 0 || strcmp(cmd, "add") == 0 || strcmp(cmd, "sub") == 0 || strcmp(cmd, "prn") == 0)) {
                 return 1;
             }
-            if (arg_num == 1 && (strcmp(cmd, "cmp") == 0 )) {
+            if ((arg_num == 1) && (strcmp(cmd, "cmp") == 0 )) {
                 return 1;
             }
             break;
         case ARG_REG:
-            if (arg_num == 0 && (strcmp(cmd, "lea") != 0 )) {
+            if ((arg_num == 0) && (strcmp(cmd, "lea") != 0 )) {
                 return 1;
             }
-            if (arg_num == 1 && (strcmp(cmd, "cmp") == 0 )) {
+            if ((arg_num == 1) && (strcmp(cmd, "cmp") == 0 )) {
                 return 1;
             }
             break;

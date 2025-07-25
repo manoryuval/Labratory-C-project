@@ -4,7 +4,7 @@ CFLAGS = -g -ansi -Wall -pedantic
 SRC_DIR = c_files
 INC_DIR = header_files
 
-OBJ = preproc.o utils.o assembler.o first_pass.o labels.o analyse.o coding.o second_pass.o
+OBJ = preproc.o utils.o assembler.o first_pass.o labels.o analyse.o coding.o second_pass.o errors.o
 EXEC = assembler
 
 $(EXEC): $(OBJ)
@@ -34,7 +34,8 @@ coding.o: $(SRC_DIR)/coding.c $(INC_DIR)/coding.h
 second_pass.o: $(SRC_DIR)/second_pass.c $(INC_DIR)/second_pass.h
 	$(CC) -c $(CFLAGS) $(SRC_DIR)/second_pass.c -o second_pass.o
 
-#על כל קובץ חדש יש להוסיף  לOBJ
+errors.o: $(SRC_DIR)/errors.c $(INC_DIR)/errors.h
+	$(CC) -c $(CFLAGS) $(SRC_DIR)/errors.c -o errors.o
 
 #וליצור קובץ .o
 clean:

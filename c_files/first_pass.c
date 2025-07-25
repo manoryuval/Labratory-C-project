@@ -8,6 +8,7 @@
 #include "../header_files/first_pass.h"
 #include "../header_files/analyse.h"
 #include "../header_files/coding.h"
+#include "../header_files/errors.h"
 
 Symbol *symbols = NULL;
 missing_line *missing_lines = NULL; /* linked list of missing lines */
@@ -33,7 +34,7 @@ int first_pass (char *file_name)
     FILE *f = fopen(am_file, "r");
     FILE *input = fopen(file_name,"r");
     if (!input || !f ) {
-        printf("File error");/*שגיאת קובץ להוסיף שגיאה*/
+        print_error(ERROR1, current_filename, 0);
         return 1;
     }
 
@@ -58,7 +59,7 @@ int first_pass (char *file_name)
             /* האם הלייבל חוקי - פירוט בהערות */
             copy_label(label, token1); /*copy label to label variable*/
             if (valid_label(label) !=1) {
-                /* לעשדות שגיאה*/
+                print_error(ERROR2, current_filename, line_count);
                 continue; /*continue to next line*/
 
             }
@@ -82,8 +83,7 @@ int first_pass (char *file_name)
                         /* printf("Adding label %s to symbols table with DC %d \n", label, dc); */
                         add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_DATA, dc);
                     }else {
-                        /*שגיאה - הלייבל כבר קיים*/
-                         printf("Error in line[%d] Label %s already exists.\n", line_count, label); 
+                        print_error(ERROR3, current_filename, line_count);
                         continue; /*continue to next line*/
                     }   
                 }
@@ -95,7 +95,7 @@ int first_pass (char *file_name)
                     {
                         if (!is_number(token2)) 
                         {
-                            /* printf("Error: Invalid number %s\n", token2); */ /*שגיאה*/
+                            print_error(ERROR4, current_filename, line_count);
                             continue; /*continue to next line*/
                         }
                         num = atoi(token2); /*convert to integer*/
@@ -124,7 +124,7 @@ int first_pass (char *file_name)
                     mat_arg = is_matrix_definition(token2); /*check if matrix definition*/
                     if (!mat_arg) 
                     {
-                        /* printf("Error: Invalid matrix definition %s\n", token2);*/ /*שגיאה*/
+                        print_error(ERROR5, current_filename, line_count);
                         continue; /*continue to next line*/
                     }                    /* code */
                     for (i = 0; i < mat_arg; i++) {
@@ -184,7 +184,7 @@ int first_pass (char *file_name)
                 L += 1; 
                 opcode_name = get_opcode_name(token1);
                 if (!opcode_name) {
-                    printf("Error in line[%d]: Invalid opcode %s\n", line_count, token1); /*שגיאה*/
+                    print_error(ERROR6, current_filename, line_count);
                     continue; /*continue to next line*/
                 }
                 /* printf("Opcode Name: %s\t", opcode_name); */
@@ -198,7 +198,7 @@ int first_pass (char *file_name)
                     switch ((arg_type = scan_word(arg))) {
                     case ARG_NUM: 
                         if(!is_valid_argument(opcode_name, i, arg_type)){
-                            printf("Error in line[%d]: Invalid matrix operand %s\n", line_count, arg); /*שגיאה*/
+                            print_error(ERROR7, current_filename, line_count);
                             continue; /*continue to next line*/
                         }                        /* printf("ARG_NUM\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'A'; /*immediate*/
@@ -209,7 +209,7 @@ int first_pass (char *file_name)
                         break;
                     case ARG_REG: 
                         if(!is_valid_argument(opcode_name, i, arg_type)){
-                            printf("Error in line[%d]: Invalid register operand %s\n", line_count, arg); /*שגיאה*/
+                            print_error(ERROR8, current_filename, line_count);
                             continue; /*continue to next line*/
                         }                        /* printf("ARG_REG\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'D'; /*register*/
@@ -231,7 +231,7 @@ int first_pass (char *file_name)
                         break;
                     case LABEL: 
                         if(!is_valid_argument(opcode_name, i, arg_type)){
-                            printf("Error in line[%d]: Invalid label operand %s\n", line_count, arg); /*שגיאה*/
+                            print_error(ERROR9, current_filename, line_count);
                             continue; /*continue to next line*/
                         }                        /* printf("LABEL\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'B'; /*label*/
@@ -241,7 +241,7 @@ int first_pass (char *file_name)
                         break;
                     case ARG_MAT:
                         if(!is_valid_argument(opcode_name, i, arg_type)){
-                            printf("Error in line[%d]: Invalid matrix operand %s\n", line_count, arg); /*שגיאה*/
+                            print_error(ERROR7, current_filename, line_count);
                             continue; /*continue to next line*/
                         }
                         /* printf("ARG_MAT\t"); */
@@ -254,7 +254,7 @@ int first_pass (char *file_name)
 
                             two_reg_code( get_reg1_matrix_operand(arg), get_reg2_matrix_operand(arg), ic + L + 1, 'I'); /*convert matrix to code*/
                             } else {
-                                /* printf("Error: Invalid matrix operand %s\n", arg); */ /*שגיאה*/
+                            print_error(ERROR9, current_filename, line_count);
                         }
                         L += 2;
                         break;

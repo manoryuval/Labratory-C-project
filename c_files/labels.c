@@ -8,7 +8,7 @@
 #include "../header_files/utils.h"
 #include "../header_files/labels.h"
 #include "../header_files/coding.h"
-
+#include "../header_files/errors.h"
 
 int add_symbol(Symbol **symbols, int *count, const char *label, Type type, Mode mode, int address) {
     Symbol *temp = realloc(*symbols, (*count + 1) * sizeof(Symbol));
