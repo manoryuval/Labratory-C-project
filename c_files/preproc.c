@@ -17,7 +17,7 @@ int line_count = 0;
 void add_mcro(Mcro **head, char *name, char *body) {
     Mcro *new_node = (Mcro *)malloc(sizeof(Mcro));
     if (!new_node) {
-        perror("malloc failed"); /*להוסיף שגיאה*/
+        printf("malloc failed"); /*להוסיף שגיאה*/
         return;
     }
     /* Copy the macro name */
@@ -29,7 +29,7 @@ void add_mcro(Mcro **head, char *name, char *body) {
         size_t body_len = strlen(body); 
         new_node->body = (char *)malloc(body_len + 1);
         if (new_node->body == NULL) {
-            perror("Failed to allocate memory for Mcro body");/*להוסיף שגיאה*/
+            printf("Failed to allocate memory for Mcro body");/*להוסיף שגיאה*/
             free(new_node); 
             return;
         }
@@ -91,7 +91,7 @@ int preproc(char *file_name) {
     mcro_body[0] = '\0';
     /* Check if the file was opened successfully */
     if (!input || !f) {
-        perror("File error");/*שגיאת קובץ להוסיף שגיאה*/
+        printf("File error");/*שגיאת קובץ להוסיף שגיאה*/
         return 1;
     }
     /* Read the input file line by line */

@@ -13,7 +13,7 @@
 int add_symbol(Symbol **symbols, int *count, const char *label, Type type, Mode mode, int address) {
     Symbol *temp = realloc(*symbols, (*count + 1) * sizeof(Symbol));
     if (temp == NULL) {
-        perror("malloc failed"); /*להוסיף שגיאה*/
+        printf("malloc failed"); /*להוסיף שגיאה*/
         return 0;
     }
 
