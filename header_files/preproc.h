@@ -10,7 +10,7 @@ typedef struct Mcro {
 } Mcro;
 /* Head of the macro list */
 extern Mcro *mcro_head;
-
+extern int line_count; /* Global variable to keep track of the line count */
 
 /*add new macro to the list
 @param head Pointer to the head of the macro list

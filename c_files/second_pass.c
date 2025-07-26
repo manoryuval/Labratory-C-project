@@ -18,16 +18,18 @@ int second_pass(char *file_name) {
     missing_line *current = missing_lines;
     missing_line *current_extern = missing_lines;
     int i;
-
     char *am_file = create_extension(file_name,".am");
     FILE *f = fopen(am_file, "r");
     FILE *input = fopen(file_name,"r");
+    line_count = 0;
+
     if (!input || !f ) {
         printf("File error");/*שגיאת קובץ להוסיף שגיאה*/
         return 1;
     }
 
     while (fgets(line, sizeof(line), f)) {
+        line_count++;
         token1 = strtok(line, " \t");
         if (!token1) continue;
         if (is_label_start(token1)) {

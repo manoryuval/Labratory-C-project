@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
         printf("Processing file: %s\n", as_name);
         file = fopen(as_name, "r");
         if (!file) {
-            print_error(ERROR1, current_filename, 0); /*שגיאה*/
+            print_error(ERROR1, current_filename, 0); 
             continue;
         }
         preproc(as_name);

@@ -17,7 +17,7 @@ int DCF = 0;
 int count_labels = 0;
 int first_pass (char *file_name) 
 {
-    int ic = 0,dc = 0, is_label = 0,line_count = 0;
+    int ic = 0,dc = 0, is_label = 0;
     char line[MAX_LINE];
     char trimmed_line[MAX_LINE];
     char label[MAX_LABEL_LENGTH];
@@ -27,7 +27,7 @@ int first_pass (char *file_name)
     int count_arg = 0; /* מספר הארגומנטים */
     int i , num, mat_arg; /* האם ארגומנט מטריצה */
     int two_reg_arg = 0; /*דגל*/
-    
+    line_count = 0;
 
     /*open file*/
     char *am_file = create_extension(file_name,".am");

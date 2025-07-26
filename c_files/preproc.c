@@ -12,7 +12,7 @@
 
 
 Mcro *mcro_head = NULL; /* Initialize the global macro head pointer */
-
+int line_count = 0;
 /*Function to add a new mcro to the linked list*/
 void add_mcro(Mcro **head, char *name, char *body) {
     Mcro *new_node = (Mcro *)malloc(sizeof(Mcro));
@@ -98,6 +98,7 @@ int preproc(char *file_name) {
     while (fgets(line, sizeof(line), input)) {
         char trim_line[MAX_LINE];
         char line_copy[MAX_LINE];
+        line_count++;
         strcpy(trim_line, line);
         trim(trim_line);
         strcpy(line_copy, line);
