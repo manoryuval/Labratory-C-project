@@ -3,7 +3,7 @@
 
 #include "../header_files/analyse.h"
 
-#define MAX_INPUT 256 /* !#$%^  צריך לוודא%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%*/
+#define MAX_INPUT 256 
 #define WORD_SIZE 5
 #define WORD_LINE_SIZE 4
 #define FILE_LINE_VALUE 100

@@ -113,7 +113,7 @@ void add100(Symbol *symbols, int count_labels);
 
 
 
-/* Free the symbol table, symbols count.
+/* Free the symbol table and symbols count.
 */
 void clear_symbols();
 

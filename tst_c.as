@@ -1,16 +1,33 @@
-.extern W
-.extern L3
-MAIN: mov M1[r2][r7],W
- add r2,STR
-LOOP: jmp W
- prn #-5
- sub r1, r4
- inc K
+; קובץ בדיקה עם מאקרו ולייבלים
+END:        stop
 
- mov M1[r3][r3],r3
- bne L3
-END: stop
-STR: .string "abcdef"
-LENGTH: .data 6,-9,15
-K: .data 22
-M1: .mat [2][2] 1,2,3,4
+.extern MAINjj
+pTEND:        stop
+
+MAIN:       .data     r3,  LENGTH
+EEND:        stop
+
+            add     LOOP[2][3],  STR
+pEND:        stop
+            .data     r3,  LENGTH
+
+            prn     #5
+            jsr     LOOP
+            stop
+
+LOOP:       .data     r3,  #0
+            bne     END
+            sub     r1,  r4
+            bne     LOOP
+            rts
+
+
+STR:        .string "abcdef"
+LENGTH:     .data   6
+
+mcro M1
+    mov r1, r2
+    add r1, #0
+mcroend
+
+            M1
