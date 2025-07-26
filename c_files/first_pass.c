@@ -23,17 +23,19 @@ int first_pass (char *file_name)
     char label[MAX_LABEL_LENGTH];
     char *token1, *token2, *token3, *arg, *reg1, *opcode_name, type1, type2;
     WordType arg_type;
+    char *am_file;
+    FILE *f;
+    FILE *input;
     int L = 0; /* מספר הארגומנטים */
     int count_arg = 0; /* מספר הארגומנטים */
     int i , num, mat_arg; /* האם ארגומנט מטריצה */
     int two_reg_arg = 0; /*דגל*/
-
-    /*open file*/
-    char *am_file = create_extension(file_name,".am");
-    FILE *f = fopen(am_file, "r");
-    FILE *input = fopen(file_name,"r");
     line_count = 0;
-
+    
+    /*open file*/
+    am_file = create_extension(file_name,".am");
+    f = fopen(am_file, "r");
+    input = fopen(file_name,"r");
     if (!input || !f ) {
         print_error(ERROR1, current_filename, 0);
         return 1;
@@ -155,15 +157,14 @@ int first_pass (char *file_name)
             }
             case EXTERN:
             {
-                /* printf("EXTERN\t"); */
                 arg = strtok(NULL, " \t");
-                /* printf("Arg1: %s\t", arg); */
-                /*אם אקסטרן - להכניס לטבלת סמלים עם הערך 0 ו מאפיין אקסטרן. continue*/
-                if (arg && valid_label(arg)) {
+                if (arg && valid_label(arg)) 
+                {
                     /* printf("Adding extern label %s to symbols table with value 0\n", arg); */
                     add_symbol(&symbols, &count_labels, arg, LABEL_EXTERN, LABEL_TBD, 0);
-                    
-                } else {
+                } 
+                else
+                {
                     /* printf("Error: Invalid extern label %s\n", arg); */
                 }
             break;
