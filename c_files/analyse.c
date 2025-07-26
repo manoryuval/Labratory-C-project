@@ -343,7 +343,6 @@ int update_missing_lines(missing_line *head/*, extern_line **extern_lines*/ , Sy
                 if (strcmp(symbols[i].label, current->label) == 0) {
                     if( symbols[i].type == LABEL_EXTERN) {
                         extern_to_code(current->line);
-                        /*add_extern_line(current->line, current->label, extern_lines);  Add to extern lines */
                     } else {
                     line_to_code(symbols[i].address, current->line,'I'); /* Update the address in IC */
                     }

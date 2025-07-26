@@ -10,9 +10,8 @@
 #define DOUBLE_QUOTE '\"'
 #define NULL_TERMINATOR '\0'
 
-typedef struct instruction {
-    char opcode[10];
-    char operands[3][30];
-} Instruction;
-
+/*
+ * Function to clear all the global variables and structures
+ * This function should be called after finish reading a file and before reading the next file
+ */
 void clear();
