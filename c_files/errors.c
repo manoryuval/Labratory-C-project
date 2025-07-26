@@ -21,7 +21,8 @@ Error errors[] = {
         {ERROR15, "line is missing"},
         {ERROR16, "argument is unknown"},
         {ERROR17, "missing argument"},
-        {ERROR18, "missing comma"}
+        {ERROR18, "missing comma"},
+        {ERROR19, "Extraneous text after end of line"}
 };
 
 void print_error(int error,char* filename, int line_number) {

@@ -1,17 +1,4 @@
-; file ps.as
-.entry LOOP
-.entry LENGTH
-.extern L3
-.extern W
-MAIN: mov M1[r2][r7], W
- add r2,STR
-LOOP: jmp W
- prn #-5
- sub r1, W 
- inc K
-
- mov M1[r3][r3],r0
- bne L3
+ lea  M1[r3][r3],#4
 END: stop
 STR: .string "abcdef"
 LENGTH: .data 6,-9,15

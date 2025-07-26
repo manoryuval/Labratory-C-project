@@ -21,7 +21,7 @@ int first_pass (char *file_name)
     char line[MAX_LINE];
     char trimmed_line[MAX_LINE];
     char label[MAX_LABEL_LENGTH];
-    char *token1, *token2, *token3, *arg, *reg1, *opcode_name, type1, type2;
+    char *token1, *token2, *token3, *arg, *reg1, *opcode_name, type1, type2, *end_of_line = NULL;
     WordType arg_type;
     char *am_file;
     FILE *f;
@@ -194,25 +194,24 @@ int first_pass (char *file_name)
                 i = 0; /*reset argument index*/
                 /*לקודד את הפקודה*/
                 /*read the arguments*/
-                while ((arg = strtok(NULL, ",\t")) && i < count_arg) {/*, עשיתי לוודא שעובד טוב. תיקון - להפריד טוקנים לפי פסיקים בלבד (ואז להוריד רווחים)*/
+                while (i < count_arg && (arg = strtok(NULL, ",\t"))) {/*, עשיתי לוודא שעובד טוב. תיקון - להפריד טוקנים לפי פסיקים בלבד (ואז להוריד רווחים)*/
                     trim(arg); /*trim the argument*/
                     /* printf("Arg1: %s\t", arg); */
                     switch ((arg_type = scan_word(arg))) {
                     case ARG_NUM: 
                         if(!is_valid_argument(opcode_name, i, arg_type)){
-                            print_error(ERROR7, current_filename, line_count);
-                            continue; /*continue to next line*/
+                            print_error(ERROR4, current_filename, line_count);
+                            break; /*continue to next line*/
                         }                        /* printf("ARG_NUM\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'A'; /*immediate*/
                         else type2 = 'A'; 
                         num_to_code8(num_to_int(arg), ic + L, 'I'); /*convert number to code*/
-                        /*לקודד מספרים  בic+i*/
                         L += 1;
                         break;
                     case ARG_REG: 
                         if(!is_valid_argument(opcode_name, i, arg_type)){
                             print_error(ERROR8, current_filename, line_count);
-                            break; /*continue to next line*/
+                            break; 
                         }            
                         if (i == 0 && count_arg > 1) type1 = 'D'; /*register*/
                         else type2 = 'D'; 
@@ -234,8 +233,8 @@ int first_pass (char *file_name)
                     case LABEL: 
                         if(!is_valid_argument(opcode_name, i, arg_type)){
                             print_error(ERROR9, current_filename, line_count);
-                            continue; /*continue to next line*/
-                        }                        /* printf("LABEL\t"); */
+                            break; /*continue to next line*/
+                        }
                         if (i == 0 && count_arg > 1) type1 = 'B'; /*label*/
                         else type2 = 'B'; 
                         add_missing_line(ic + L, arg, &missing_lines, line_count); /*add missing line*/
@@ -244,13 +243,11 @@ int first_pass (char *file_name)
                     case ARG_MAT:
                         if(!is_valid_argument(opcode_name, i, arg_type)){
                             print_error(ERROR7, current_filename, line_count);
-                            continue; /*continue to next line*/
+                            break; /*continue to next line*/
                         }
                         /* printf("ARG_MAT\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'C'; /*matrix*/
                         else type2 = 'C'; 
-                        /*printf("Matrix operand detected: %s\n", arg);
-                        printf("matrix name %s \n", get_matrix_name(arg));*/
                         add_missing_line(ic + L, get_matrix_name(arg), &missing_lines, line_count); /*add missing line*/
                         if (get_reg1_matrix_operand(arg) && get_reg2_matrix_operand(arg)) {
 
@@ -267,13 +264,15 @@ int first_pass (char *file_name)
 
                     i++;
                 }
+                end_of_line = strtok(NULL, " \t"); /*check if there is more text after the last argument*/
+                if(end_of_line != NULL) {
+                    print_error(ERROR19, current_filename, line_count); /*if there is more text after the last argument*/
+                }
                 if (i < count_arg) {
                     print_error(ERROR17, current_filename, line_count);
                     continue; /*continue to next line*/
                 }
-                op_to_code(opcode_name, type1, type2, ic, 'I'); /*convert opcode to code*/
-                /*תיקון - לבדוק i ביחס ל לארגומנטים*/
-                /* printf(">>>>>----------L: %d\t", L); */
+                op_to_code(opcode_name, type1, type2, ic, 'I'); /*convert opcode to code*/                /* printf(">>>>>----------L: %d\t", L); */
                 ic += L; 
                 L = 0; /*reset L for next line*/
                 two_reg_arg = 0; /*reset two_reg_arg for next line*/
