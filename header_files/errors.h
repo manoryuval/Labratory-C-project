@@ -18,7 +18,10 @@ typedef enum Error_code {
     ERROR12,
     ERROR13,
     ERROR14,
-    ERROR15
+    ERROR15,
+    ERROR16,
+    ERROR17,
+    ERROR18
 } Error_code;
 
 extern int error_count;

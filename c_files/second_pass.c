@@ -24,7 +24,7 @@ int second_pass(char *file_name) {
     line_count = 0;
 
     if (!input || !f ) {
-        printf("File error");/*שגיאת קובץ להוסיף שגיאה*/
+        print_error(ERROR1, current_filename, line_count);
         return 1;
     }
 
@@ -45,11 +45,11 @@ int second_pass(char *file_name) {
                 token2 = strtok(NULL, " \t");
 
                 if (!token2 || !valid_label(token2)) {
-                    printf("Error: Invalid entry label %s\n", token2);/*שגיאה*/
+                    print_error(ERROR2, current_filename, line_count);
                     continue; /*continue to next line*/
                 }
                 if (is_label_exists(symbols, count_labels, token2)) {
-                    printf("Error: Entry label %s does not exist in the symbol table\n", token2);/*שגיאה*/
+                        print_error(ERROR3, current_filename, line_count);
                     continue; /*continue to next line*/
                 }
                 /* Update the symbol table entry for the entry label */
@@ -62,19 +62,16 @@ int second_pass(char *file_name) {
                 break;
         }
     }
-    while (current != NULL)
-    {
-        int updated = update_missing_lines(current/*, &extern_lines*/, symbols, count_labels);
-        if (updated == 0) {
-            printf("No missing lines were updated.\n");
-            break; /* שגיאה */
-        }
-        current = current->next;
-    }
+    
+    update_missing_lines(current, symbols, count_labels);
 
-    if(entry_count(symbols, count_labels)) {
+    if(entry_count(symbols, count_labels) && error_count == 0) {
         char *entry_file = create_extension(file_name, ".ent");
         FILE *f = fopen(entry_file, "w+");
+        if (!f) {
+            print_error(ERROR1, current_filename, 0);
+            return 0;
+        }
         for(i = 0; i < count_labels; i++) {
             if (symbols[i].type == LABEL_ENTRY) {
                 fprintf(f, "%s\t", symbols[i].label);
@@ -83,10 +80,14 @@ int second_pass(char *file_name) {
             }
         }
     }
-    if(extern_count(symbols, count_labels)) 
+    if(extern_count(symbols, count_labels) && error_count == 0) 
     {
         char *extern_file = create_extension(file_name, ".ext");
         FILE *f1 = fopen(extern_file, "w+");
+        if (!f1) {
+            print_error(ERROR1, current_filename, 0);
+            return 0;
+        }
         while (current_extern != NULL) {
             for(i = 0; i < count_labels; i++) {
                 if ((strcmp(symbols[i].label, current_extern->label) == 0) && symbols[i].type == LABEL_EXTERN) {
@@ -101,7 +102,6 @@ int second_pass(char *file_name) {
         }
         fclose(f1);
     }
-
     fclose(f);
     return 0;
 }

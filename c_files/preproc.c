@@ -17,7 +17,7 @@ int line_count = 0;
 void add_mcro(Mcro **head, char *name, char *body) {
     Mcro *new_node = (Mcro *)malloc(sizeof(Mcro));
     if (!new_node) {
-        perror("malloc failed"); /*להוסיף שגיאה*/
+        print_error(ERROR11, current_filename, line_count);
         return;
     }
     /* Copy the macro name */
@@ -29,8 +29,8 @@ void add_mcro(Mcro **head, char *name, char *body) {
         size_t body_len = strlen(body); 
         new_node->body = (char *)malloc(body_len + 1);
         if (new_node->body == NULL) {
-            perror("Failed to allocate memory for Mcro body");/*להוסיף שגיאה*/
-            free(new_node); 
+            print_error(ERROR11, current_filename, line_count);
+            free(new_node);
             return;
         }
         strcpy(new_node->body, body);
@@ -91,7 +91,7 @@ int preproc(char *file_name) {
     mcro_body[0] = '\0';
     /* Check if the file was opened successfully */
     if (!input || !f) {
-        perror("File error");/*שגיאת קובץ להוסיף שגיאה*/
+        print_error(ERROR1, current_filename, line_count);
         return 1;
     }
     /* Read the input file line by line */
@@ -110,7 +110,7 @@ int preproc(char *file_name) {
             /* set name */
             name = strtok(NULL, " ");
             if (name == NULL) {
-                fprintf(stderr, "Error: Macro name is missing.\n");/*שגיאה*/
+                print_error(ERROR14, current_filename, line_count);
                 continue; /* Skip to the next line */
             }
             /* Copy the macro name */

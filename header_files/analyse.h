@@ -44,6 +44,7 @@ typedef struct missing_line
 {
     int line;                  /* The line number where the missing label is found */
     char *label;               /* The label that is missing */
+    int am_line;            /* The line number in the .am file where the label is missing */
     struct missing_line *next; /* Pointer to the next missing line */
     struct missing_line *prev; /* Pointer to the previous missing line */
 } missing_line;
@@ -130,7 +131,7 @@ Add a missing line to the linked list.
 @param label the label that is missing.
 @param head a pointer to the head of the linked list.
 */
-void add_missing_line(int line, char *label, missing_line **head);
+void add_missing_line(int line, char *label, missing_line **head, int am_line);
 /*
 print the missing lines in the linked list.
 @param head a pointer to the head of the linked list.

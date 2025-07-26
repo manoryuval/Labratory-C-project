@@ -27,12 +27,13 @@ int first_pass (char *file_name)
     int count_arg = 0; /* מספר הארגומנטים */
     int i , num, mat_arg; /* האם ארגומנט מטריצה */
     int two_reg_arg = 0; /*דגל*/
-    line_count = 0;
 
     /*open file*/
     char *am_file = create_extension(file_name,".am");
     FILE *f = fopen(am_file, "r");
     FILE *input = fopen(file_name,"r");
+    line_count = 0;
+
     if (!input || !f ) {
         print_error(ERROR1, current_filename, 0);
         return 1;
@@ -171,14 +172,14 @@ int first_pass (char *file_name)
             {/*שורת הוראה - אם יש סמל */ 
                 /* printf("CODE\t"); */
                 if (is_label) {
-                    printf("Found label %s in code line\n", label);
+                    /*printf("Found label %s in code line\n", label);*/
                     /* printf("CODE with label\t"); */
                     if(!is_label_exists(symbols, count_labels, label)) {
                         /* printf("Adding label %s to symbols table with IC \n", label); */
                         add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_CODE,ic);
                     }else {
-                         printf("Error in line[%d]: Label %s already exists.\n", line_count, label); 
-                        continue; /*continue to next line*/
+                        print_error(ERROR3, current_filename, line_count);
+                        continue; 
                     }
                 }
                 L += 1; 
@@ -210,20 +211,20 @@ int first_pass (char *file_name)
                     case ARG_REG: 
                         if(!is_valid_argument(opcode_name, i, arg_type)){
                             print_error(ERROR8, current_filename, line_count);
-                            continue; /*continue to next line*/
-                        }                        /* printf("ARG_REG\t"); */
+                            break; /*continue to next line*/
+                        }            
                         if (i == 0 && count_arg > 1) type1 = 'D'; /*register*/
                         else type2 = 'D'; 
-                        /*לקודד רישומים ic + i*/
+
                         if (two_reg_arg == 1){
                             two_reg_code(reg1, arg, ic + L-1, 'I'); /*convert register to code*/
-                            continue;
+                            break;;
                         }
                         reg1=arg;
                         if(type2 == 'D'){
                             two_reg_code("r0",reg1, ic + L, 'I'); /*convert register to code*/
                             L += 1;
-                            continue;
+                            break;
                         }
                         two_reg_code(reg1, "r0", ic + L, 'I'); /*convert register to code*/
                         two_reg_arg++;
@@ -236,7 +237,7 @@ int first_pass (char *file_name)
                         }                        /* printf("LABEL\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'B'; /*label*/
                         else type2 = 'B'; 
-                        add_missing_line(ic + L, arg, &missing_lines); /*add missing line*/
+                        add_missing_line(ic + L, arg, &missing_lines, line_count); /*add missing line*/
                         L += 1;
                         break;
                     case ARG_MAT:
@@ -247,9 +248,9 @@ int first_pass (char *file_name)
                         /* printf("ARG_MAT\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'C'; /*matrix*/
                         else type2 = 'C'; 
-                        printf("Matrix operand detected: %s\n", arg);
-                        printf("matrix name %s \n", get_matrix_name(arg));
-                        add_missing_line(ic + L, get_matrix_name(arg), &missing_lines); /*add missing line*/
+                        /*printf("Matrix operand detected: %s\n", arg);
+                        printf("matrix name %s \n", get_matrix_name(arg));*/
+                        add_missing_line(ic + L, get_matrix_name(arg), &missing_lines, line_count); /*add missing line*/
                         if (get_reg1_matrix_operand(arg) && get_reg2_matrix_operand(arg)) {
 
                             two_reg_code( get_reg1_matrix_operand(arg), get_reg2_matrix_operand(arg), ic + L + 1, 'I'); /*convert matrix to code*/
@@ -259,10 +260,15 @@ int first_pass (char *file_name)
                         L += 2;
                         break;
                     default:
+                        print_error(ERROR18, current_filename, line_count);
                         break;
                     }
 
                     i++;
+                }
+                if (i < count_arg) {
+                    print_error(ERROR17, current_filename, line_count);
+                    continue; /*continue to next line*/
                 }
                 op_to_code(opcode_name, type1, type2, ic, 'I'); /*convert opcode to code*/
                 /*תיקון - לבדוק i ביחס ל לארגומנטים*/
@@ -279,7 +285,7 @@ int first_pass (char *file_name)
         
         }
         
-        printf("\n");
+        /*printf("\n");*/
     }
 
     ICF = ic;
@@ -288,7 +294,7 @@ int first_pass (char *file_name)
     update_symbol_address(symbols, count_labels, ICF);
     dcf_to_icf(ICF,DCF);
     add100(symbols, count_labels);
-    print_missing_lines(missing_lines);
+    /*print_missing_lines(missing_lines);*/
     fclose(input);
     fclose(f);
     return 1;

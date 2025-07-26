@@ -27,6 +27,9 @@ int main(int argc, char *argv[]) {
     
     for(i = 1; i < argc; i++) {
         char *as_name=NULL;
+        char *ent_file = create_extension(argv[i], ".ent");
+        char *ext_file = create_extension(argv[i], ".ext");
+        char *ob_file = create_extension(argv[i], ".ob");
         FILE *file = NULL;
         current_filename = argv[i];
         printf("file name: %s\n", argv[i]);
@@ -39,11 +42,20 @@ int main(int argc, char *argv[]) {
         }
         preproc(as_name);
         first_pass(as_name);
-        printf("_____ print ICF__________\n");
-        printf("ICF: %d ,DCF: %d\n", ICF, DCF);
         second_pass(as_name);
-        fprint_ICF(argv[i], ICF+DCF);
-        print_symbols(symbols, count_labels);
+        if(error_count > 0) {
+            remove(ent_file);
+            remove(ext_file);
+            remove(ob_file);
+            printf("Errors found in file %s. Skipping output files.\n", argv[i]);
+        }
+        else{
+            printf("No errors found in file %s. Generating output files.\n\n", argv[i]);
+        }
+        /*printf("_____ print ICF__________\n");
+        printf("ICF: %d ,DCF: %d\n", ICF, DCF);*/
+        /*fprint_ICF(argv[i], ICF+DCF);
+        print_symbols(symbols, count_labels);*/
         clear();
         fclose(file);
     }

@@ -264,7 +264,7 @@ DataType get_data_kind(char *token) {
 
 
 
-void add_missing_line(int line, char *label, missing_line **head)
+void add_missing_line(int line, char *label, missing_line **head, int am_line)
 
 {
     /*check if label exists*/
@@ -273,6 +273,7 @@ void add_missing_line(int line, char *label, missing_line **head)
     {
         *head = malloc(sizeof(missing_line));
         (*head)->line = line;
+        (*head)->am_line = am_line;
         (*head)->label = malloc(strlen(label) + 1);
         strcpy((*head)->label, label);
         (*head)->next = NULL;
@@ -287,6 +288,7 @@ void add_missing_line(int line, char *label, missing_line **head)
         }
         current->next = malloc(sizeof(missing_line));
         current->next->line = line;
+        current->next->am_line = am_line;
         current->next->label = malloc(strlen(label) + 1);
         current->next->prev = current; 
         strcpy(current->next->label, label);
@@ -337,6 +339,8 @@ int update_missing_lines(missing_line *head/*, extern_line **extern_lines*/ , Sy
     
     int i, updated = 0;
     while (current != NULL) {
+        current->label[strcspn(current->label, "\r\n")] = '\0';
+
         if (is_label_exists(symbols, count, current->label)) {
             /* If the label exists, update the address */
             for (i = 0; i < count; i++) {
@@ -350,6 +354,8 @@ int update_missing_lines(missing_line *head/*, extern_line **extern_lines*/ , Sy
                     break;
                 }
             }
+        }else{
+        print_error(ERROR16, current_filename, current->am_line);/*  Print error if label not found */
         }
         current = current->next;
     }
@@ -357,7 +363,7 @@ int update_missing_lines(missing_line *head/*, extern_line **extern_lines*/ , Sy
         
         remove_node(&head, current); 
     } else {
-        printf("No missing lines were updated.\n");/*שגיאה*/
+        /*printf("No missing lines were updated.\n");שגיאה*/
     }
     return updated; /* Return the number of updated labels */
 }
@@ -389,7 +395,7 @@ int is_valid_argument(char *cmd, int arg_num, WordType type) {
             if ((arg_num == 0) && (strcmp(cmd, "lea") != 0 )) {
                 return 1;
             }
-            if ((arg_num == 1) && (strcmp(cmd, "cmp") == 0 )) {
+            if ((arg_num == 1)) {
                 return 1;
             }
             break;

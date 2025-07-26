@@ -13,7 +13,7 @@
 int add_symbol(Symbol **symbols, int *count, const char *label, Type type, Mode mode, int address) {
     Symbol *temp = realloc(*symbols, (*count + 1) * sizeof(Symbol));
     if (temp == NULL) {
-        perror("malloc failed"); /*להוסיף שגיאה*/
+        print_error(ERROR11, current_filename, line_count);
         return 0;
     }
 
@@ -69,13 +69,13 @@ void copy_label(char *dest, char *src) {
 int valid_label(char *label) {
     /*valid label length check*/
     if (strlen(label) > MAX_LABEL_LENGTH) {
-        printf("Error: Label '%s' is too long.\n", label);
-        return 0; /* Label too long שגיאה*/
+        print_error(ERROR12, current_filename, line_count);
+        return 0; 
     }
     /* Check if the label is a macro name */
     if(find_mcro_body(mcro_head,label) != NULL) {
-        printf("Error: Label '%s' is a macro name.\n", label);
-        return 0; /* Label is a macro  שגיאה*/
+        print_error(ERROR13,current_filename,line_count);
+        return 0;
     }
 
     return 1; /* Valid label */
