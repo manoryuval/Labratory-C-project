@@ -1,4 +1,4 @@
- lea  M1[r3][r3],#4
+ cmp  M1[r3][r3],#4
 END: stop
 STR: .string "abcdef"
 LENGTH: .data 6,-9,15
