@@ -154,3 +154,84 @@ int num_to_int(char *token) {
     /* printf("\n\n%s\n\n", ptr); */
     return atoi(ptr);
 }
+
+int multiple_consecutive_commas(char *line) {
+    int i;
+    int comma_count = 0;
+    int line_length = strlen(line);
+    for (i = 0; i < line_length; i++) {
+        if (line[i] == ' ' || line[i] == '\t') {
+            continue;  /* Skip spaces and tabs */
+        }
+        if (line[i] == ',') {
+            comma_count++;
+            if (comma_count > 1) {
+                return 1;  /* Found multiple consecutive commas*/
+            }
+        } else {
+            comma_count = 0;  /* Reset count if not a comma */
+        }
+    }
+    return 0;  /* No multiple consecutive commas found */
+}
+
+int check_missing_commas(const char* input) {
+    int i = 0;
+    int arg_index = 0;         
+    int last_was_comma = 0;
+
+    while (input[i] != '\0') {
+        /* דילוג על רווחים וטאבים */
+        while (input[i] == ' ' || input[i] == '\t') {
+            i++;
+        }
+
+        if (input[i] == '\0') break;
+
+        arg_index++;
+
+        /* קריאת הפקודה עצמה */
+        if (arg_index == 1) {
+            while (input[i] != '\0' && input[i] != ' ' && input[i] != '\t' && input[i] != ',') {
+                i++;
+            }
+
+            /* דילוג על רווחים וטאבים אחרי הפקודה */
+            while (input[i] == ' ' || input[i] == '\t') {
+                i++;
+            }
+
+            /* בדיקה אם יש פסיק ישירות אחרי הפקודה */
+            if (input[i] == ',') {
+                return 2; /* פסול – פסיק ישירות אחרי הפקודה */
+            }
+
+            continue;
+        }
+
+        /* בדיקה אם חסר פסיק בין הארגומנטים (מתחיל מהשני) */
+        if (!last_was_comma && arg_index > 2) {
+            return 1; /* חסר פסיק */
+        }
+
+        /* קפיצה על הטוקן (עד לרווח, טאב או פסיק) */
+        while (input[i] != '\0' && input[i] != ' ' && input[i] != '\t' && input[i] != ',') {
+            i++;
+        }
+
+        /* דילוג על רווחים אחרי הטוקן */
+        while (input[i] == ' ' || input[i] == '\t') {
+            i++;
+        }
+
+        /* בדיקה אם יש פסיק */
+        if (input[i] == ',') {
+            last_was_comma = 1;
+            i++;
+        } else {
+            last_was_comma = 0;
+        }
+    }
+
+    return 0; /* הכל תקין */
+}

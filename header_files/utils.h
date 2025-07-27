@@ -39,3 +39,7 @@ Converts a numeric string to an integer.
 @return The integer value of the string.
 */
 int num_to_int(char *token);
+
+int multiple_consecutive_commas(char *line);
+
+int check_missing_commas(const char* input);

@@ -182,13 +182,17 @@ char *get_matrix_name(char *str) {
     char *result;
     matched = sscanf(str, "%30[^[]", name);
 
-    if (matched != 1) {
-        return NULL;
+    if (matched != 1 ) {
+        print_error(ERROR23, current_filename, line_count);
+        return NULL; 
     }
 
     /* הקצאת זיכרון חדש והחזרת עותק */
     result = malloc(strlen(name) + 1);
-    if (!result) return NULL;
+    if (!result) {
+        print_error(ERROR11, current_filename, line_count);
+        return NULL;
+    }
     strcpy(result, name);
     return result;
 }
@@ -201,7 +205,12 @@ char *get_reg1_matrix_operand( char *str) {
     /* Check for matrix operand format */
     matched = sscanf(str, "%*[^[][%3[^]]]", reg1);
     /* Check for valid register */
-    if (matched != 1 || !get_register_name(reg1)) {
+    if (matched != 1 ) {
+        print_error(ERROR23, current_filename, line_count);
+        return NULL; 
+    }
+    if(!get_register_name(reg1)) {
+        print_error(ERROR24, current_filename, line_count);
         return NULL; 
     }
     return get_register_name(reg1); /* Return the register name */

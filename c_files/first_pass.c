@@ -28,7 +28,7 @@ int first_pass (char *file_name)
     FILE *input;
     int L = 0; /* מספר הארגומנטים */
     int count_arg = 0; /* מספר הארגומנטים */
-    int i , num, mat_arg; /* האם ארגומנט מטריצה */
+    int i , num, mat_arg, comma_index; /* האם ארגומנט מטריצה */
     int two_reg_arg = 0; /*דגל*/
     line_count = 0;
     
@@ -53,6 +53,15 @@ int first_pass (char *file_name)
         trim(trimmed_line);
         if(trimmed_line[0] == '\0' || line[0] == COMMENT) {
             continue; /*skip empty lines*/
+        }
+        if(multiple_consecutive_commas(trimmed_line)) {
+            print_error(ERROR26, current_filename, line_count); /*multiple commas*/
+            continue; /*continue to next line*/
+        }
+        comma_index= check_missing_commas(trimmed_line);
+        if(comma_index == 2) {
+            print_error(ERROR27, current_filename, line_count); /*missing comma*/
+            continue; /*continue to next line*/
         }
         /*בדיקה אם יש לייבל*/
         token1 = strtok(trimmed_line, " \t"); 
@@ -147,10 +156,11 @@ int first_pass (char *file_name)
                     }
 
                     break;
-                default:
+                default:{
+                    print_error(ERROR21, current_filename, line_count); /*unknown word*/
                     break;
+                    } 
                 }
-                    /*שורה 7 באלגוריתם - זיהוי סוג הנתונים והגודל ולקדם את DC בהתאם*/
             }  
             case ENTRY:{  /*האם entry*/
                 break;
@@ -200,7 +210,7 @@ int first_pass (char *file_name)
                     switch ((arg_type = scan_word(arg))) {
                     case ARG_NUM: 
                         if(!is_valid_argument(opcode_name, i, arg_type)){
-                            print_error(ERROR4, current_filename, line_count);
+                            print_error(ERROR22, current_filename, line_count);
                             break; /*continue to next line*/
                         }                        /* printf("ARG_NUM\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'A'; /*immediate*/
@@ -258,7 +268,7 @@ int first_pass (char *file_name)
                         L += 2;
                         break;
                     default:
-                        print_error(ERROR18, current_filename, line_count);
+                        print_error(ERROR16, current_filename, line_count);
                         break;
                     }
 
@@ -280,7 +290,10 @@ int first_pass (char *file_name)
 
             break;
             }
-            default: break;
+            default:{
+                print_error(ERROR21, current_filename, line_count); /*unknown word*/
+                break;
+            }
 
         
         }
