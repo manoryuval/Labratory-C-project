@@ -342,7 +342,7 @@ void remove_node(missing_line **head_ref, missing_line *current) {
     free(current);
 }
 
-int update_missing_lines(missing_line *head/*, extern_line **extern_lines*/ , Symbol *symbols, int count)
+int update_missing_lines(missing_line *head, Symbol *symbols, int count)
 {
     missing_line *current = head;
     
@@ -364,7 +364,7 @@ int update_missing_lines(missing_line *head/*, extern_line **extern_lines*/ , Sy
                 }
             }
         }else{
-        print_error(ERROR16, current_filename, current->am_line);/*  Print error if label not found */
+        /*print_error(ERROR16, current_filename, current->am_line);  Print error if label not found */
         }
         current = current->next;
     }

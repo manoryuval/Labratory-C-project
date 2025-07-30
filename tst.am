@@ -1,4 +1,4 @@
- add   END ,M1[r3][r3]  
+ add   END ,M1[3][r3]  
 END: stop
 STR: .string "abcdef"
 LENGTH: .data 6,-9,15
