@@ -39,6 +39,6 @@ void print_error(int error,char* filename, int line_number) {
         printf("~~ERROR: ID:%d~~ in file %s |error message: %s\n", error+1, filename, errors[error].error_msg);
         return;
     }else{
-        printf("~~ERROR: ID:%d~~ in file %s |error message: %s |in line %d\n", error+1, filename, errors[error].error_msg, line_number);
+        printf("~~ERROR: in line %d | in file %s | error message: %s ~~ ID:%d \n", line_number ,filename, errors[error].error_msg, error+1);
     }
 }

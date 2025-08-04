@@ -3,10 +3,11 @@
 
 #include "../header_files/analyse.h"
 
-#define MAX_INPUT 256 
+#define START_MEMORY_ADDRESS 100 /* starting memory address at code destination */
+#define MAX_INPUT 255 - START_MEMORY_ADDRESS
 #define WORD_SIZE 5
 #define WORD_LINE_SIZE 4
-#define FILE_LINE_VALUE 100
+
 
 extern char IC[MAX_INPUT][WORD_SIZE]; /* Instruction Code */
 extern char DC[MAX_INPUT][WORD_SIZE]; /* Data Code */
@@ -72,6 +73,3 @@ void fprint_ICF(char *file_name, int icf);
 /*Function to clear the instruction code and data code
 */
 void clear_IC_DC(); 
-
-void print_DCF(char *file_name, int dcf); /* לבדיקה בלבד!*/
-void print_ICF( int icf); /* לבדיקה בלבד!*/

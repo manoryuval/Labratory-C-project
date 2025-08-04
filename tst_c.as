@@ -7,7 +7,7 @@ pTEND:        stop
 MAIN:       .data     r3,  LENGTH
 EEND:        stop
 
-            add     LOOP[2][3],  STR
+            add     LOOP[3][r3],  STR
 pEND:        stop
             .data     r3,  LENGTH
 
@@ -15,7 +15,7 @@ pEND:        stop
             jsr     LOOP
             stop
 
-LOOP:       .data     r3,  #0
+LOOP:       .data     4
             bne     END
             sub     r1,  r4
             bne     LOOP

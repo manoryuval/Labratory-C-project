@@ -337,7 +337,7 @@ void fprint_ICF(char *file_name, int icf)
    int j = 0;
    for (i = 0; i < icf; i++)
    {
-            line_fprint(f,FILE_LINE_VALUE + i);
+            line_fprint(f,START_MEMORY_ADDRESS + i);
 
       for (j = 0; j < WORD_SIZE; j++)
       {
