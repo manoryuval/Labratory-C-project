@@ -31,6 +31,7 @@ Error errors[] = {
         {ERROR25, "Invalid matrix name"},
         {ERROR26, "multiple consecutive commas"},
         {ERROR27, "illegal comma"},
+        {ERROR28,"illegal character"},
 };
 
 void print_error(int error,char* filename, int line_number) {

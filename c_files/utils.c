@@ -67,10 +67,7 @@ int alpha_count(char *token){
     }
 
     for (i = 1; i < len - 1; i++) {
-        char c = token[i];
-        if (!isalpha((unsigned char)c)) {
-            return 0;
-        }
+        char c = token[i];        
         if (c == ' ' || c == '\t' ) {
             continue;
         }
