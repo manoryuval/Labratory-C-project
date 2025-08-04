@@ -187,7 +187,7 @@ void char_to_code(char c, int line, char type)
       num_to_code(i, line, type); /* נשתמש בפונקציה num_to_code כדי להמיר את התו לקוד */ 
       return;
    }
-   print_error(ERROR28, current_filename, line); /* Illegal character */
+   print_error(ERROR28, current_filename, line_count); /* Illegal character */
 
 }
 void op_to_code(char* op, char type1, char type2, int line, char type)

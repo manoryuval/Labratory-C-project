@@ -116,6 +116,7 @@ int first_pass (char *file_name)
                         dc ++; /*increment DC for each number*/
                     }
                     break;
+                    
                 case STRING_:
                     token2 = strtok(NULL,"\n"); /*next token should be the string*/
                     trim(token2); /*trim the string*/
