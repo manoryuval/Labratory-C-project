@@ -58,23 +58,12 @@ void trim(char *line) {
 
 int alpha_count(char *token){
     int len = strlen(token);
-    int i;
-    int count = 0;
-    if (len < 2) return 0; 
+    if (len < 2) return -1; 
 
     if (token[0] != '"' || token[len-1] != '"') {
-        return 0; 
+        return -1; 
     }
-
-    for (i = 1; i < len - 1; i++) {
-        char c = token[i];        
-        if (c == ' ' || c == '\t' ) {
-            continue;
-        }
-        count++;    
-    }
-
-    return count; 
+    return len-2; /* Return the length of the string without the quotes */
 }
 
 

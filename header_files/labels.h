@@ -111,7 +111,11 @@ add 100 to address of symbols tabel and missing lines
 */
 void add100(Symbol *symbols, int count_labels);
 
-
+/*Check if a label is a reserved word.
+@param label The label to check
+@return 1 if the label is a reserved word, 0 otherwise
+*/
+int label_is_reserved(char *label);
 
 /* Free the symbol table and symbols count.
 */

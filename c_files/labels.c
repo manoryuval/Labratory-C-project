@@ -45,15 +45,27 @@ int is_label_exists(Symbol *symbols, int count, char *label)
 int is_label_start(char *line) 
 {
     char *ptr = line;/*pointer to the current position in the line*/
+    int count = 0; /* Count of characters in the label */
     /* Skip whitespace */
     while (*ptr == ' ' || *ptr == '\t')
+    {
         ptr++;
-    /* Check for label name */
+        count ++;
+    }
+        /* Check for label name */
     while (isalpha(*ptr) || isdigit(*ptr))
+    {
         ptr++;
+        count++;
+    }
     /* Check if the next character is a colon. if true, it's a label */
     if (*(ptr) == COLON)
-        return 1;
+        {
+            count++; /* Count the colon */
+            if(count == strlen(line) ) {
+                return 1; /* It's a label */
+            }
+        }
     return 0;
 }
 
@@ -75,6 +87,12 @@ int valid_label(char *label) {
     /* Check if the label is a macro name */
     if(find_mcro_body(mcro_head,label) != NULL) {
         print_error(ERROR13,current_filename,line_count);
+        return 0;
+    }
+
+    if(label_is_reserved(label)) 
+    {
+        print_error(ERROR32,current_filename,line_count);
         return 0;
     }
 
@@ -150,8 +168,23 @@ void add100(Symbol *symbols, int count_labels)/*לעשות שתעלה 100 גם �
     }
  }
  
-
-
+int label_is_reserved(char *label) {
+    /* Check if the label is a reserved word */
+    
+    if ( strcmp(label, "mov" ) == 0 || strcmp(label, "cmp") == 0 || strcmp(label, "add") == 0 ||
+         strcmp(label, "sub") == 0 || strcmp(label, "not") == 0 || strcmp(label, "clr") == 0 ||
+         strcmp(label, "lea") == 0 || strcmp(label, "inc") == 0 || strcmp(label, "dec") == 0 ||
+         strcmp(label, "jmp") == 0 || strcmp(label, "bne") == 0 || strcmp(label, "jsr") == 0 ||
+         strcmp(label, "red") == 0 || strcmp(label, "prn") == 0 ||
+         strcmp(label, "rts") == 0 || strcmp(label, "stop") == 0 ||
+         strcmp(label, ".data") == 0 || strcmp(label, ".string") == 0 ||
+         strcmp(label, ".mat") == 0 || strcmp(label, ".entry") == 0 ||
+         strcmp(label, ".extern") == 0 || strcmp(label, "mcro") == 0 ||
+         strcmp(label, "end") == 0 || strcmp(label, "mcroend") == 0 )    
+                    return 1;  /* It's a reserved word */
+        return 0; /* Not a reserved word */
+    }
+    
 void clear_symbols() {
         free(symbols);
         symbols = NULL; /* Set the pointer to NULL after freeing */

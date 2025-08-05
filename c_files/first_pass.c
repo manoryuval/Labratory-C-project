@@ -20,8 +20,9 @@ int first_pass (char *file_name)
     int ic = 0,dc = 0, is_label = 0;
     char line[MAX_LINE];
     char trimmed_line[MAX_LINE];
+    char copy_trimmed_line[MAX_LINE];
     char label[MAX_LABEL_LENGTH];
-    char *token1, *token2, *token3, *arg, *reg1, *opcode_name, type1, type2, *end_of_line = NULL;
+    char *token1, *token2, *token3, *token4, *arg, *reg1, *opcode_name, type1, type2, *end_of_line = NULL;
     WordType arg_type;
     char *am_file;
     FILE *f;
@@ -51,17 +52,16 @@ int first_pass (char *file_name)
         /*הסרת רווחים מיותרים*/
         strcpy(trimmed_line, line);
         trim(trimmed_line);
+        strcpy(copy_trimmed_line, trimmed_line);
         if(trimmed_line[0] == '\0' || line[0] == COMMENT) {
             continue; /*skip empty lines*/
         }
         if(multiple_consecutive_commas(trimmed_line)) {
             print_error(ERROR26, current_filename, line_count); /*multiple commas*/
-            continue; /*continue to next line*/
         }
         comma_index= check_missing_commas(trimmed_line);
         if(comma_index == 2) {
             print_error(ERROR27, current_filename, line_count); /*missing comma*/
-            continue; /*continue to next line*/
         }
         /*בדיקה אם יש לייבל*/
         token1 = strtok(trimmed_line, " \t"); 
@@ -103,8 +103,13 @@ int first_pass (char *file_name)
                 switch (get_data_kind(token1))
                 {
                 case DATA_:
-                    while((token2 = strtok(NULL, ", \t")))  /*next token should be the data*/
+                while((token2 = strtok(NULL, ",")))  /*next token should be the data*/
                     {
+                        trim(token2); /*trim the data*/
+                        if (token2[0] == '\0') 
+                        {
+                            continue; /*continue to next line*/
+                        }                        
                         if (!is_number(token2)) 
                         {
                             print_error(ERROR4, current_filename, line_count);
@@ -115,13 +120,28 @@ int first_pass (char *file_name)
                         num_to_code(num, dc, 'D'); 
                         dc ++; /*increment DC for each number*/
                     }
+                    if(copy_trimmed_line[strlen(copy_trimmed_line)-1] == ',') {
+                        print_error(ERROR30, current_filename, line_count); 
+                    }
+                    token4 = strtok(copy_trimmed_line, " \t");
+                    token4 = strtok(NULL, " \t");
+                    token4 = strtok(NULL, " \t");
+                    if (token4[0] == ',') {
+                        print_error(ERROR31, current_filename, line_count); 
+                    }
                     break;
+
                     
                 case STRING_:
                     token2 = strtok(NULL,"\n"); /*next token should be the string*/
                     trim(token2); /*trim the string*/
-                    printf("Token2: %s\t", token2); 
-                    printf("String length: %d\t", alpha_count(token2)); 
+                    /*printf("Token2: %s\t", token2); 
+                    printf("String length: %d\t", alpha_count(token2)); */
+                    if (alpha_count(token2) < 0) 
+                    {
+                        print_error(ERROR29, current_filename, line_count);
+                        continue; /*continue to next line*/
+                    }
                     for (i = 1; i < alpha_count(token2) + 1; i++)
                     {
                         char_to_code(token2[i], dc,'D');
@@ -171,8 +191,15 @@ int first_pass (char *file_name)
                 arg = strtok(NULL, " \t");
                 if (arg && valid_label(arg)) 
                 {
-                    /* printf("Adding extern label %s to symbols table with value 0\n", arg); */
-                    add_symbol(&symbols, &count_labels, arg, LABEL_EXTERN, LABEL_TBD, 0);
+                    if(!is_label_exists(symbols, count_labels, arg)) {
+                        /* printf("Adding extern label %s to symbols table with value 0\n", arg); */
+                       add_symbol(&symbols, &count_labels, arg, LABEL_EXTERN, LABEL_TBD, 0);
+                    }else {
+                        print_error(ERROR3, current_filename, line_count);
+                        continue; 
+                    }
+                    
+                    
                 } 
                 else
                 {

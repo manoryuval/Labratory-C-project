@@ -24,7 +24,7 @@ Error errors[] = {
         {ERROR18, "missing comma"},
         {ERROR19, "Extraneous text after end of line"},
         {ERROR20, ".as files name is missing"},
-        {ERROR21, "syntax error"},
+        {ERROR21, "Unknown word"},
         {ERROR22, "Invalid addressing method"},
         {ERROR23, "Invalid matrix format"},
         {ERROR24, "Invalid matrix operand"},
@@ -32,6 +32,10 @@ Error errors[] = {
         {ERROR26, "multiple consecutive commas"},
         {ERROR27, "illegal comma"},
         {ERROR28,"illegal character"},
+        {ERROR29, "illegal declaration of string"},
+        {ERROR30, "comma after last argument"},
+        {ERROR31, "comma before first argument"},
+        {ERROR32, "label is a reserved word"}
 };
 
 void print_error(int error,char* filename, int line_number) {
