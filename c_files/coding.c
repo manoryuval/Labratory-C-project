@@ -182,8 +182,7 @@ void char_to_code(char c, int line, char type)
 {
 
    int i = (int)c;
-   printf("char_to_code: %c (%d)\n", c, i);
-   if( (i > 32 && i < 126) || i ==0) {
+   if( (i > 32 && i < 126) || i == 0) {
       num_to_code(i, line, type); /* נשתמש בפונקציה num_to_code כדי להמיר את התו לקוד */ 
       return;
    }

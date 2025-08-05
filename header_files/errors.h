@@ -31,7 +31,11 @@ typedef enum Error_code {
     ERROR25,
     ERROR26,
     ERROR27,
-    ERROR28
+    ERROR28,
+    ERROR29,
+    ERROR30,
+    ERROR31,
+    ERROR32
 } Error_code;
 
 extern int error_count;
