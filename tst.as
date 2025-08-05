@@ -1,4 +1,3 @@
 
-BREAK:  add        r6 ,r1
-.entry BREAK
+data:  add        r6 ,r1
  stop

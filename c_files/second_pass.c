@@ -43,17 +43,22 @@ int second_pass(char *file_name) {
                 break;
             case ENTRY:
                 token2 = strtok(NULL, " \t");
+                token2[strcspn(token2, "\r\n")] = '\0';
 
-                if (!token2 || !valid_label(token2)) {
+                if (!token2) {
                     print_error(ERROR2, current_filename, line_count);
                     continue; /*continue to next line*/
                 }
-                if (is_label_exists(symbols, count_labels, token2)) {
-                        print_error(ERROR3, current_filename, line_count);
+
+                if (!valid_label(token2)) {
+                    continue; /*continue to next line*/
+                }
+
+                if (!is_label_exists(symbols, count_labels, token2)) {
+                        print_error(ERROR33, current_filename, line_count);
                     continue; /*continue to next line*/
                 }
                 /* Update the symbol table entry for the entry label */
-                token2[strcspn(token2, "\r\n")] = '\0';
                 update_symbol_type(symbols, count_labels, token2, LABEL_ENTRY);
                 break;
             case CODE:

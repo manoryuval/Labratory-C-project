@@ -35,7 +35,8 @@ Error errors[] = {
         {ERROR29, "illegal declaration of string"},
         {ERROR30, "comma after last argument"},
         {ERROR31, "comma before first argument"},
-        {ERROR32, "label is a reserved word"}
+        {ERROR32, "label is a reserved word"},
+        {ERROR33, "try to entering a label that doesn't exist"},
 };
 
 void print_error(int error,char* filename, int line_number) {

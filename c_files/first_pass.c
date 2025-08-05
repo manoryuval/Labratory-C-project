@@ -71,7 +71,6 @@ int first_pass (char *file_name)
             /* האם הלייבל חוקי - פירוט בהערות */
             copy_label(label, token1); /*copy label to label variable*/
             if (valid_label(label) !=1) {
-                print_error(ERROR2, current_filename, line_count);
                 continue; /*continue to next line*/
 
             }
@@ -201,10 +200,7 @@ int first_pass (char *file_name)
                     
                     
                 } 
-                else
-                {
-                    /* printf("Error: Invalid extern label %s\n", arg); */
-                }
+                
             break;
             }    
             case CODE:

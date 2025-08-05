@@ -180,8 +180,10 @@ int label_is_reserved(char *label) {
          strcmp(label, ".data") == 0 || strcmp(label, ".string") == 0 ||
          strcmp(label, ".mat") == 0 || strcmp(label, ".entry") == 0 ||
          strcmp(label, ".extern") == 0 || strcmp(label, "mcro") == 0 ||
-         strcmp(label, "end") == 0 || strcmp(label, "mcroend") == 0 )    
-                    return 1;  /* It's a reserved word */
+         strcmp(label, "mcroend") == 0  || strcmp(label, "data") == 0 || strcmp(label, "string") == 0 ||
+         strcmp(label, "mat") == 0 || strcmp(label, "entry") == 0 ||
+         strcmp(label, "extern") == 0 || strcmp(label, "string") == 0 ) 
+            return 1;  /* It's a reserved word */
         return 0; /* Not a reserved word */
     }
     
