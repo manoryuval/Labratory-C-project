@@ -332,6 +332,7 @@ int first_pass (char *file_name)
     dcf_to_icf(ICF,DCF);
     add100(symbols, count_labels);
     /*print_missing_lines(missing_lines);*/
+    
     fclose(input);
     fclose(f);
     return 1;

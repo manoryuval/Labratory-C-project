@@ -8,9 +8,14 @@
 #define WORD_SIZE 5
 #define WORD_LINE_SIZE 4
 
+typedef struct code_line
+{
+    int line; /* The line number in the code */
+    char code[WORD_SIZE]; /* The machine code representation of the line */ 
+    struct code_line *next; /* Pointer to the next code in the linked list */
+} code_line;
 
-extern char IC[MAX_INPUT][WORD_SIZE]; /* Instruction Code */
-extern char DC[MAX_INPUT][WORD_SIZE]; /* Data Code */
+
 
 /*Function to convert a number into code
 @param num the number to convert
@@ -73,3 +78,7 @@ void fprint_ICF(char *file_name, int icf);
 /*Function to clear the instruction code and data code
 */
 void clear_IC_DC(); 
+
+void add_code_line(char type, int line, char *code);
+
+void print_code_lines();

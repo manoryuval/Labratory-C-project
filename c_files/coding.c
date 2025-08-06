@@ -11,6 +11,8 @@
 #include "../header_files/coding.h"
 #include "../header_files/errors.h"
 
+code_line *ic = NULL; /* Pointer to the head of the instruction code linked list */
+code_line *dc = NULL; /* Pointer to the head of the data code linked list */
 
 char IC[MAX_INPUT][WORD_SIZE];
 char DC[MAX_INPUT][WORD_SIZE];
@@ -73,14 +75,15 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
          case 'd': code[i] = 'a'; i--; break;
       }
    }
+
+   add_code_line(type ,line, code);
    switch (type)
    {
     case 'I': /* Instruction */
       strcpy(IC[line], code); /* נעתיק את הקוד למערך ה-IC */
-         /* printf("\n\n%s\n\n", IC[line]); */
       break;
     case 'D': /* Data */
-       strcpy(DC[line], code); /* נעתיק את הקוד למערך ה-DC */
+      strcpy(DC[line], code); /* נעתיק את הקוד למערך ה-DC */
     break;
    default: break;
    }
@@ -361,3 +364,50 @@ void clear_IC_DC()
       memset(DC[i], 0, WORD_SIZE);
    }
 }
+
+void add_code_line(char type, int line, char *code)
+{
+   int i;
+   code_line *current = NULL;
+   code_line *new_line = (code_line *)malloc(sizeof(code_line));
+
+   if (ic == NULL)
+      ic = (code_line *)malloc(sizeof(code_line)); /* Initialize the head of the linked list if it's NULL */
+   if (dc == NULL)
+      dc = (code_line *)malloc(sizeof(code_line)); /* Initialize the head of the linked list if it's NULL */
+
+
+   printf("Adding code line: %s at line %d with type %c\n", code, line, type);
+
+   if (type == 'I')
+      current = ic;
+   else
+      current = dc;
+
+   for (i = 1; i < line ; i++)
+   {
+      if(current->next == NULL) {
+         current->next = (code_line *)malloc(sizeof(code_line));
+         if (!current->next) {
+            fprintf(stderr, "Memory allocation failed for code line.\n");
+            exit(EXIT_FAILURE);
+         }
+         current->next->line = i;
+         current->next->next = NULL;         
+      }
+      current = current->next;
+   }
+
+   current->line = line; /* Set the line number */
+   strcpy(current->code, code); /* Copy the code to the code field */
+}
+
+void print_code_lines() {
+   code_line *current = ic;
+   printf("print_code_lines\n");
+   while (current != NULL) {
+      printf("Line %d: %s\n", current->line, current->code);
+      current = current->next;
+   }
+}
+

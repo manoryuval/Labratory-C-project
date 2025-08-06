@@ -56,8 +56,10 @@ int main(int argc, char *argv[]) {
         /*printf("_____ print ICF__________\n");
         printf("ICF: %d ,DCF: %d\n", ICF, DCF);*/
         /*print_symbols(symbols, count_labels);*/
+        print_code_lines();
         clear();
         fclose(file);
+        
     }
    
     return 0;
