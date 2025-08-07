@@ -81,4 +81,6 @@ void clear_IC_DC();
 
 void add_code_line(char type, int line, char *code);
 
+void dc_to_ic(int icf);
+
 void print_code_lines();

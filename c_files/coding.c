@@ -147,6 +147,7 @@ void num_to_code8(int num, int line, char type)
       }
    }
    code[4] = 'a';
+   add_code_line(type ,line, code);
    switch (type)
    {
     case 'I': /* Instruction */
@@ -166,6 +167,8 @@ void two_reg_code (char *reg1, char *reg2, int line, char type)
     strcat(code, get_register_code(reg2));
 
     strcat(code, "a");/* a - ARE*/
+
+    add_code_line(type ,line, code);
 \
     switch (type)
     {
@@ -204,6 +207,7 @@ void op_to_code(char* op, char type1, char type2, int line, char type)
       code[3] = lowercase(type2);
       /* נוסיף את ה-ARE */
       code[4] = 'a';
+      add_code_line(type ,line, code);
       switch (type)
       {
          case 'I': /* Instruction */
@@ -241,11 +245,11 @@ void line_to_code(int num, int line, char type)
       num /= 4;
    }
    code[4] = 'c'; /*ARE - always 10 (E) */
-
+   add_code_line(type ,line, code);
    switch (type)
    {
     case 'I': /* Instruction */
-      for( i = 0; i < WORD_SIZE; i++) {
+      for(i = 0; i < WORD_SIZE; i++) {
                    IC[line][i] = code[i]; /* Copy the code to the IC array */
                }
       break;
@@ -291,6 +295,7 @@ void extern_to_code(int line)
 {
    char code[WORD_SIZE]= "aaaab"; 
    int i;
+   add_code_line('I' ,line, code);
    for( i = 0; i < WORD_SIZE; i++) {
             IC[line][i] = code[i]; /* Copy the code to the IC array */
       }
@@ -369,22 +374,27 @@ void add_code_line(char type, int line, char *code)
 {
    int i;
    code_line *current = NULL;
-   code_line *new_line = (code_line *)malloc(sizeof(code_line));
-
-   if (ic == NULL)
+   code_line *temp = (code_line *)malloc(sizeof(code_line));
+   if (type == 'I') printf("in add code for IC line: %d \n",line);
+   else printf("in add code for DC line: %d \n",line);
+   if (ic == NULL && type == 'I') /* If the instruction code linked list is empty */
+   {
       ic = (code_line *)malloc(sizeof(code_line)); /* Initialize the head of the linked list if it's NULL */
-   if (dc == NULL)
+      ic->line = 0;
+   }
+   if (dc == NULL && type == 'D') /* If the data code linked list is empty */
+   {
       dc = (code_line *)malloc(sizeof(code_line)); /* Initialize the head of the linked list if it's NULL */
-
-
-   printf("Adding code line: %s at line %d with type %c\n", code, line, type);
+      dc->line = 0;
+   }
 
    if (type == 'I')
       current = ic;
    else
       current = dc;
 
-   for (i = 1; i < line ; i++)
+
+   for (i = 0; i < line - 1 ; i++)
    {
       if(current->next == NULL) {
          current->next = (code_line *)malloc(sizeof(code_line));
@@ -392,19 +402,84 @@ void add_code_line(char type, int line, char *code)
             fprintf(stderr, "Memory allocation failed for code line.\n");
             exit(EXIT_FAILURE);
          }
-         current->next->line = i;
-         current->next->next = NULL;         
+         current->next->line = i+1;         
       }
       current = current->next;
    }
+   if(line == 0)
+   {
+      current->line = line;
+      strcpy(current->code, code);
+      if (current->next != NULL)
+      {
+         temp->line = current->next->line;
+         strcpy(temp->code,current->next->code);
+         temp->next = current->next->next;
+         current->next->next = temp;
+      }
+      
+      
+   }
 
-   current->line = line; /* Set the line number */
-   strcpy(current->code, code); /* Copy the code to the code field */
+   else if (current->next == NULL){
+      current->next = (code_line *)malloc(sizeof(code_line));
+      current->next->line = line;
+      strcpy(current->next->code,code);
+   }
+
+   else
+   {
+      temp->line = current->next->line;
+      strcpy(temp->code,current->next->code);
+      temp->next = current->next->next;
+      current->next->line = line;
+      strcpy(current->next->code, code);
+      current->next->next = temp;
+   }
+
+   print_code_lines();
+  
 }
+void dc_to_ic(int icf)
+{
+   code_line *current = ic;
+   int counter = 0;
+   print_code_lines();
+   if (ic == NULL) /* If the instruction code linked list is empty */
+   {
+      ic = dc; /* Link the data code linked list to the instruction code linked list */
+      return;
+   }
+   if (dc == NULL) /* If the data code linked list is empty */
+      return; /* Nothing to do, return */
 
+   while (current->next != NULL)
+   {
+      printf("code line %d: %s\n", current->next->line, current->next->code);
+      counter++;
+      current = current->next; /* Move to the next code line */
+   }
+   while (counter < icf - 1 )
+   {
+      
+      counter++;
+   }
+   
+   current->next = dc; /* Link the end of IC to the start of DC */
+   
+   
+   while (current->next != NULL) /* Traverse to the end of the IC linked list */
+   {
+      current->next->line += counter;
+      current = current->next;
+   }
+   
+   printf("count: %d\n", counter);
+   
+}
 void print_code_lines() {
    code_line *current = ic;
-   printf("print_code_lines\n");
+   printf("print code lines\n");
    while (current != NULL) {
       printf("Line %d: %s\n", current->line, current->code);
       current = current->next;
