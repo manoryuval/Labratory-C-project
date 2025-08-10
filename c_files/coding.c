@@ -372,74 +372,59 @@ void clear_IC_DC()
 
 void add_code_line(char type, int line, char *code)
 {
-   int i;
-   code_line *current = NULL;
-   code_line *temp = (code_line *)malloc(sizeof(code_line));
-   if (type == 'I') printf("in add code for IC line: %d \n",line);
-   else printf("in add code for DC line: %d \n",line);
-   if (ic == NULL && type == 'I') /* If the instruction code linked list is empty */
-   {
-      ic = (code_line *)malloc(sizeof(code_line)); /* Initialize the head of the linked list if it's NULL */
-      ic->line = 0;
-   }
-   if (dc == NULL && type == 'D') /* If the data code linked list is empty */
-   {
-      dc = (code_line *)malloc(sizeof(code_line)); /* Initialize the head of the linked list if it's NULL */
-      dc->line = 0;
-   }
+    code_line **head = (type == 'I') ? &ic : &dc;
+    code_line *current;
+    code_line *prev;
+    code_line *newNode;
 
-   if (type == 'I')
-      current = ic;
-   else
-      current = dc;
-
-
-   for (i = 0; i < line - 1 ; i++)
-   {
-      if(current->next == NULL) {
-         current->next = (code_line *)malloc(sizeof(code_line));
-         if (!current->next) {
-            fprintf(stderr, "Memory allocation failed for code line.\n");
+    /* If list is empty, create head node */
+    if (*head == NULL) {
+        *head = malloc(sizeof(code_line));
+        if (!*head) {
+            fprintf(stderr, "Memory allocation failed.\n");
             exit(EXIT_FAILURE);
-         }
-         current->next->line = i+1;         
-      }
-      current = current->next;
-   }
-   if(line == 0)
-   {
-      current->line = line;
-      strcpy(current->code, code);
-      if (current->next != NULL)
-      {
-         temp->line = current->next->line;
-         strcpy(temp->code,current->next->code);
-         temp->next = current->next->next;
-         current->next->next = temp;
-      }
-      
-      
-   }
+        }
+        (*head)->line = line;
+        strcpy((*head)->code, code);
+        (*head)->next = NULL;
+        return;
+    }
 
-   else if (current->next == NULL){
-      current->next = (code_line *)malloc(sizeof(code_line));
-      current->next->line = line;
-      strcpy(current->next->code,code);
-   }
+   current= *head;
+   prev = NULL;
 
-   else
-   {
-      temp->line = current->next->line;
-      strcpy(temp->code,current->next->code);
-      temp->next = current->next->next;
-      current->next->line = line;
-      strcpy(current->next->code, code);
-      current->next->next = temp;
-   }
+    /* Traverse to find insertion point (sorted by line) */
+    while (current != NULL && current->line < line) {
+        prev = current;
+        current = current->next;
+    }
 
-   print_code_lines();
-  
+    /* If the line already exists → overwrite code */
+    if (current != NULL && current->line == line) {
+        strcpy(current->code, code);
+        return;
+    }
+
+    /* Create new node */
+    newNode = malloc(sizeof(code_line));
+    if (!newNode) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        exit(EXIT_FAILURE);
+    }
+    newNode->line = line;
+    strcpy(newNode->code, code);
+
+    /* Insert at correct place */
+    newNode->next = current;
+    if (prev == NULL) {
+        /* Insert at head */
+        *head = newNode;
+    } else {
+        prev->next = newNode;
+    }
 }
+
+
 void dc_to_ic(int icf)
 {
    code_line *current = ic;
@@ -484,5 +469,5 @@ void print_code_lines() {
       printf("Line %d: %s\n", current->line, current->code);
       current = current->next;
    }
-}
+} 
 

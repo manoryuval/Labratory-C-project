@@ -330,7 +330,7 @@ int first_pass (char *file_name)
   
     update_symbol_address(symbols, count_labels, ICF);
     dcf_to_icf(ICF,DCF);
-    /* dc_to_ic(ICF);*/
+    dc_to_ic(ICF);
     add100(symbols, count_labels);
     /*print_missing_lines(missing_lines);*/
     
