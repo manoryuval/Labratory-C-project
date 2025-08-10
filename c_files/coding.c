@@ -362,6 +362,10 @@ void fprint_ICF(char *file_name, int icf)
 
 void clear_IC_DC()
 {
+   free(ic);
+   free(dc);
+
+
    int i;
    for (i = 0; i < MAX_INPUT; i++)
    {
@@ -428,8 +432,10 @@ void add_code_line(char type, int line, char *code)
 void dc_to_ic(int icf)
 {
    code_line *current = ic;
-   int counter = 0;
+   code_line *dc_current = dc;
+   
    print_code_lines();
+   
    if (ic == NULL) /* If the instruction code linked list is empty */
    {
       ic = dc; /* Link the data code linked list to the instruction code linked list */
@@ -438,29 +444,24 @@ void dc_to_ic(int icf)
    if (dc == NULL) /* If the data code linked list is empty */
       return; /* Nothing to do, return */
 
+   /* Traverse to the end of the IC linked list */
    while (current->next != NULL)
    {
-      printf("code line %d: %s\n", current->next->line, current->next->code);
-      counter++;
-      current = current->next; /* Move to the next code line */
-   }
-   while (counter < icf - 1 )
-   {
-      
-      counter++;
-   }
-   
-   current->next = dc; /* Link the end of IC to the start of DC */
-   
-   
-   while (current->next != NULL) /* Traverse to the end of the IC linked list */
-   {
-      current->next->line += counter;
       current = current->next;
    }
    
-   printf("count: %d\n", counter);
+   /* Link the end of IC to the start of DC */
+   current->next = dc;
    
+   /* Update line numbers in DC part by adding icf (instruction counter final) */
+   while (dc_current != NULL)
+   {
+      dc_current->line += icf;
+      dc_current = dc_current->next;
+   }
+   
+   
+   printf("DC linked to IC successfully. ICF: %d\n", icf);
 }
 void print_code_lines() {
    code_line *current = ic;
@@ -469,5 +470,4 @@ void print_code_lines() {
       printf("Line %d: %s\n", current->line, current->code);
       current = current->next;
    }
-} 
-
+}
