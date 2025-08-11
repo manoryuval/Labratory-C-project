@@ -100,7 +100,7 @@ int valid_label(char *label) {
 }
 
 
-void print_symbols(Symbol *symbols, int count) {
+void print_symbols(Symbol *symbols, int count) /* למחיקה לפני הגשה */{
     int i;
     printf("Symbols table:\n");
     for (i = 0; i < count; i++) {
@@ -188,9 +188,9 @@ int label_is_reserved(char *label) {
     }
     
 void clear_symbols() {
-        free(symbols);
-        symbols = NULL; /* Set the pointer to NULL after freeing */
-        count_labels = 0; /* Reset the count of symbols */
+    free(symbols);
+    symbols = NULL; /* Set the pointer to NULL after freeing */
+    count_labels = 0; /* Reset the count of symbols */
 }
 
 

@@ -19,13 +19,15 @@ void clear()
     clear_symbols();
     clear_missing_lines();
     clear_macros();
+    error_count = 0;
     
 }
 
 int main(int argc, char *argv[]) {
     int i;
     
-    for(i = 1; i < argc; i++) {
+    for(i = 1; i < argc; i++) 
+    {
         char *as_name=NULL;
         char *ent_file = create_extension(argv[i], ".ent");
         char *ext_file = create_extension(argv[i], ".ext");

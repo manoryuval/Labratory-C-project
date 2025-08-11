@@ -259,9 +259,9 @@ void fprint_ICF(char *file_name, int icf)
 
 void clear_IC_DC()
 {
-   free(ic);
-   free(dc);
-
+   printf("free1 \n");
+   ic = NULL;
+   dc = NULL;
 }
 
 void add_code_line(char type, int line, char *code)
