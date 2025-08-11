@@ -49,14 +49,10 @@ int main(int argc, char *argv[]) {
             remove(ob_file);
             printf("Errors found in file %s. Skipping output files.\n", argv[i]);
         }
-        else{
+        else {
             fprint_ICF(argv[i], ICF+DCF);
             printf("No errors found in file %s. Generating output files.\n\n", argv[i]);
         }
-        /*printf("_____ print ICF__________\n");
-        printf("ICF: %d ,DCF: %d\n", ICF, DCF);*/
-        /*print_symbols(symbols, count_labels);*/
-        print_code_lines();
         clear();
         fclose(file);
         

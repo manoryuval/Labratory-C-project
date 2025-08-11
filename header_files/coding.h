@@ -65,11 +65,6 @@ void extern_to_code(int line);
 @param num the number of the line to print
 */
 void line_fprint(FILE *ob, int num); 
-/*Function to copy DC to IC
-@param icf the instruction code final value
-@param dcf the data code final value
-*/
-void dcf_to_icf(int icf,int dcf); 
 /*Function to print the instruction code and data code to a file
 @param file_name the name of the file to print to
 @param icf the instruction code final value
@@ -93,7 +88,4 @@ the line numbers in the DC part by adding the instruction counter final value fo
 */
 void dc_to_ic(int icf);
 
-/*Function to print all code lines in the instruction code (IC) linked list
-Used for debugging purposes to display the current state of the IC linked list
-*/
-void print_code_lines();
+void print_code_lines(); /* למחיקה לפני הגשה */

@@ -318,22 +318,15 @@ int first_pass (char *file_name)
                 print_error(ERROR21, current_filename, line_count); /*unknown word*/
                 break;
             }
-
-        
         }
-        
-        /*printf("\n");*/
     }
 
     ICF = ic;
     DCF = dc;
   
     update_symbol_address(symbols, count_labels, ICF);
-    dcf_to_icf(ICF,DCF);
     dc_to_ic(ICF);
-    add100(symbols, count_labels);
-    /*print_missing_lines(missing_lines);*/
-    
+    add100(symbols, count_labels);    
     fclose(input);
     fclose(f);
     return 1;
