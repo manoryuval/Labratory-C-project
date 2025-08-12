@@ -174,7 +174,10 @@ int first_pass (char *file_name)
                         num_to_code(num, dc, 'D');
                         dc ++; /*increment DC for each number*/
                     }
-
+                    if(copy_trimmed_line[strlen(copy_trimmed_line)-1] == ',') {
+                        print_error(ERROR30, current_filename, line_count); 
+                    }
+                    /* חסר פה לוודא שאין פסיק לפני כל המספרים*/
                     break;
                 default:{
                     print_error(ERROR21, current_filename, line_count); /*unknown word*/
