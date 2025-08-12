@@ -282,7 +282,11 @@ int first_pass (char *file_name)
                         /* printf("ARG_MAT\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'C'; /*matrix*/
                         else type2 = 'C'; 
-                        add_missing_line(ic + L, get_matrix_name(arg), &missing_lines, line_count); /*add missing line*/
+                        {
+                            char *mat_name = get_matrix_name(arg);
+                            add_missing_line(ic + L, mat_name, &missing_lines, line_count); /*add missing line*/
+                            free(mat_name);
+                        }
                         if (get_reg1_matrix_operand(arg) && get_reg2_matrix_operand(arg)) {
 
                             two_reg_code( get_reg1_matrix_operand(arg), get_reg2_matrix_operand(arg), ic + L + 1, 'I'); /*convert matrix to code*/
@@ -329,6 +333,7 @@ int first_pass (char *file_name)
     add100(symbols, count_labels);    
     fclose(input);
     fclose(f);
+    free(am_file);
     return 1;
     }
 

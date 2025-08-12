@@ -11,6 +11,10 @@
 #include "../header_files/coding.h"
 #include "../header_files/errors.h"
 
+/*
+ * Allocates a new string with the given extension.
+ * The caller is responsible for freeing the returned pointer using free().
+ */
 char *create_extension(char *filename, char *extension) {
 
     char *output_filename = malloc(FILENAME_MAX);

@@ -20,7 +20,6 @@ void clear()
     clear_missing_lines();
     clear_macros();
     error_count = 0;
-    
 }
 
 int main(int argc, char *argv[]) {
@@ -39,7 +38,11 @@ int main(int argc, char *argv[]) {
         printf("Processing file: %s\n", as_name);
         file = fopen(as_name, "r");
         if (!file) {
-            print_error(ERROR20, current_filename, 0); 
+            print_error(ERROR20, current_filename, 0);
+            free(ent_file);
+            free(ext_file);
+            free(ob_file);
+            free(as_name); 
             continue;
         }
         preproc(as_name);
@@ -56,9 +59,13 @@ int main(int argc, char *argv[]) {
             printf("No errors found in file %s. Generating output files.\n\n", argv[i]);
         }
         clear();
+        free(ent_file);
+        free(ext_file);
+        free(ob_file);
+        free(as_name);
         fclose(file);
-        
+       
     }
-   
+    
     return 0;
 }

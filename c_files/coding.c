@@ -14,11 +14,17 @@
 code_line *ic = NULL; /* Pointer to the head of the instruction code linked list */
 code_line *dc = NULL; /* Pointer to the head of the data code linked list */
 
-void num_to_code(int num, int line, char type) /* מניח שהמספר שמתקבל בין -512 ל513 ושמתקבל מספר ולא משהו לא תקין*/
+void num_to_code(int num, int line, char type) 
 {
     char code[5];
     int i;
     int flag = 0;
+    
+    if( num < -512 || num > 511)
+   {
+      print_error(ERROR35, current_filename, line_count);
+      return;
+   }
 
     if (num < 0)
     {
@@ -76,11 +82,17 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
    add_code_line(type ,line, code);
 
 }
-void num_to_code8(int num, int line, char type) /* להכניס תקלה על מספר גדול מידי ל8 ביטים  */
+void num_to_code8(int num, int line, char type) 
 {
    char code[5];
     int i;
     int flag = 0;
+    
+    if( num < -128 || num > 127)
+   {
+      print_error(ERROR34, current_filename, line_count);
+      return;
+   }
 
     if (num < 0)
     {
@@ -255,11 +267,19 @@ void fprint_ICF(char *file_name, int icf)
       current = current->next;
    }
    fclose(f);
+   free(ob_file);
 }
 
 void clear_IC_DC()
 {
-   printf("free1 \n");
+   code_line *current, *next;
+   /* Free the entire instruction+data code linked list (they may be connected) */
+   current = ic;
+   while (current != NULL) {
+       next = current->next;
+       free(current);
+       current = next;
+   }
    ic = NULL;
    dc = NULL;
 }
@@ -358,3 +378,5 @@ void print_code_lines() /* למחוק לפני הגשה */
       current = current->next;
    }
 }
+
+

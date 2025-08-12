@@ -37,6 +37,8 @@ Error errors[] = {
         {ERROR31, "comma before first argument"},
         {ERROR32, "label is a reserved word"},
         {ERROR33, "try to entering a label that doesn't exist"},
+        {ERROR34, "the number you enterd are not between (-128) - (127)"},
+        {ERROR35, "the number you enterd are not between (-512) - (511)"},
 };
 
 void print_error(int error,char* filename, int line_number) {
