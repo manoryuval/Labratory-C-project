@@ -187,7 +187,7 @@ void line_to_code(int num, int line, char type) /* להכניס תקלה על מ
 {
     char code[5];
     int i;
-    
+
    for (i = 3; i >= 0; i--)
    {
       switch (num%4) 
@@ -219,6 +219,7 @@ void line_fprint(FILE *ob, int num) {
       printf("Error opening file \n");/*שגיאה*/
       return;
    }
+   
    for (i = 3; i >= 0; i--)
    {
       switch (num%4) 
@@ -258,7 +259,11 @@ void fprint_ICF(char *file_name, int icf)
    FILE *f = fopen(ob_file, "w+");
    code_line *current = ic;
    int i;
-
+    if(icf + START_MEMORY_ADDRESS > 255)
+   {
+      print_error(ERROR36, current_filename, 0);
+      return;
+   }
    for (i = 0; i < icf; i++)
    {
       line_fprint(f,START_MEMORY_ADDRESS + i);

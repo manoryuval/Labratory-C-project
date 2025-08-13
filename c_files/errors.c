@@ -39,6 +39,8 @@ Error errors[] = {
         {ERROR33, "try to entering a label that doesn't exist"},
         {ERROR34, "the number you enterd are not between (-128) - (127)"},
         {ERROR35, "the number you enterd are not between (-512) - (511)"},
+        {ERROR36, "line address exceeded over 255. you need to reduce the number of lines in the file code"},
+        {ERROR37, "the amount of numbers you enterd to the matrix is not equal to the matrix size"},
 };
 
 void print_error(int error,char* filename, int line_number) {
