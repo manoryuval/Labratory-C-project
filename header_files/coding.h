@@ -87,5 +87,10 @@ the line numbers in the DC part by adding the instruction counter final value fo
 @param icf the instruction code final value (used to adjust DC line numbers)
 */
 void dc_to_ic(int icf);
+/*
+
+
+*/
+void print_num(FILE *ob, int num);
 
 void print_code_lines(); /* למחיקה לפני הגשה */

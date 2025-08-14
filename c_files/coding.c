@@ -245,14 +245,12 @@ void line_fprint(FILE *ob, int num) {
       }
    fprintf(ob, "\t");
 } 
-
 void extern_to_code(int line)
 {
    char code[WORD_SIZE]= "aaaab"; 
    add_code_line('I' ,line, code);
 
 }
-
 void fprint_ICF(char *file_name, int icf)
 {
    char *ob_file = create_extension(file_name,".ob");
@@ -264,6 +262,11 @@ void fprint_ICF(char *file_name, int icf)
       print_error(ERROR36, current_filename, 0);
       return;
    }
+
+   print_num(f, ICF);
+   print_num(f, DCF);
+   fprintf(f, "\n");
+
    for (i = 0; i < icf; i++)
    {
       line_fprint(f,START_MEMORY_ADDRESS + i);
@@ -274,7 +277,6 @@ void fprint_ICF(char *file_name, int icf)
    fclose(f);
    free(ob_file);
 }
-
 void clear_IC_DC()
 {
    code_line *current, *next;
@@ -288,7 +290,6 @@ void clear_IC_DC()
    ic = NULL;
    dc = NULL;
 }
-
 void add_code_line(char type, int line, char *code)
 {
     code_line **head = (type == 'I') ? &ic : &dc;
@@ -342,7 +343,6 @@ void add_code_line(char type, int line, char *code)
         prev->next = newNode;
     }
 }
-
 void dc_to_ic(int icf)
 {
    code_line *current = ic;
@@ -372,7 +372,48 @@ void dc_to_ic(int icf)
       dc_current = dc_current->next;
    }
 }
+void print_num(FILE *ob, int num) 
+{
+   char code[4];
+   int i = 0;
+   
+   for (i = 3; i >= 0; i--)
+   {
+      switch (num%4) 
+      {
+         case 0:
+            code[i] = 'a';
+            break;
+         case 1:
+            code[i] = 'b';
+            break;
+         case 2:
+            code[i] = 'c';
+            break;
+         case 3:
+            code[i] = 'd';
+            break;
+      }
+      num /= 4;
+   }
 
+   i = 0;
+
+   while (i < 4 && code[i] == 'a') /* Skip leading 'a's */
+   {
+      code[i] = '\0';
+      i++;
+   }
+
+   fprintf(ob, " ");
+
+   for (i = 0; i < 4; i++)
+   {
+      if (code[i] != '\0')
+         fprintf(ob, "%c", code[i]);
+   }
+  
+}
 
 void print_code_lines() /* למחוק לפני הגשה */
  {

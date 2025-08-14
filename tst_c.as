@@ -1,15 +1,15 @@
 ; קובץ בדיקה עם מאקרו ולייבלים
 END:        stop
 
-.extern MAINjj
+STR12: .extern MAINjj
 pTEND:        stop
 
-MAIN:       .data     r3,  LENGTH
+MAIN:       .data     7,8
 EEND:        stop
 
-            add     LOOP[3][r3],  STR
+             add     STR,  STR
 pEND:        stop
-            .data     r3,  LENGTH
+            .data    67,5
 
             prn     #5
             jsr     LOOP
@@ -27,7 +27,7 @@ LENGTH:     .data   6
 
 mcro M1
     mov r1, r2
-    add r1, #0
+    add r1, r5
 mcroend
 
             M1

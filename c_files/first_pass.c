@@ -337,7 +337,6 @@ int first_pass (char *file_name)
 
     ICF = ic;
     DCF = dc;
-  
     update_symbol_address(symbols, count_labels, ICF);
     dc_to_ic(ICF);
     add100(symbols, count_labels);    
