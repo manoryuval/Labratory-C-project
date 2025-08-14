@@ -33,7 +33,6 @@ int main(int argc, char *argv[]) {
         char *ob_file = create_extension(argv[i], ".ob");
         FILE *file = NULL;
         current_filename = argv[i];
-        printf("file name: %s\n", argv[i]);
         as_name = create_extension(argv[i], ".as");
         printf("Processing file: %s\n", as_name);
         file = fopen(as_name, "r");
@@ -52,11 +51,11 @@ int main(int argc, char *argv[]) {
             remove(ent_file);
             remove(ext_file);
             remove(ob_file);
-            printf("Errors found in file %s. Skipping output files.\n", argv[i]);
+            printf("Errors found in file %s, Skipping output files.\n\n", argv[i]);
         }
         else {
             fprint_ICF(argv[i], ICF+DCF);
-            printf("No errors found in file %s. Generating output files.\n\n", argv[i]);
+            printf("No errors found in file %s, Generating output files.\n\n", argv[i]);
         }
         clear();
         free(ent_file);

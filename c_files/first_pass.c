@@ -17,7 +17,7 @@ int DCF = 0;
 int count_labels = 0;
 int first_pass (char *file_name) 
 {
-    int ic = 0,dc = 0, is_label = 0, is_data = 0;
+    int ic = 0,dc = 0, is_label = 0, is_data = 0, empty = 0;
     char line[MAX_LINE];
     char trimmed_line[MAX_LINE];
     char copy_trimmed_line[MAX_LINE];
@@ -46,6 +46,7 @@ int first_pass (char *file_name)
     while (fgets(line, sizeof(line), f)) {
         is_label = 0; /*reset label flag for each line*/
         is_data = 0; /*reset data flag for each line*/
+        empty = 0;
         line_count++;
         reg1 = "r1"; /*default register*/
         type1 = 'A'; /*default type*/
@@ -141,6 +142,7 @@ int first_pass (char *file_name)
                     char_to_code(0, dc, 'D');  /*קודד אפס לסיום המחרוזת*/
                     dc ++; /*increment DC for the null terminator*/
                     break;
+
                 case MAT_:
                     token2 = strtok(NULL, " \t"); /*next token should be the matrix*/
                     trim(token2); /*trim the matrix*/
@@ -157,32 +159,24 @@ int first_pass (char *file_name)
                             print_error(ERROR4, current_filename, line_count);
                             continue; /*continue to next line*/
                         }
-                        is_data ++;
                         num = atoi(token3); /*convert to integer*/
                         num_to_code(num, dc, 'D');
+                        is_data ++; /*increment data count*/
                         dc ++; /*increment DC for each number*/
+                        empty ++;
                     }
-                    if(is_data == 0)
+                    while(is_data < mat_arg)
                     {
-                        for(i=0; i < mat_arg; i++){
                             num_to_code(0, dc, 'D'); /*קודד אפס אם אין נתונים*/
+                            is_data++; /*increment data count*/
                             dc++; /*increment DC for the null terminator*/
-                        }
                     }
-                    if (is_data != mat_arg && is_data != 0)
-                    {
-                        print_error(ERROR37, current_filename, line_count);
-                        /*for(i=0; i < mat_arg - is_data; i++){
-                            num_to_code(0, dc, 'D'); 
-                            dc++; increment DC for the null terminator
-                        } */
-                    }
-                   
+                    if(is_data > mat_arg)
+                        print_error(ERROR38, current_filename, line_count);
                     if(copy_trimmed_line[strlen(copy_trimmed_line)-1] == ',')
                         print_error(ERROR30, current_filename, line_count);
-
-                     if(is_data)
-                    {
+                    
+                    if(empty){                    
                         token4 = strtok(copy_trimmed_line, " \t"); /* check for comma in the start of the data*/
                         token4 = strtok(NULL, " \t");
                         token4 = strtok(NULL, " \t");

@@ -88,9 +88,9 @@ the line numbers in the DC part by adding the instruction counter final value fo
 */
 void dc_to_ic(int icf);
 /*
-
-
+Function to print a number to a file
+@param ob the file to print to
+@param num the number to print
 */
 void print_num(FILE *ob, int num);
 
-void print_code_lines(); /* למחיקה לפני הגשה */

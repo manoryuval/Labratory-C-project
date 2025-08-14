@@ -10,7 +10,7 @@ mov M1[r3][r3],r3
 bne L3
 END: stop
 M1: .mat [2][2] 1,2,3,3
-STR: .string   "abcdef" 
+STR: .string   "abcde 
 LENGTH: .data 6,-9,15
 K: .data 22
 .entry LENGTH
