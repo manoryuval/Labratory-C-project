@@ -11,15 +11,20 @@
 #include "../header_files/coding.h"
 #include "../header_files/errors.h"
 
+code_line *ic = NULL; /* Pointer to the head of the instruction code linked list */
+code_line *dc = NULL; /* Pointer to the head of the data code linked list */
 
-char IC[MAX_INPUT][WORD_SIZE];
-char DC[MAX_INPUT][WORD_SIZE];
-
-void num_to_code(int num, int line, char type) /* מניח שהמספר שמתקבל בין -512 ל513 ושמתקבל מספר ולא משהו לא תקין*/
+void num_to_code(int num, int line, char type) 
 {
     char code[5];
     int i;
     int flag = 0;
+    
+    if( num < -512 || num > 511)
+   {
+      print_error(ERROR35, current_filename, line_count);
+      return;
+   }
 
     if (num < 0)
     {
@@ -73,23 +78,21 @@ void num_to_code(int num, int line, char type) /* מניח שהמספר שמתק
          case 'd': code[i] = 'a'; i--; break;
       }
    }
-   switch (type)
-   {
-    case 'I': /* Instruction */
-      strcpy(IC[line], code); /* נעתיק את הקוד למערך ה-IC */
-         /* printf("\n\n%s\n\n", IC[line]); */
-      break;
-    case 'D': /* Data */
-       strcpy(DC[line], code); /* נעתיק את הקוד למערך ה-DC */
-    break;
-   default: break;
-   }
+
+   add_code_line(type ,line, code);
+
 }
-void num_to_code8(int num, int line, char type)
+void num_to_code8(int num, int line, char type) 
 {
    char code[5];
     int i;
     int flag = 0;
+    
+    if( num < -128 || num > 127)
+   {
+      print_error(ERROR34, current_filename, line_count);
+      return;
+   }
 
     if (num < 0)
     {
@@ -144,39 +147,19 @@ void num_to_code8(int num, int line, char type)
       }
    }
    code[4] = 'a';
-   switch (type)
-   {
-    case 'I': /* Instruction */
-      strcpy(IC[line], code); /* נעתיק את הקוד למערך ה-IC */
-         /* printf("\n\n%s\n\n", IC[line]); */
-      break;
-    case 'D': /* Data */
-       strcpy(DC[line], code); /* נעתיק את הקוד למערך ה-DC */
-    break;
-   default: break;
-   }
+
+   add_code_line(type ,line, code);
+
 }
 void two_reg_code (char *reg1, char *reg2, int line, char type)
 {
     char code[5];
     strcpy(code, get_register_code(reg1));
     strcat(code, get_register_code(reg2));
-
     strcat(code, "a");/* a - ARE*/
-\
-    switch (type)
-    {
-        case 'I': /* Instruction */
-            strcpy(IC[line], code);
-\
-            break;
-        case 'D': /* Data */
-            strcpy(DC[line], code);
-            break;
-        default:
-            fprintf(stderr, "Error: Invalid type for two_reg_code function.\n");
-            exit(EXIT_FAILURE);
-    }
+
+    add_code_line(type ,line, code);
+
 }
 void char_to_code(char c, int line, char type)
 {
@@ -192,32 +175,19 @@ void char_to_code(char c, int line, char type)
 void op_to_code(char* op, char type1, char type2, int line, char type)
 {
       char code[5];
-      int i;
-      /* נעתיק את הקוד של האופרטור */
+   
       strcpy(code, get_opcode_code(op));
-
-      /* נוסיף את סוגי מיון האופרנדים */
       code[2] = lowercase(type1);
       code[3] = lowercase(type2);
-      /* נוסיף את ה-ARE */
       code[4] = 'a';
-      switch (type)
-      {
-         case 'I': /* Instruction */
-               for( i = 0; i < WORD_SIZE; i++) {
-                   IC[line][i] = code[i]; /* Copy the code to the IC array */
-               }
-               break;
-         case 'D': /* Data */
-               strcpy(DC[line], code);
-               break;
-      }
+
+      add_code_line(type ,line, code);
 }
-void line_to_code(int num, int line, char type)
+void line_to_code(int num, int line, char type) /* להכניס תקלה על מספר שורה גדול מידי ל8 ביטים*/
 {
     char code[5];
     int i;
-    
+
    for (i = 3; i >= 0; i--)
    {
       switch (num%4) 
@@ -238,19 +208,9 @@ void line_to_code(int num, int line, char type)
       num /= 4;
    }
    code[4] = 'c'; /*ARE - always 10 (E) */
+ 
+   add_code_line(type ,line, code);
 
-   switch (type)
-   {
-    case 'I': /* Instruction */
-      for( i = 0; i < WORD_SIZE; i++) {
-                   IC[line][i] = code[i]; /* Copy the code to the IC array */
-               }
-      break;
-    case 'D': /* Data */
-       strcpy(DC[line], code); /* נעתיק את הקוד למערך ה-DC */
-    break;
-   default: break;
-   }
 }
 void line_fprint(FILE *ob, int num) {
    char line[WORD_LINE_SIZE];
@@ -259,6 +219,7 @@ void line_fprint(FILE *ob, int num) {
       printf("Error opening file \n");/*שגיאה*/
       return;
    }
+   
    for (i = 3; i >= 0; i--)
    {
       switch (num%4) 
@@ -287,77 +248,181 @@ void line_fprint(FILE *ob, int num) {
 void extern_to_code(int line)
 {
    char code[WORD_SIZE]= "aaaab"; 
-   int i;
-   for( i = 0; i < WORD_SIZE; i++) {
-            IC[line][i] = code[i]; /* Copy the code to the IC array */
-      }
+   add_code_line('I' ,line, code);
 
-}
-void print_DCF(char *file_name, int dcf)
-{
-   char *ob_file = create_extension(file_name,".ob");
-   FILE *f = fopen(ob_file, "w+");
-   int i = 0;
-   int j = 0;
-   for (i = 0; i < dcf; i++)
-   {
-      fprintf(f, "DC[%d]: ", i);
-      for (j = 0; j < WORD_SIZE; j++)
-      {
-            fprintf(f, "%c", DC[i][j]);
-      }
-      fprintf(f, "\n");
-   }
-}
-void print_ICF( int icf)
-{
-   /*char *ob_file = create_extension(file_name,".ob");
-   FILE *f = fopen(ob_file, "w");*/
-   int i = 0;
-   int j = 0;
-   for (i = 0; i < icf; i++)
-   {
-      printf( "IC[%d]: ", i);
-      for (j = 0; j < WORD_SIZE; j++)
-      {
-            printf( "%c", IC[i][j]);
-      }
-      printf( "\n");
-   }
-}
-void dcf_to_icf(int icf,int dcf)
-{
-   int i;
-   for (i = 0; i < dcf; i++)
-   {
-      strcpy(IC[icf + i], DC[i]); /* נעתיק את ה-DC ל-IC */
-   }
 }
 void fprint_ICF(char *file_name, int icf)
 {
    char *ob_file = create_extension(file_name,".ob");
    FILE *f = fopen(ob_file, "w+");
-   int i = 0;
-   int j = 0;
+   code_line *current = ic;
+   int i;
+    if(icf + START_MEMORY_ADDRESS > 255)
+   {
+      print_error(ERROR36, current_filename, 0);
+      return;
+   }
+
+   print_num(f, ICF);
+   print_num(f, DCF);
+   fprintf(f, "\n");
+
    for (i = 0; i < icf; i++)
    {
-            line_fprint(f,START_MEMORY_ADDRESS + i);
-
-      for (j = 0; j < WORD_SIZE; j++)
-      {
-            fprintf(f, "%c", IC[i][j]);
-      }
+      line_fprint(f,START_MEMORY_ADDRESS + i);
+      fprintf(f, "%s", current->code);
       fprintf(f, "\n");
+      current = current->next;
    }
    fclose(f);
+   free(ob_file);
 }
-
 void clear_IC_DC()
 {
-   int i;
-   for (i = 0; i < MAX_INPUT; i++)
+   code_line *current, *next;
+   /* Free the entire instruction+data code linked list (they may be connected) */
+   current = ic;
+   while (current != NULL) {
+       next = current->next;
+       free(current);
+       current = next;
+   }
+   ic = NULL;
+   dc = NULL;
+}
+void add_code_line(char type, int line, char *code)
+{
+    code_line **head = (type == 'I') ? &ic : &dc;
+    code_line *current;
+    code_line *prev;
+    code_line *newNode;
+
+    /* If list is empty, create head node */
+    if (*head == NULL) {
+        *head = malloc(sizeof(code_line));
+        if (!*head) {
+            fprintf(stderr, "Memory allocation failed.\n");
+            exit(EXIT_FAILURE);
+        }
+        (*head)->line = line;
+        strcpy((*head)->code, code);
+        (*head)->next = NULL;
+        return;
+    }
+
+   current= *head;
+   prev = NULL;
+
+    /* Traverse to find insertion point (sorted by line) */
+    while (current != NULL && current->line < line) {
+        prev = current;
+        current = current->next;
+    }
+
+    /* If the line already exists → overwrite code */
+    if (current != NULL && current->line == line) {
+        strcpy(current->code, code);
+        return;
+    }
+
+    /* Create new node */
+    newNode = malloc(sizeof(code_line));
+    if (!newNode) {
+        fprintf(stderr, "Memory allocation failed.\n");
+        exit(EXIT_FAILURE);
+    }
+    newNode->line = line;
+    strcpy(newNode->code, code);
+
+    /* Insert at correct place */
+    newNode->next = current;
+    if (prev == NULL) {
+        /* Insert at head */
+        *head = newNode;
+    } else {
+        prev->next = newNode;
+    }
+}
+void dc_to_ic(int icf)
+{
+   code_line *current = ic;
+   code_line *dc_current = dc;
+   
+   if (ic == NULL) /* If the instruction code linked list is empty */
    {
-      memset(IC[i], 0, WORD_SIZE);
-      memset(DC[i], 0, WORD_SIZE);
+      ic = dc; /* Link the data code linked list to the instruction code linked list */
+      return;
+   }
+   if (dc == NULL) /* If the data code linked list is empty */
+      return; /* Nothing to do, return */
+
+   /* Traverse to the end of the IC linked list */
+   while (current->next != NULL)
+   {
+      current = current->next;
+   }
+   
+   /* Link the end of IC to the start of DC */
+   current->next = dc;
+   
+   /* Update line numbers in DC part by adding icf (instruction counter final) */
+   while (dc_current != NULL)
+   {
+      dc_current->line += icf;
+      dc_current = dc_current->next;
    }
 }
+void print_num(FILE *ob, int num) 
+{
+   char code[4];
+   int i = 0;
+   
+   for (i = 3; i >= 0; i--)
+   {
+      switch (num%4) 
+      {
+         case 0:
+            code[i] = 'a';
+            break;
+         case 1:
+            code[i] = 'b';
+            break;
+         case 2:
+            code[i] = 'c';
+            break;
+         case 3:
+            code[i] = 'd';
+            break;
+      }
+      num /= 4;
+   }
+
+   i = 0;
+
+   while (i < 4 && code[i] == 'a') /* Skip leading 'a's */
+   {
+      code[i] = '\0';
+      i++;
+   }
+
+   fprintf(ob, " ");
+
+   for (i = 0; i < 4; i++)
+   {
+      if (code[i] != '\0')
+         fprintf(ob, "%c", code[i]);
+   }
+  
+}
+
+void print_code_lines() /* למחוק לפני הגשה */
+ {
+   code_line *current = ic;
+   printf("print code lines\n");
+   while (current != NULL) {
+      printf("Line %d: %s\n", current->line, current->code);
+      current = current->next;
+   }
+}
+
+

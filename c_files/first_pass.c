@@ -17,7 +17,7 @@ int DCF = 0;
 int count_labels = 0;
 int first_pass (char *file_name) 
 {
-    int ic = 0,dc = 0, is_label = 0;
+    int ic = 0,dc = 0, is_label = 0, is_data = 0, empty = 0;
     char line[MAX_LINE];
     char trimmed_line[MAX_LINE];
     char copy_trimmed_line[MAX_LINE];
@@ -45,6 +45,8 @@ int first_pass (char *file_name)
     /*read file line by line*/
     while (fgets(line, sizeof(line), f)) {
         is_label = 0; /*reset label flag for each line*/
+        is_data = 0; /*reset data flag for each line*/
+        empty = 0;
         line_count++;
         reg1 = "r1"; /*default register*/
         type1 = 'A'; /*default type*/
@@ -65,35 +67,26 @@ int first_pass (char *file_name)
         }
         /*בדיקה אם יש לייבל*/
         token1 = strtok(trimmed_line, " \t"); 
-        /* printf("Token1: %s\t", token1); */
+        
         if (is_label_start(token1)) {
-            /* printf("label\t"); */
-            /* האם הלייבל חוקי - פירוט בהערות */
             copy_label(label, token1); /*copy label to label variable*/
             if (valid_label(label) !=1) {
                 continue; /*continue to next line*/
-
             }
-            is_label = 1; /*אחרי בדיקת ולידציה*/
+            is_label = 1;
             /*remove label from line*/
             token1 =  strtok(NULL, " \t"); 
         }
 
-
-        /* printf("Token1: %s\t", token1); */
-        
         switch(scan_word(token1)) 
         {
-            case DATA: /*האם הנחיה לאחסון נתונים*/
+            case DATA: 
             { 
-                /* printf("DATA\t"); */
                 if(is_label) 
                 {
-                    /* printf("DATA with label\n"); */
-                    if(!is_label_exists(symbols, count_labels, label)) {
-                        /* printf("Adding label %s to symbols table with DC %d \n", label, dc); */
+                    if(!is_label_exists(symbols, count_labels, label)) 
                         add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_DATA, dc);
-                    }else {
+                    else {
                         print_error(ERROR3, current_filename, line_count);
                         continue; /*continue to next line*/
                     }   
@@ -104,6 +97,7 @@ int first_pass (char *file_name)
                 case DATA_:
                 while((token2 = strtok(NULL, ",")))  /*next token should be the data*/
                     {
+                        is_data ++;
                         trim(token2); /*trim the data*/
                         if (token2[0] == '\0') 
                         {
@@ -115,18 +109,19 @@ int first_pass (char *file_name)
                             continue; /*continue to next line*/
                         }
                         num = atoi(token2); /*convert to integer*/
-                        /* printf("Token2: %s\t", token2); */
                         num_to_code(num, dc, 'D'); 
                         dc ++; /*increment DC for each number*/
                     }
                     if(copy_trimmed_line[strlen(copy_trimmed_line)-1] == ',') {
                         print_error(ERROR30, current_filename, line_count); 
                     }
-                    token4 = strtok(copy_trimmed_line, " \t");
-                    token4 = strtok(NULL, " \t");
-                    token4 = strtok(NULL, " \t");
-                    if (token4[0] == ',') {
-                        print_error(ERROR31, current_filename, line_count); 
+                    if(is_data) {
+                        token4 = strtok(copy_trimmed_line, " \t"); /* check for comma in the start of the data*/
+                        token4 = strtok(NULL, " \t");
+                        if(is_label)
+                            token4 = strtok(NULL, " \t");
+                        if (token4[0] == ',') 
+                            print_error(ERROR31, current_filename, line_count); 
                     }
                     break;
 
@@ -134,8 +129,6 @@ int first_pass (char *file_name)
                 case STRING_:
                     token2 = strtok(NULL,"\n"); /*next token should be the string*/
                     trim(token2); /*trim the string*/
-                    /*printf("Token2: %s\t", token2); 
-                    printf("String length: %d\t", alpha_count(token2)); */
                     if (alpha_count(token2) < 0) 
                     {
                         print_error(ERROR29, current_filename, line_count);
@@ -149,32 +142,49 @@ int first_pass (char *file_name)
                     char_to_code(0, dc, 'D');  /*קודד אפס לסיום המחרוזת*/
                     dc ++; /*increment DC for the null terminator*/
                     break;
+
                 case MAT_:
                     token2 = strtok(NULL, " \t"); /*next token should be the matrix*/
                     trim(token2); /*trim the matrix*/
-                    /* printf("Token2: %s\t", token2);  */
                     mat_arg = is_matrix_definition(token2); /*check if matrix definition*/
                     if (!mat_arg) 
                     {
                         print_error(ERROR5, current_filename, line_count);
                         continue; /*continue to next line*/
-                    }                    /* code */
-                    for (i = 0; i < mat_arg; i++) {
-                        token3 = strtok(NULL, ","); /*next token should be the matrix data*/
+                    }                   
+                    while((token3 = strtok(NULL, ","))){ /*next token should be the matrix data*/
                         trim(token3); /*trim the matrix data*/
-                        if (!token3) 
+                        if (!is_number(token3)) 
                         {
-                            num_to_code(0, dc, 'D'); /*קודד אפס אם אין נתונים*/
-                            dc++; /*increment DC for the null terminator*/
+                            print_error(ERROR4, current_filename, line_count);
                             continue; /*continue to next line*/
                         }
                         num = atoi(token3); /*convert to integer*/
-                        /* printf("Token3: %s\t", token3); */
-                        /*קודד מספרים - עבור כל מספר*/
                         num_to_code(num, dc, 'D');
+                        is_data ++; /*increment data count*/
                         dc ++; /*increment DC for each number*/
+                        empty ++;
                     }
-
+                    while(is_data < mat_arg)
+                    {
+                            num_to_code(0, dc, 'D'); /*קודד אפס אם אין נתונים*/
+                            is_data++; /*increment data count*/
+                            dc++; /*increment DC for the null terminator*/
+                    }
+                    if(is_data > mat_arg)
+                        print_error(ERROR38, current_filename, line_count);
+                    if(copy_trimmed_line[strlen(copy_trimmed_line)-1] == ',')
+                        print_error(ERROR30, current_filename, line_count);
+                    
+                    if(empty){                    
+                        token4 = strtok(copy_trimmed_line, " \t"); /* check for comma in the start of the data*/
+                        token4 = strtok(NULL, " \t");
+                        token4 = strtok(NULL, " \t");
+                        if(is_label)
+                            token4 = strtok(NULL, " \t");
+                        if (token4[0] == ',') 
+                            print_error(ERROR31, current_filename, line_count); 
+                    }
                     break;
                 default:{
                     print_error(ERROR21, current_filename, line_count); /*unknown word*/
@@ -205,14 +215,10 @@ int first_pass (char *file_name)
             }    
             case CODE:
             {/*שורת הוראה - אם יש סמל */ 
-                /* printf("CODE\t"); */
                 if (is_label) {
-                    /*printf("Found label %s in code line\n", label);*/
-                    /* printf("CODE with label\t"); */
-                    if(!is_label_exists(symbols, count_labels, label)) {
-                        /* printf("Adding label %s to symbols table with IC \n", label); */
+                    if(!is_label_exists(symbols, count_labels, label))
                         add_symbol(&symbols, &count_labels, label, LABEL_REGULAR, LABEL_CODE,ic);
-                    }else {
+                    else {
                         print_error(ERROR3, current_filename, line_count);
                         continue; 
                     }
@@ -223,17 +229,15 @@ int first_pass (char *file_name)
                     print_error(ERROR6, current_filename, line_count);
                     continue; /*continue to next line*/
                 }
-                /* printf("Opcode Name: %s\t", opcode_name); */
                 count_arg = get_opcode_arg(token1);
                 i = 0; /*reset argument index*/
-                /*לקודד את הפקודה*/
                 /*read the arguments*/
                 while (i < count_arg && (arg = strtok(NULL, ",\t"))) {/*, עשיתי לוודא שעובד טוב. תיקון - להפריד טוקנים לפי פסיקים בלבד (ואז להוריד רווחים)*/
                     trim(arg); /*trim the argument*/
-                    /* printf("Arg1: %s\t", arg); */
                     switch ((arg_type = scan_word(arg))) {
                     case ARG_NUM: 
-                        if(!is_valid_argument(opcode_name, i, arg_type)){
+                        if(!is_valid_argument(opcode_name, i, arg_type))
+                        {
                             print_error(ERROR22, current_filename, line_count);
                             break; /*continue to next line*/
                         }                        /* printf("ARG_NUM\t"); */
@@ -252,7 +256,7 @@ int first_pass (char *file_name)
 
                         if (two_reg_arg == 1){
                             two_reg_code(reg1, arg, ic + L-1, 'I'); /*convert register to code*/
-                            break;;
+                            break;
                         }
                         reg1=arg;
                         if(type2 == 'D'){
@@ -282,7 +286,11 @@ int first_pass (char *file_name)
                         /* printf("ARG_MAT\t"); */
                         if (i == 0 && count_arg > 1) type1 = 'C'; /*matrix*/
                         else type2 = 'C'; 
-                        add_missing_line(ic + L, get_matrix_name(arg), &missing_lines, line_count); /*add missing line*/
+                        {
+                            char *mat_name = get_matrix_name(arg);
+                            add_missing_line(ic + L, mat_name, &missing_lines, line_count); /*add missing line*/
+                            free(mat_name);
+                        }
                         if (get_reg1_matrix_operand(arg) && get_reg2_matrix_operand(arg)) {
 
                             two_reg_code( get_reg1_matrix_operand(arg), get_reg2_matrix_operand(arg), ic + L + 1, 'I'); /*convert matrix to code*/
@@ -318,22 +326,17 @@ int first_pass (char *file_name)
                 print_error(ERROR21, current_filename, line_count); /*unknown word*/
                 break;
             }
-
-        
         }
-        
-        /*printf("\n");*/
     }
 
     ICF = ic;
     DCF = dc;
-  
     update_symbol_address(symbols, count_labels, ICF);
-    dcf_to_icf(ICF,DCF);
-    add100(symbols, count_labels);
-    /*print_missing_lines(missing_lines);*/
+    dc_to_ic(ICF);
+    add100(symbols, count_labels);    
     fclose(input);
     fclose(f);
+    free(am_file);
     return 1;
     }
 

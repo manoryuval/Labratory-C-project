@@ -19,25 +19,29 @@ void clear()
     clear_symbols();
     clear_missing_lines();
     clear_macros();
-    
+    error_count = 0;
 }
 
 int main(int argc, char *argv[]) {
     int i;
     
-    for(i = 1; i < argc; i++) {
+    for(i = 1; i < argc; i++) 
+    {
         char *as_name=NULL;
         char *ent_file = create_extension(argv[i], ".ent");
         char *ext_file = create_extension(argv[i], ".ext");
         char *ob_file = create_extension(argv[i], ".ob");
         FILE *file = NULL;
         current_filename = argv[i];
-        printf("file name: %s\n", argv[i]);
         as_name = create_extension(argv[i], ".as");
         printf("Processing file: %s\n", as_name);
         file = fopen(as_name, "r");
         if (!file) {
-            print_error(ERROR20, current_filename, 0); 
+            print_error(ERROR20, current_filename, 0);
+            free(ent_file);
+            free(ext_file);
+            free(ob_file);
+            free(as_name); 
             continue;
         }
         preproc(as_name);
@@ -47,18 +51,20 @@ int main(int argc, char *argv[]) {
             remove(ent_file);
             remove(ext_file);
             remove(ob_file);
-            printf("Errors found in file %s. Skipping output files.\n", argv[i]);
+            printf("Errors found in file %s, Skipping output files.\n\n", argv[i]);
         }
-        else{
+        else {
             fprint_ICF(argv[i], ICF+DCF);
-            printf("No errors found in file %s. Generating output files.\n\n", argv[i]);
+            printf("No errors found in file %s, Generating output files.\n\n", argv[i]);
         }
-        /*printf("_____ print ICF__________\n");
-        printf("ICF: %d ,DCF: %d\n", ICF, DCF);*/
-        /*print_symbols(symbols, count_labels);*/
         clear();
+        free(ent_file);
+        free(ext_file);
+        free(ob_file);
+        free(as_name);
         fclose(file);
+       
     }
-   
+    
     return 0;
 }

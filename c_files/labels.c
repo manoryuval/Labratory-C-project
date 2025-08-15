@@ -100,7 +100,7 @@ int valid_label(char *label) {
 }
 
 
-void print_symbols(Symbol *symbols, int count) {
+void print_symbols(Symbol *symbols, int count) /* למחיקה לפני הגשה */{
     int i;
     printf("Symbols table:\n");
     for (i = 0; i < count; i++) {
@@ -182,15 +182,20 @@ int label_is_reserved(char *label) {
          strcmp(label, ".extern") == 0 || strcmp(label, "mcro") == 0 ||
          strcmp(label, "mcroend") == 0  || strcmp(label, "data") == 0 || strcmp(label, "string") == 0 ||
          strcmp(label, "mat") == 0 || strcmp(label, "entry") == 0 ||
-         strcmp(label, "extern") == 0 || strcmp(label, "string") == 0 ) 
+         strcmp(label, "extern") == 0 || strcmp(label, "r0") == 0 || strcmp(label, "r1") == 0 ||
+         strcmp(label, "r2") == 0 || strcmp(label, "r3") == 0 || strcmp(label, "r4") == 0 ||
+         strcmp(label, "r5") == 0 || strcmp(label, "r6") == 0 || strcmp(label, "r7") == 0 ||
+         strcmp(label, "R0") == 0 || strcmp(label, "R1") == 0 || strcmp(label, "R2") == 0 ||
+         strcmp(label, "R3") == 0 || strcmp(label, "R4") == 0 || strcmp(label, "R5") == 0 ||
+         strcmp(label, "R6") == 0 || strcmp(label, "R7") == 0)
             return 1;  /* It's a reserved word */
         return 0; /* Not a reserved word */
     }
     
 void clear_symbols() {
-        free(symbols);
-        symbols = NULL; /* Set the pointer to NULL after freeing */
-        count_labels = 0; /* Reset the count of symbols */
+    free(symbols);
+    symbols = NULL; /* Set the pointer to NULL after freeing */
+    count_labels = 0; /* Reset the count of symbols */
 }
 
 

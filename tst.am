@@ -1,3 +1,3 @@
 
-;mat:  add        r6 ,r1
+data:  add        r6 ,r1
  stop

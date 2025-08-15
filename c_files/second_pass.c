@@ -84,6 +84,7 @@ int second_pass(char *file_name) {
                 fprintf(f, "\n");
             }
         }
+        free(entry_file);
     }
     if(extern_count(symbols, count_labels) && error_count == 0) 
     {
@@ -106,7 +107,9 @@ int second_pass(char *file_name) {
             current_extern = current_extern->next;
         }
         fclose(f1);
+        free(extern_file);
     }
     fclose(f);
+    free(am_file);
     return 0;
 }

@@ -37,14 +37,19 @@ Error errors[] = {
         {ERROR31, "comma before first argument"},
         {ERROR32, "label is a reserved word"},
         {ERROR33, "try to entering a label that doesn't exist"},
+        {ERROR34, "the number you enterd are not between (-128) - (127)"},
+        {ERROR35, "the number you enterd are not between (-512) - (511)"},
+        {ERROR36, "line address exceeded over 255. you need to reduce the number of lines in the file code"},
+        {ERROR37, "the amount of numbers you enterd to the matrix is not equal to the matrix size"},
+        {ERROR38, "the amount of data entered to the matrix is more than the matrix size declaration"}
 };
 
 void print_error(int error,char* filename, int line_number) {
     error_count++;
     if (line_number == 0){
-        printf("~~ERROR: ID:%d~~ in file %s |error message: %s\n", error+1, filename, errors[error].error_msg);
+        printf("%s: %s. (ID:%d)\n", filename, errors[error].error_msg, error+1);
         return;
     }else{
-        printf("~~ERROR: in line %d | in file %s | error message: %s ~~ ID:%d \n", line_number ,filename, errors[error].error_msg, error+1);
+        printf("%s.%d: %s. (ID:%d)\n",filename, line_number , errors[error].error_msg, error+1);
     }
 }
