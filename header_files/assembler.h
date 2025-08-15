@@ -6,7 +6,6 @@
 #define COLON ':'
 #define COMMA ','
 #define COMMENT ';'
-#define ASTERISK '*'
 #define DOUBLE_QUOTE '\"'
 #define NULL_TERMINATOR '\0'
 
