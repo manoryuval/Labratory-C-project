@@ -22,6 +22,7 @@ int first_pass (char *file_name)
     char trimmed_line[MAX_LINE];
     char copy_trimmed_line[MAX_LINE];
     char label[MAX_LABEL_LENGTH];
+    char matrix_def[MAX_LINE];  
     char *token1, *token2, *token3, *token4, *arg, *reg1, *opcode_name, type1, type2, *end_of_line = NULL;
     WordType arg_type;
     char *am_file;
@@ -148,14 +149,19 @@ int first_pass (char *file_name)
                     break;
 
                 case MAT_:
-                    token2 = strtok(NULL, " \t"); /*next token should be the matrix*/
-                    trim(token2); /*trim the matrix*/
-                    mat_arg = is_matrix_definition(token2); /*check if matrix definition*/
+                    token2 = strtok(NULL, "]"); /*next token should be the matrix*/
+                    strcpy(matrix_def, token2); /*copy the matrix definition*/
+                    strcat(matrix_def,"]"); 
+                    strcat(matrix_def,strtok(NULL, "]")); 
+                    strcat(matrix_def,"]"); 
+                    /*trim(matrix_def); trim the matrix*/
+                    mat_arg = is_matrix_definition(matrix_def); /*check if matrix definition*/
                     if (!mat_arg) 
                     {
                         print_error(ERROR5, current_filename, line_count);
                         continue; /*continue to next line*/
-                    }                   
+                    } 
+
                     while((token3 = strtok(NULL, ","))){ /*next token should be the matrix data*/
                         trim(token3); /*trim the matrix data*/
                         if (!is_number(token3)) 

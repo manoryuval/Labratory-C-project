@@ -164,7 +164,7 @@ int is_matrix_operand( char *str) {
     char name[31], reg1[4], reg2[4], extra;
     /* Check for matrix operand format */
     /*matched = sscanf(str, "%30[^[][%[^]]][%[^]]]%c", name, reg1, reg2, &extra);*/
-    matched = sscanf(str,    " %30[^[] [ %3[^]] ] [ %3[^]] ] %c",    name, reg1, reg2, &extra);
+    matched = sscanf(str,  " %30[^[] [ %3[^]] ] [ %3[^]] ] %c",    name, reg1, reg2, &extra);
     /* Check for extra characters */
     if (matched != 3) {
         return 0; 
@@ -237,8 +237,8 @@ int is_matrix_definition(const char *str) {
     int num1, num2;
     char temp;
     /*Check for matrix definition format*/
-    int matched = sscanf(str, "[%d][%d]%c", &num1, &num2, &temp);
-
+    int matched = sscanf(str, "[ %d ][ %d ]%c", &num1, &num2, &temp);/* [ %3[^]] ] [ %3[^]] ] %c*/
+    
     /* Check for valid dimensions */
     if (matched != 2) return 0;
     /* Check for valid ranges */
