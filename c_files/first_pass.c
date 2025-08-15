@@ -55,6 +55,10 @@ int first_pass (char *file_name)
         strcpy(trimmed_line, line);
         trim(trimmed_line);
         strcpy(copy_trimmed_line, trimmed_line);
+        if (strlen(copy_trimmed_line) >= LENGTH_LINE) {
+            print_error(ERROR40, current_filename, line_count);
+            continue; /*skip empty lines*/
+        }
         if(trimmed_line[0] == '\0' || line[0] == COMMENT) {
             continue; /*skip empty lines*/
         }

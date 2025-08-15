@@ -1,4 +1,6 @@
-#define MAX_LINE 256
+#define MAX_LINE 1024
+#define LENGTH_LINE 80
+
 #define DOT '.'
 #define HASH '#'
 #define PLUS '+'

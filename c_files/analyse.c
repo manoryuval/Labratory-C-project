@@ -163,11 +163,14 @@ int is_matrix_operand( char *str) {
     int matched;
     char name[31], reg1[4], reg2[4], extra;
     /* Check for matrix operand format */
-    matched = sscanf(str, "%30[^[][%3[^]]][%3[^]]]%c", name, reg1, reg2, &extra);
+    /*matched = sscanf(str, "%30[^[][%[^]]][%[^]]]%c", name, reg1, reg2, &extra);*/
+    matched = sscanf(str,    " %30[^[] [ %3[^]] ] [ %3[^]] ] %c",    name, reg1, reg2, &extra);
     /* Check for extra characters */
     if (matched != 3) {
         return 0; 
     }
+    trim(reg1);
+    trim(reg2);
     /* Check for valid registers */
     if (!get_register_name(reg1) || !get_register_name(reg2)) {
         return 0;
@@ -365,7 +368,7 @@ int update_missing_lines(missing_line *head, Symbol *symbols, int count)
                 }
             }
         }else{
-        /*print_error(ERROR16, current_filename, current->am_line);  Print error if label not found */
+        print_error(ERROR16, current_filename, current->am_line);
         }
         current = current->next;
     }

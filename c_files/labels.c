@@ -96,6 +96,11 @@ int valid_label(char *label) {
         return 0;
     }
 
+    if(!isalpha(label[0])) {
+        print_error(ERROR39, current_filename, line_count);
+        return 0; /* Invalid label */
+    }
+
     return 1; /* Valid label */
 }
 

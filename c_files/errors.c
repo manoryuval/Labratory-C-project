@@ -41,7 +41,9 @@ Error errors[] = {
         {ERROR35, "the number you enterd are not between (-512) - (511)"},
         {ERROR36, "line address exceeded over 255. you need to reduce the number of lines in the file code"},
         {ERROR37, "the amount of numbers you enterd to the matrix is not equal to the matrix size"},
-        {ERROR38, "the amount of data entered to the matrix is more than the matrix size declaration"}
+        {ERROR38, "the amount of data entered to the matrix is more than the matrix size declaration"},
+        {ERROR39, "label is not start with a letter"},
+        {ERROR40, "line is too long"} /* This is a placeholder for the last error */
 };
 
 void print_error(int error,char* filename, int line_number) {
