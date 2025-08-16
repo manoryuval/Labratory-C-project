@@ -1,8 +1,13 @@
+#ifndef ERRORS_H
+#define ERRORS_H
+
+/* Structure to represent an error */
 typedef struct Error {
     int error_id;     /* Unique identifier for the error */
     char *error_msg;  /* Error message associated with the error */
 } Error;
 
+/* Error codes */
 typedef enum Error_code {
     ERROR1,
     ERROR2,
@@ -49,4 +54,12 @@ typedef enum Error_code {
 extern int error_count;
 extern char *current_filename;
 
+/*
+ Function to print error messages
+@param error The error code
+@param filename The name of the file where the error occurred
+@param line_number The line number where the error occurred
+*/
 void print_error(int error,char* filename, int line_number);
+
+#endif

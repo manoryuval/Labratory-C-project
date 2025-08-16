@@ -12,9 +12,9 @@
 
 Symbol *symbols = NULL;
 missing_line *missing_lines = NULL; /* linked list of missing lines */
-int ICF = 0;
-int DCF = 0;
-int count_labels = 0;
+int ICF = 0;/* Instruction counter */
+int DCF = 0;/* Data counter */
+int count_labels = 0;/* Count of labels */
 int first_pass (char *file_name) 
 {
     int ic = 0,dc = 0, is_label = 0, is_data = 0, empty = 0;
@@ -28,13 +28,13 @@ int first_pass (char *file_name)
     char *am_file;
     FILE *f;
     FILE *input;
-    int L = 0; /* מספר הארגומנטים */
-    int count_arg = 0; /* מספר הארגומנטים */
-    int i , num, mat_arg, comma_index; /* האם ארגומנט מטריצה */
-    int two_reg_arg = 0; /*דגל*/
+    int L = 0;
+    int count_arg = 0;
+    int i , num, mat_arg, comma_index;
+    int two_reg_arg = 0;
     line_count = 0;
-    
-    /*open file*/
+
+    /* Open file */
     am_file = create_extension(file_name,".am");
     f = fopen(am_file, "r");
     input = fopen(file_name,"r");
@@ -43,32 +43,36 @@ int first_pass (char *file_name)
         return 1;
     }
 
-    /*read file line by line*/
+    /* Read file line by line */
     while (fgets(line, sizeof(line), f)) {
-        is_label = 0; /*reset label flag for each line*/
-        is_data = 0; /*reset data flag for each line*/
-        empty = 0;
-        line_count++;
-        reg1 = "r1"; /*default register*/
-        type1 = 'A'; /*default type*/
-        type2 = 'A'; /*default type*/
-        /*הסרת רווחים מיותרים*/
+        is_label = 0; /* Reset label flag for each line */
+        is_data = 0; /* Reset data flag for each line */
+        empty = 0; /* Reset empty flag for each line */
+        line_count++; /* Increment line count */
+        reg1 = "r1"; /* Default register */
+        type1 = 'A'; /* Default type */
+        type2 = 'A'; /* Default type */
+        /* Remove unnecessary whitespace */
         strcpy(trimmed_line, line);
         trim(trimmed_line);
         strcpy(copy_trimmed_line, trimmed_line);
+        /* Check for line length */
         if (strlen(copy_trimmed_line) >= LENGTH_LINE) {
             print_error(ERROR40, current_filename, line_count);
-            continue; /*skip empty lines*/
+            continue;
         }
+        /* Skip empty lines */
         if(trimmed_line[0] == '\0' || line[0] == COMMENT) {
-            continue; /*skip empty lines*/
+            continue;
         }
+        /* Check for multiple consecutive commas */
         if(multiple_consecutive_commas(trimmed_line)) {
-            print_error(ERROR26, current_filename, line_count); /*multiple commas*/
+            print_error(ERROR26, current_filename, line_count);
         }
+        /* Check for missing commas */
         comma_index= check_missing_commas(trimmed_line);
         if(comma_index == 2) {
-            print_error(ERROR27, current_filename, line_count); /*missing comma*/
+            print_error(ERROR27, current_filename, line_count);
         }
         /*בדיקה אם יש לייבל*/
         token1 = strtok(trimmed_line, " \t"); 

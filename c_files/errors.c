@@ -48,6 +48,7 @@ Error errors[] = {
 
 void print_error(int error,char* filename, int line_number) {
     error_count++;
+    /* Print the error message */
     if (line_number == 0){
         printf("%s: %s. (ID:%d)\n", filename, errors[error].error_msg, error+1);
         return;

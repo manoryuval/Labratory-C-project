@@ -53,7 +53,7 @@ int is_label_start(char *line)
         count ++;
     }
         /* Check for label name */
-    while (isalpha(*ptr) || isdigit(*ptr))
+    while (isalpha(*ptr) || isdigit(*ptr) || *ptr == '_')
     {
         ptr++;
         count++;

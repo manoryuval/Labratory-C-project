@@ -234,16 +234,17 @@ void fprint_ICF(char *file_name, int icf)
    FILE *f = fopen(ob_file, "w+");
    code_line *current = ic;
    int i;
-    if(icf + START_MEMORY_ADDRESS > 255)
+   /* Check if the instruction code final value is within the valid range */
+   if(icf + START_MEMORY_ADDRESS > 255)
    {
       print_error(ERROR36, current_filename, 0);
       return;
    }
-
+   /* Print the instruction code final value */
    print_num(f, ICF);
    print_num(f, DCF);
    fprintf(f, "\n");
-
+   /* Print the code lines */
    for (i = 0; i < icf; i++)
    {
       line_fprint(f,START_MEMORY_ADDRESS + i);
@@ -259,10 +260,10 @@ void line_fprint(FILE *ob, int num) {
    char line[WORD_LINE_SIZE];
    int i;
    if (!ob) {
-      printf("Error opening file \n");/*שגיאה*/
+      printf("Error opening file \n");
       return;
    }
-   
+   /* Print the line number */
    for (i = 3; i >= 0; i--)
    {
       switch (num%4) 
@@ -282,10 +283,11 @@ void line_fprint(FILE *ob, int num) {
       }
       num /= 4;
    }
+   /* Print the line number */
    for (i = 0; i < WORD_LINE_SIZE; i++)
-      {
-            fprintf(ob, "%c", line[i]);
-      }
+   {
+      fprintf(ob, "%c", line[i]);
+   }
    fprintf(ob, "\t");
 } 
 
@@ -302,6 +304,7 @@ void clear_IC_DC()
    ic = NULL;
    dc = NULL;
 }
+
 void add_code_line(char type, int line, char *code)
 {
     code_line **head = (type == 'I') ? &ic : &dc;
@@ -310,62 +313,61 @@ void add_code_line(char type, int line, char *code)
     code_line *newNode;
 
     /* If list is empty, create head node */
-    if (*head == NULL) {
-        *head = malloc(sizeof(code_line));
-        if (!*head) {
-            fprintf(stderr, "Memory allocation failed.\n");
-            exit(EXIT_FAILURE);
-        }
-        (*head)->line = line;
-        strcpy((*head)->code, code);
-        (*head)->next = NULL;
-        return;
-    }
-
+   if (*head == NULL) {
+      *head = malloc(sizeof(code_line));
+      if (!*head) {
+         print_error(ERROR11, current_filename, line_count);
+         exit(EXIT_FAILURE);
+      }
+      (*head)->line = line;
+      strcpy((*head)->code, code);
+      (*head)->next = NULL;
+      return;
+   }
    current= *head;
    prev = NULL;
+   /* Traverse to find insertion point (sorted by line) */
+   while (current != NULL && current->line < line) {
+      prev = current;
+      current = current->next;
+   }
+   /* If the line already exists → overwrite code */
+   if (current != NULL && current->line == line) {
+      strcpy(current->code, code);
+      return;
+   }
 
-    /* Traverse to find insertion point (sorted by line) */
-    while (current != NULL && current->line < line) {
-        prev = current;
-        current = current->next;
-    }
+   /* Create new node */
+   newNode = malloc(sizeof(code_line));
+   if (!newNode) {
+      fprintf(stderr, "Memory allocation failed.\n");
+      exit(EXIT_FAILURE);
+   }
+   newNode->line = line;
+   strcpy(newNode->code, code);
 
-    /* If the line already exists → overwrite code */
-    if (current != NULL && current->line == line) {
-        strcpy(current->code, code);
-        return;
-    }
-
-    /* Create new node */
-    newNode = malloc(sizeof(code_line));
-    if (!newNode) {
-        fprintf(stderr, "Memory allocation failed.\n");
-        exit(EXIT_FAILURE);
-    }
-    newNode->line = line;
-    strcpy(newNode->code, code);
-
-    /* Insert at correct place */
-    newNode->next = current;
-    if (prev == NULL) {
-        /* Insert at head */
-        *head = newNode;
-    } else {
-        prev->next = newNode;
-    }
+   /* Insert at correct place */
+   newNode->next = current;
+   if (prev == NULL) {
+      /* Insert at head */
+      *head = newNode;
+   } else {
+      prev->next = newNode;
+   }
 }
+
 void dc_to_ic(int icf)
 {
    code_line *current = ic;
    code_line *dc_current = dc;
-   
-   if (ic == NULL) /* If the instruction code linked list is empty */
+   /* If the instruction code linked list is empty */
+   if (ic == NULL) 
    {
       ic = dc; /* Link the data code linked list to the instruction code linked list */
       return;
    }
-   if (dc == NULL) /* If the data code linked list is empty */
+   /* If the data code linked list is empty */
+   if (dc == NULL) 
       return; /* Nothing to do, return */
 
    /* Traverse to the end of the IC linked list */
@@ -373,10 +375,8 @@ void dc_to_ic(int icf)
    {
       current = current->next;
    }
-   
    /* Link the end of IC to the start of DC */
    current->next = dc;
-   
    /* Update line numbers in DC part by adding icf (instruction counter final) */
    while (dc_current != NULL)
    {
@@ -384,6 +384,7 @@ void dc_to_ic(int icf)
       dc_current = dc_current->next;
    }
 }
+
 void print_num(FILE *ob, int num) 
 {
    char code[4];

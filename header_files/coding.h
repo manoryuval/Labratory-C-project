@@ -67,30 +67,30 @@ Function to convert an extern label into code
 */
 void extern_to_code(int line); 
 /*
+Function to print the instruction code and data code to a file
+@param file_name the name of the file to print to
+@param icf the instruction code final value
+*/
+void fprint_ICF(char *file_name, int icf); 
+/*
 Function to print the number of line to a file
 @param file_name the name of the file to print to
 @param num the number of the line to print
 */
 void line_fprint(FILE *ob, int num); 
-/*Function to print the instruction code and data code to a file
-@param file_name the name of the file to print to
-@param icf the instruction code final value
-*/
-void fprint_ICF(char *file_name, int icf); 
-/*Function to clear the instruction code and data code
+/*
+Function to clear the instruction code and data code
 */
 void clear_IC_DC(); 
-/**/
-/*Function to add a code line to the appropriate linked list (IC or DC)
+/*
+Function to add a code line to the appropriate linked list (IC or DC)
 @param type the type of the code ('I' for instruction, 'D' for data)
 @param line the line number in the code
 @param code the machine code string to add
 */
 void add_code_line(char type, int line, char *code);
-
-/*Function to link the data code (DC) linked list to the end of the instruction code (IC) linked list
-This function combines the IC and DC linked lists by appending DC to the end of IC and adjusts
-the line numbers in the DC part by adding the instruction counter final value for proper memory addressing
+/*
+Function to link the data code (DC) linked list to the end of the instruction code (IC) linked list
 @param icf the instruction code final value (used to adjust DC line numbers)
 */
 void dc_to_ic(int icf);
