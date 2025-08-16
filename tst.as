@@ -1,4 +1,4 @@
-MAIN: mov M1[ r2 ][ r7 ],W
+MAIN: mov M1[ r2 ][ r7 ],Wmjh
 add r2,STR
 prn #-5
 sub r1, r4
