@@ -19,20 +19,20 @@ void num_to_code(int num, int line, char type)
     char code[5];
     int i;
     int flag = 0;
-    
+
+    /* Check if the number is within the valid range */
     if( num < -512 || num > 511)
    {
       print_error(ERROR35, current_filename, line_count);
       return;
    }
-
-    if (num < 0)
-    {
-         num = -num;
-         flag = 1;
-    }
-
-    
+   /* If the number is negative, we will convert it to positive and set a flag */
+   if (num < 0)
+   {
+      num = -num;
+      flag = 1;
+   }
+   /* Convert the number to a 5-character code */
    for (i = 4; i >= 0; i--)
    {
       switch (num%4) 
@@ -52,8 +52,8 @@ void num_to_code(int num, int line, char type)
       }
       num /= 4;
    }
-
-   if (flag == 1) /* נהפוך את הסיביות אם המספר היה שלילי ונוסיף אחד */
+   /* If the number was negative, invert the bits and add one */
+   if (flag == 1) 
    {
       for (i = 0; i < 5; i++)
       {
@@ -66,8 +66,8 @@ void num_to_code(int num, int line, char type)
          }
       }
    }
-
-   i = 4; /* נתחיל מהאחרון */
+   /* Adjust the last character based on the flag */
+   i = 4; 
    while (flag && i >=0)
    {
       switch (code[i])
@@ -78,29 +78,29 @@ void num_to_code(int num, int line, char type)
          case 'd': code[i] = 'a'; i--; break;
       }
    }
-
+   /* Add the code line to the appropriate linked list */
    add_code_line(type ,line, code);
 
 }
+
 void num_to_code8(int num, int line, char type) 
 {
    char code[5];
     int i;
     int flag = 0;
-    
+    /* Check if the number is within the valid range */
     if( num < -128 || num > 127)
    {
       print_error(ERROR34, current_filename, line_count);
       return;
    }
-
-    if (num < 0)
-    {
-         num = -num;
-         flag = 1;
-    }
-
-    
+   /* If the number is negative, we will convert it to positive and set a flag */
+   if (num < 0)
+   {
+      num = -num;
+      flag = 1;
+   }
+   /* Convert the number to a 4-character code */
    for (i = 3; i >= 0; i--)
    {
       switch (num%4) 
@@ -120,8 +120,8 @@ void num_to_code8(int num, int line, char type)
       }
       num /= 4;
    }
-
-   if (flag == 1) /* נהפוך את הסיביות אם המספר היה שלילי ונוסיף אחד */
+   /* If the number was negative, invert the bits and add one */
+   if (flag == 1) 
    {
       for (i = 0; i < 4; i++)
       {
@@ -134,8 +134,8 @@ void num_to_code8(int num, int line, char type)
          }
       }
    }
-
-   i = 3; /* נתחיל מהאחרון */
+   /* Adjust the last character based on the flag */
+   i = 3; 
    while (flag && i >=0)
    {
       switch (code[i])
@@ -147,47 +147,42 @@ void num_to_code8(int num, int line, char type)
       }
    }
    code[4] = 'a';
-
+   /* Add the code line to the appropriate linked list */
    add_code_line(type ,line, code);
 
 }
+
 void two_reg_code (char *reg1, char *reg2, int line, char type)
 {
     char code[5];
+    /* Get the register codes for both registers */
     strcpy(code, get_register_code(reg1));
     strcat(code, get_register_code(reg2));
     strcat(code, "a");/* a - ARE*/
-
+   /* Add the code line to the appropriate linked list */
     add_code_line(type ,line, code);
 
 }
+
 void char_to_code(char c, int line, char type)
 {
-
+   /* Convert the character to its ASCII value */
    int i = (int)c;
+   /* Check if the ASCII value is within the valid range */
    if( (i > 32 && i < 126) || i == 0) {
-      num_to_code(i, line, type); /* נשתמש בפונקציה num_to_code כדי להמיר את התו לקוד */ 
+      /* If valid, convert to code */
+      num_to_code(i, line, type);
       return;
    }
-   print_error(ERROR28, current_filename, line_count); /* Illegal character */
+   print_error(ERROR28, current_filename, line_count);
 
 }
-void op_to_code(char* op, char type1, char type2, int line, char type)
-{
-      char code[5];
-   
-      strcpy(code, get_opcode_code(op));
-      code[2] = lowercase(type1);
-      code[3] = lowercase(type2);
-      code[4] = 'a';
 
-      add_code_line(type ,line, code);
-}
-void line_to_code(int num, int line, char type) /* להכניס תקלה על מספר שורה גדול מידי ל8 ביטים*/
+void line_to_code(int num, int line, char type)
 {
-    char code[5];
-    int i;
-
+   char code[5];
+   int i;
+   /* Convert the line number to code */
    for (i = 3; i >= 0; i--)
    {
       switch (num%4) 
@@ -208,10 +203,58 @@ void line_to_code(int num, int line, char type) /* להכניס תקלה על מ
       num /= 4;
    }
    code[4] = 'c'; /*ARE - always 10 (E) */
- 
+   /* Add the code line to the appropriate linked list */
    add_code_line(type ,line, code);
 
 }
+
+void op_to_code(char* op, char type1, char type2, int line, char type)
+{
+   char code[5];
+   /* Get the opcode code */
+   strcpy(code, get_opcode_code(op));
+   code[2] = lowercase(type1);
+   code[3] = lowercase(type2);
+   code[4] = 'a';
+   /* Add the code line to the appropriate linked list */
+   add_code_line(type ,line, code);
+}
+
+void extern_to_code(int line)
+{
+   char code[WORD_SIZE]= "aaaab";
+   /* Convert extern label to code */
+   add_code_line('I' ,line, code);
+
+}
+
+void fprint_ICF(char *file_name, int icf)
+{
+   char *ob_file = create_extension(file_name,".ob");
+   FILE *f = fopen(ob_file, "w+");
+   code_line *current = ic;
+   int i;
+    if(icf + START_MEMORY_ADDRESS > 255)
+   {
+      print_error(ERROR36, current_filename, 0);
+      return;
+   }
+
+   print_num(f, ICF);
+   print_num(f, DCF);
+   fprintf(f, "\n");
+
+   for (i = 0; i < icf; i++)
+   {
+      line_fprint(f,START_MEMORY_ADDRESS + i);
+      fprintf(f, "%s", current->code);
+      fprintf(f, "\n");
+      current = current->next;
+   }
+   fclose(f);
+   free(ob_file);
+}
+
 void line_fprint(FILE *ob, int num) {
    char line[WORD_LINE_SIZE];
    int i;
@@ -245,38 +288,7 @@ void line_fprint(FILE *ob, int num) {
       }
    fprintf(ob, "\t");
 } 
-void extern_to_code(int line)
-{
-   char code[WORD_SIZE]= "aaaab"; 
-   add_code_line('I' ,line, code);
 
-}
-void fprint_ICF(char *file_name, int icf)
-{
-   char *ob_file = create_extension(file_name,".ob");
-   FILE *f = fopen(ob_file, "w+");
-   code_line *current = ic;
-   int i;
-    if(icf + START_MEMORY_ADDRESS > 255)
-   {
-      print_error(ERROR36, current_filename, 0);
-      return;
-   }
-
-   print_num(f, ICF);
-   print_num(f, DCF);
-   fprintf(f, "\n");
-
-   for (i = 0; i < icf; i++)
-   {
-      line_fprint(f,START_MEMORY_ADDRESS + i);
-      fprintf(f, "%s", current->code);
-      fprintf(f, "\n");
-      current = current->next;
-   }
-   fclose(f);
-   free(ob_file);
-}
 void clear_IC_DC()
 {
    code_line *current, *next;
@@ -413,16 +425,6 @@ void print_num(FILE *ob, int num)
          fprintf(ob, "%c", code[i]);
    }
   
-}
-
-void print_code_lines() /* למחוק לפני הגשה */
- {
-   code_line *current = ic;
-   printf("print code lines\n");
-   while (current != NULL) {
-      printf("Line %d: %s\n", current->line, current->code);
-      current = current->next;
-   }
 }
 
 

@@ -12,7 +12,7 @@
 #include "../header_files/errors.h"
 
 
-/* array of opcodes */
+/* Array of opcodes */
 op_code OPCODES[] = {
         {"mov",  2, "aa"},
         {"cmp",  2, "ab"},
@@ -32,7 +32,7 @@ op_code OPCODES[] = {
         {"stop", 0, "dd"},
 };
 
-/* array of registers */
+/* Array of registers */
 regs_code REGS[] = {
     {"r0", "aa"},
     {"r1", "ab"},
@@ -96,11 +96,11 @@ WordType scan_word(char *token) {
     if(token[0] == '"' && token[token_length - 1] == '"') {
         return STRING;
     }
-    /*check for matrix operand*/
+    /* Check for matrix operand */
     if(is_matrix_operand(token)) {
         return ARG_MAT;
     }
-    /*check for matrix definition*/
+    /* Check for matrix definition */
     if(is_matrix_definition(token)) {
         return MAT;
     }
@@ -116,6 +116,7 @@ WordType scan_word(char *token) {
 
 char *get_opcode_name(char *token) {
     int i;
+    /* Run through the opcodes array */
     for (i = 0; i < sizeof(OPCODES) / sizeof(OPCODES[0]); i++) {
         if (strcmp(token, OPCODES[i].opcode) == 0) {
             /*if opcode found, return opcode name*/
@@ -127,9 +128,10 @@ char *get_opcode_name(char *token) {
 
 char *get_opcode_code(char *token) {
     int i;
+    /* Run through the opcodes array */
     for (i = 0; i < sizeof(OPCODES) / sizeof(OPCODES[0]); i++) {
         if (strcmp(token, OPCODES[i].opcode) == 0) {
-            /*if opcode found, return opcode code*/
+            /* If opcode found, return opcode code*/
             return OPCODES[i].code;
         }
     }
@@ -138,8 +140,10 @@ char *get_opcode_code(char *token) {
 
 char *get_register_name(char *token) {
     int i;
+    /* Run through the registers array */
     for (i = 0; i < sizeof(REGS) / sizeof(REGS[0]); i++) {
         if (strcmp(token, REGS[i].reg) == 0) {
+            /* If register found, return register name*/
             return REGS[i].reg;
         }
     }
@@ -151,8 +155,10 @@ char *get_register_code(char *token) {
     if (!token || strlen(token) == 0) {
         return NULL; /* Check for NULL or empty token */
     }
+    /* Run through the registers array */
     for (i = 0; i < sizeof(REGS) / sizeof(REGS[0]); i++) {
         if (strcmp(token, REGS[i].reg) == 0) {
+            /* If register found, return register code*/
             return REGS[i].code;
         }
     }
@@ -163,8 +169,7 @@ int is_matrix_operand( char *str) {
     int matched;
     char name[31], reg1[4], reg2[4], extra;
     /* Check for matrix operand format */
-    /*matched = sscanf(str, "%30[^[][%[^]]][%[^]]]%c", name, reg1, reg2, &extra);*/
-    matched = sscanf(str,  " %30[^[] [ %3[^]] ] [ %3[^]] ] %c",    name, reg1, reg2, &extra);
+      matched = sscanf(str," %30[^[] [ %3[^]] ][%3[^]] ]%c",name, reg1, reg2, &extra);
     /* Check for extra characters */
     if (matched != 3) {
         return 0; 
@@ -183,14 +188,16 @@ char *get_matrix_name(char *str) {
     int matched;
     char name[31];
     char *result;
+    /* Check for matrix operand name */
     matched = sscanf(str, "%30[^[]", name);
 
+    /* Check for valid matrix name */
     if (matched != 1 ) {
         print_error(ERROR23, current_filename, line_count);
         return NULL; 
     }
 
-    /* הקצאת זיכרון חדש והחזרת עותק */
+    /* Allocate memory for the result */
     result = malloc(strlen(name) + 1);
     if (!result) {
         print_error(ERROR11, current_filename, line_count);
@@ -204,7 +211,7 @@ char *get_reg1_matrix_operand( char *str) {
     int matched;
     char reg1[4];
     remove_spaces(str); /* Remove spaces from the string */
-    /* printf("\n\n%s\n\n", str); */
+
     /* Check for matrix operand format */
     matched = sscanf(str, "%*[^[][%3[^]]]", reg1);
     /* Check for valid register */
@@ -212,11 +219,12 @@ char *get_reg1_matrix_operand( char *str) {
         print_error(ERROR23, current_filename, line_count);
         return NULL; 
     }
+    /* Check for valid register */
     if(!get_register_name(reg1)) {
         print_error(ERROR24, current_filename, line_count);
         return NULL; 
     }
-    return get_register_name(reg1); /* Return the register name */
+    return get_register_name(reg1); 
 }
 
 char *get_reg2_matrix_operand( char *str) {
@@ -227,20 +235,23 @@ char *get_reg2_matrix_operand( char *str) {
     /* Check for valid register */
     if (matched != 1 )
         return NULL;
+
+    /* Check for valid register */
     if(!get_register_name(reg2))             
         return NULL; 
-    
-    return get_register_name(reg2); /* Return the register name */
+
+    return get_register_name(reg2);
 }
 
 int is_matrix_definition(const char *str) {
     int num1, num2;
     char temp;
     /*Check for matrix definition format*/
-    int matched = sscanf(str, "[ %d ][ %d ]%c", &num1, &num2, &temp);/* [ %3[^]] ] [ %3[^]] ] %c*/
+    int matched = sscanf(str, "[ %d ][ %d ]%c", &num1, &num2, &temp);
     
     /* Check for valid dimensions */
     if (matched != 2) return 0;
+
     /* Check for valid ranges */
     if (num1 < 0 || num2 < 0 ) {
         return 0;
@@ -251,16 +262,15 @@ int is_matrix_definition(const char *str) {
 
 int get_opcode_arg(char *token) {
     int i;
+    /* Run through the opcodes array */
     for (i = 0; i < sizeof(OPCODES) / sizeof(OPCODES[0]); i++) {
         if (strcmp(token, OPCODES[i].opcode) == 0) {
-            /*if opcode found, return opcode name*/
+            /* If opcode found, return opcode name*/
             return OPCODES[i].arg_num;
         }
     }
     return -1;
 }
-
-
 
 DataType get_data_kind(char *token) {
     if (strcmp(token, ".data") == 0) {
@@ -273,26 +283,23 @@ DataType get_data_kind(char *token) {
     return UNKNOWN_;
 }
 
-
-
-
 void add_missing_line(int line, char *label, missing_line **head, int am_line)
-
 {
-    /*check if label exists*/
-    
+    /* Check if the head is NULL */
     if (*head == NULL)
     {
+        /* Create a new node */
         *head = malloc(sizeof(missing_line));
         (*head)->line = line;
         (*head)->am_line = am_line;
         (*head)->label = malloc(strlen(label) + 1);
         strcpy((*head)->label, label);
         (*head)->next = NULL;
-        (*head)->prev = NULL; /* Initialize prev pointer to NULL */
+        (*head)->prev = NULL; 
     }
     else
     {
+        /* Traverse to the end of the list */
         missing_line *current = *head;
         while (current->next != NULL) 
         {
@@ -326,17 +333,16 @@ void remove_node(missing_line **head_ref, missing_line *current) {
     if (current == NULL) return;
 
     if (current->prev == NULL && current->next == NULL) {
-        /* צומת בודד ברשימה */
         *head_ref = NULL;
     } else if (current->prev == NULL) {
-        /* הסרה מראש הרשימה */
+        /* Remove from the head of the list */
         *head_ref = current->next;
         (*head_ref)->prev = NULL;
     } else if (current->next == NULL) {
-        /* הסרה מהסוף */
+        /* Remove from the end of the list */
         current->prev->next = NULL;
     } else {
-        /* הסרה באמצע */
+        /* Remove from the middle */
         current->next->prev = current->prev;
         current->prev->next = current->next;
     }
@@ -345,19 +351,20 @@ void remove_node(missing_line **head_ref, missing_line *current) {
     free(current);
 }
 
-
 int update_missing_lines(missing_line *head, Symbol *symbols, int count)
 {
     missing_line *current = head;
-    
     int i, updated = 0;
+    /* Check if the label exists */
     while (current != NULL) {
         current->label[strcspn(current->label, "\r\n")] = '\0';
 
         if (is_label_exists(symbols, count, current->label)) {
-            /* If the label exists, update the address */
+            /* If the label exists */
             for (i = 0; i < count; i++) {
+                /* Check if the label matches */
                 if (strcmp(symbols[i].label, current->label) == 0) {
+                    /* If the label is external, update the address */
                     if( symbols[i].type == LABEL_EXTERN) {
                         extern_to_code(current->line);
                     } else {
@@ -372,18 +379,17 @@ int update_missing_lines(missing_line *head, Symbol *symbols, int count)
         }
         current = current->next;
     }
+    /* Check if any missing lines were updated */
     if (updated > 0) {
-        
-        remove_node(&head, current); 
-    } else {
-        /*printf("No missing lines were updated.\n");שגיאה*/
+        remove_node(&head, current);
     }
-    return updated; /* Return the number of updated labels */
+    return updated;
 }
 
 void clear_missing_lines()
 {
     missing_line *current = missing_lines;
+    /* Free all nodes in the linked list */
     while (current != NULL) {
         missing_line *temp = current;
         current = current->next;
@@ -419,7 +425,7 @@ int is_valid_argument(char *cmd, int arg_num, WordType type) {
             return 1;
             break;
         default:
-            return 0; /* Invalid argument type */
+            return 0;
         }
-    return 0; /* Invalid argument type */
+    return 0;
 }

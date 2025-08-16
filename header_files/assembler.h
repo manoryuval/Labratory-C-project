@@ -1,3 +1,6 @@
+#ifndef ASSEMBLER_H
+#define ASSEMBLER_H
+
 #define MAX_LINE 1024
 #define LENGTH_LINE 80
 
@@ -16,3 +19,4 @@
  * This function should be called after finish reading a file and before reading the next file
  */
 void clear();
+#endif
