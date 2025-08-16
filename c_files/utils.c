@@ -11,16 +11,12 @@
 #include "../header_files/coding.h"
 #include "../header_files/errors.h"
 
-/*
- * Allocates a new string with the given extension.
- * The caller is responsible for freeing the returned pointer using free().
- */
 char *create_extension(char *filename, char *extension) {
 
     char *output_filename = malloc(FILENAME_MAX);
     char *dot;
     /* Check for memory allocation errors */
-    if (!output_filename) return NULL; /*שגיאת לזיכרון*/
+    if (!output_filename) return NULL;
     /* Copy the original file name */
     strcpy(output_filename, filename);
     dot = strrchr(output_filename, '.');
@@ -59,40 +55,16 @@ void trim(char *line) {
     line[len] = '\0';
 }
 
-
 int alpha_count(char *token){
     int len = strlen(token);
-    if (len < 2) return -1; 
-
+    /* Check for empty strings */
+    if (len < 2) return -1;
+    /* Check for quotes */
     if (token[0] != '"' || token[len-1] != '"') {
         return -1; 
     }
-    return len-2; /* Return the length of the string without the quotes */
-}
-
-
-int valid_mat(char *token) {
-    int len = strlen(token);
-    int i;
-    int count = 0;
-    if (len < 2) return 0;
-
-    if (token[0] != '[' || token[len-1] != ']') {
-        return 0;
-    }
-
-    for (i = 1; i < len - 1; i++) {
-        char c = token[i];
-        if (!isdigit((unsigned char)c)) {
-            return 0;
-        }
-        if (c == ' ' || c == '\t' ) {
-            continue;
-        }
-        count++;
-    }
-
-    return count;
+    /* Return the length of the string without the quotes */
+    return len-2; 
 }
 
 void remove_spaces(char *str) {
@@ -103,7 +75,7 @@ void remove_spaces(char *str) {
         }
         src++;
     }
-    *dst = '\0'; /* Null-terminate the string */
+    *dst = '\0';
 }
 
 char lowercase(char c) 
@@ -125,9 +97,11 @@ char lowercase(char c)
 int is_number(char *token) 
 {
     int i;
+    /* Check for valid signs */
     if (token[0] == MINUS || token[0] == PLUS || isdigit(token[0])) 
     {
         for(i = 1; i < strlen(token); i++) {
+            /* Check if the character is a digit */
             if(!isdigit(token[i])) 
             {
                 return 0;
@@ -141,7 +115,6 @@ int is_number(char *token)
 int num_to_int(char *token) {
     char *ptr = token;
     ptr++;
-    /* printf("\n\n%s\n\n", ptr); */
     return atoi(ptr);
 }
 
@@ -151,8 +124,9 @@ int multiple_consecutive_commas(char *line) {
     int line_length = strlen(line);
     for (i = 0; i < line_length; i++) {
         if (line[i] == ' ' || line[i] == '\t') {
-            continue;  /* Skip spaces and tabs */
+            continue; 
         }
+        /* Check for multiple consecutive commas */
         if (line[i] == ',') {
             comma_count++;
             if (comma_count > 1) {
@@ -171,50 +145,50 @@ int check_missing_commas(const char* input) {
     int last_was_comma = 0;
 
     while (input[i] != '\0') {
-        /* דילוג על רווחים וטאבים */
+        /* Skip spaces and tabs */
         while (input[i] == ' ' || input[i] == '\t') {
             i++;
         }
-
+        /* Check for end of input */
         if (input[i] == '\0') break;
 
         arg_index++;
 
-        /* קריאת הפקודה עצמה */
+        /* Read the command */
         if (arg_index == 1) {
             while (input[i] != '\0' && input[i] != ' ' && input[i] != '\t' && input[i] != ',') {
                 i++;
             }
 
-            /* דילוג על רווחים וטאבים אחרי הפקודה */
+            /* Skip spaces and tabs after the command */
             while (input[i] == ' ' || input[i] == '\t') {
                 i++;
             }
 
-            /* בדיקה אם יש פסיק ישירות אחרי הפקודה */
+            /* Check if there is a comma directly after the command */
             if (input[i] == ',') {
-                return 2; /* פסול – פסיק ישירות אחרי הפקודה */
+                return 2; /* Invalid - comma directly after command */
             }
 
             continue;
         }
 
-        /* בדיקה אם חסר פסיק בין הארגומנטים (מתחיל מהשני) */
+        /* Check if a comma is missing between arguments (except for the second one) */
         if (!last_was_comma && arg_index > 2) {
-            return 1; /* חסר פסיק */
+            return 1; /* Missing comma */
         }
 
-        /* קפיצה על הטוקן (עד לרווח, טאב או פסיק) */
+        /* Skip the token (until a space, tab, or comma) */
         while (input[i] != '\0' && input[i] != ' ' && input[i] != '\t' && input[i] != ',') {
             i++;
         }
 
-        /* דילוג על רווחים אחרי הטוקן */
+        /* Skip spaces and tabs after the token */
         while (input[i] == ' ' || input[i] == '\t') {
             i++;
         }
 
-        /* בדיקה אם יש פסיק */
+        /* Check if there is a comma */
         if (input[i] == ',') {
             last_was_comma = 1;
             i++;
@@ -223,5 +197,5 @@ int check_missing_commas(const char* input) {
         }
     }
 
-    return 0; /* הכל תקין */
+    return 0; /* Valid */
 }

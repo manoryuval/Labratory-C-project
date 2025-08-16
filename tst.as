@@ -8,8 +8,8 @@ bne L3
 END: stop
 M1: .mat [ 4   ][ 3 ] 1,2,3,3
 STR: .string   "abcde"
-LENG_TH: .data 6,-9,15
+LENGTH: .data 6,-9,15
 K: .data 22
-.entry LENG_TH
+.entry LENGTH
 .extern L3
 .extern W

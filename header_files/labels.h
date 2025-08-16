@@ -1,4 +1,9 @@
-#define MAX_LABEL_LENGTH 31
+#ifndef LABELS_H
+#define LABELS_H
+
+
+#define MAX_LABEL_LENGTH 31 /* Maximum length of a label */
+
 /* Label types */
 typedef enum Type {
     LABEL_REGULAR,
@@ -25,7 +30,8 @@ typedef struct {
 extern Symbol *symbols;
 
 
-/* Function to add a symbol to the symbol table 
+/*
+Function to add a symbol to the symbol table 
 @param symbols Pointer to the symbol table
 @param count Pointer to the number of symbols in the table
 @param label The label to add
@@ -35,7 +41,6 @@ extern Symbol *symbols;
 @return 1 on success, 0 on failure
 */
 int add_symbol(Symbol **symbols, int *count, const char *label, Type type, Mode mode, int address);
-
 /*
 Check if a label exists in the symbol table.
 @param symbols Pointer to the symbol table
@@ -56,17 +61,18 @@ Copy a label from source to destination.
 @param src The source string
 */
 void copy_label(char *dest, char *src);
-/* Check if a label is valid.
+/*
+Check if a label is valid.
 @param label The label to check
 @return 1 if the label is valid, 0 otherwise
 */
 int valid_label(char *label);
-/* Print the symbol table. 
+/*
+Print the symbol table. 
 @param symbols Pointer to the symbol table
 @param count Number of symbols in the table
 */
 void print_symbols(Symbol *symbols, int count);
-
 /*
 Find the data symbols in the table and update the address
 @param symbols Pointer to the symbol table
@@ -75,7 +81,6 @@ Find the data symbols in the table and update the address
 @return 1 when loop over
 */
 int update_symbol_address(Symbol *symbols, int count, int ICF);
-
 /*
 Find the symbol in the table and update its type
 @param symbols Pointer to the symbol table
@@ -85,39 +90,35 @@ Find the symbol in the table and update its type
 @return 1 if succssed (find label and update type), otherwise 0.
 */
 int update_symbol_type(Symbol *symbols, int count,char *label,  Type type);
-
-
 /*
-count the label in entry type
+Count the label in entry type
 @param symbols Pointer to the symbol table
 @param count Number of symbols in the table
 @return sum of label with entry type
 */
 int entry_count(Symbol *symbols, int count);
-
 /*
-count the label in extern type
+Count the label in extern type
 @param symbols Pointer to the symbol table
 @param count Number of symbols in the table
 @return sum of label with extern type
 */
-
 int extern_count(Symbol *symbols, int count);
-
 /*
 add 100 to address of symbols tabel and missing lines
 @param symbols Pointer to the symbol table
 @param count Number of symbols in the table
 */
 void add100(Symbol *symbols, int count_labels);
-
-/*Check if a label is a reserved word.
+/*
+Check if a label is a reserved word.
 @param label The label to check
 @return 1 if the label is a reserved word, 0 otherwise
 */
 int label_is_reserved(char *label);
-
-/* Free the symbol table and symbols count.
+/*
+Free the symbol table and symbols count.
 */
 void clear_symbols();
 
+#endif

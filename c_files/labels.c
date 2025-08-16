@@ -11,6 +11,7 @@
 #include "../header_files/errors.h"
 
 int add_symbol(Symbol **symbols, int *count, const char *label, Type type, Mode mode, int address) {
+    /* Allocate memory for a new symbol */
     Symbol *temp = realloc(*symbols, (*count + 1) * sizeof(Symbol));
     if (temp == NULL) {
         print_error(ERROR11, current_filename, line_count);
@@ -25,8 +26,8 @@ int add_symbol(Symbol **symbols, int *count, const char *label, Type type, Mode 
     (*symbols)[*count].type = type;
     (*symbols)[*count].address = address;
     (*symbols)[*count].mode = mode;
-    /* Increment the symbol count */
-    (*count)++;
+    (*count)++;/* Increment the symbol count */
+
     return 1; 
 }
 
@@ -52,8 +53,8 @@ int is_label_start(char *line)
         ptr++;
         count ++;
     }
-        /* Check for label name */
-    while (isalpha(*ptr) || isdigit(*ptr) || *ptr == '_')
+    /* Check for label name */
+    while (isalpha(*ptr) || isdigit(*ptr))
     {
         ptr++;
         count++;
@@ -89,13 +90,13 @@ int valid_label(char *label) {
         print_error(ERROR13,current_filename,line_count);
         return 0;
     }
-
+    /* Check if the label is a reserved word */
     if(label_is_reserved(label)) 
     {
         print_error(ERROR32,current_filename,line_count);
         return 0;
     }
-
+    /* Check if the label starts with a letter */
     if(!isalpha(label[0])) {
         print_error(ERROR39, current_filename, line_count);
         return 0; /* Invalid label */
@@ -103,7 +104,6 @@ int valid_label(char *label) {
 
     return 1; /* Valid label */
 }
-
 
 void print_symbols(Symbol *symbols, int count) /* למחיקה לפני הגשה */{
     int i;
@@ -113,7 +113,6 @@ void print_symbols(Symbol *symbols, int count) /* למחיקה לפני הגשה
             symbols[i].label, symbols[i].type, symbols[i].address, symbols[i].mode);
     }
 }
-
 
 int update_symbol_address(Symbol *symbols, int count, int ICF) {
     int i;
@@ -164,18 +163,17 @@ int extern_count(Symbol *symbols, int count) {
     return extern_count;
 }
 
-void add100(Symbol *symbols, int count_labels)/*לעשות שתעלה 100 גם בשורות חסרות*/
+void add100(Symbol *symbols, int count_labels)
 {
     int i;
     /* Add 100 to the address of each symbol */
     for (i = 0; i < count_labels; i++) {
-        symbols[i].address += 100;
+        symbols[i].address += START_MEMORY_ADDRESS;
     }
  }
  
 int label_is_reserved(char *label) {
     /* Check if the label is a reserved word */
-    
     if ( strcmp(label, "mov" ) == 0 || strcmp(label, "cmp") == 0 || strcmp(label, "add") == 0 ||
          strcmp(label, "sub") == 0 || strcmp(label, "not") == 0 || strcmp(label, "clr") == 0 ||
          strcmp(label, "lea") == 0 || strcmp(label, "inc") == 0 || strcmp(label, "dec") == 0 ||

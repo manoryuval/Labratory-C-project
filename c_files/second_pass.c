@@ -22,54 +22,59 @@ int second_pass(char *file_name) {
     FILE *f = fopen(am_file, "r");
     FILE *input = fopen(file_name,"r");
     line_count = 0;
-
+    /* Check if the file was opened successfully */
     if (!input || !f ) {
         print_error(ERROR1, current_filename, line_count);
         return 1;
     }
-
+    /* Read the am file line by line */
     while (fgets(line, sizeof(line), f)) {
         line_count++;
         token1 = strtok(line, " \t");
         if (!token1) continue;
+        /* Skip labels */
         if (is_label_start(token1)) {
             token1 = strtok(NULL, " \t"); /* Skip the label */
         }
-
+        /* Tokenize the next word */
         switch (scan_word(token1)) {
-            case DATA:
+            case DATA:/*Data directive*/
                 break;
-            case EXTERN:
+            case EXTERN:/* External directive */
                 break;
-            case ENTRY:
+            case ENTRY:/* Entry directive */
+            {
+                /* Tokenize the entry label */
                 token2 = strtok(NULL, " \t");
                 token2[strcspn(token2, "\r\n")] = '\0';
-
+                /* Check if the entry label is valid */
                 if (!token2) {
                     print_error(ERROR2, current_filename, line_count);
-                    continue; /*continue to next line*/
+                    continue; 
                 }
-
+                /* Check if the label is valid */
                 if (!valid_label(token2)) {
-                    continue; /*continue to next line*/
+                    continue;
                 }
-
+                /* Check if the label exists in the symbol table */
                 if (!is_label_exists(symbols, count_labels, token2)) {
                         print_error(ERROR33, current_filename, line_count);
-                    continue; /*continue to next line*/
+                    continue; 
                 }
                 /* Update the symbol table entry for the entry label */
                 update_symbol_type(symbols, count_labels, token2, LABEL_ENTRY);
                 break;
+            }
             case CODE:
                 break;
             default:
                 break;
         }
     }
-    
+    /* Update missing lines (line of labels)*/
     update_missing_lines(current, symbols, count_labels);
 
+    /* Create entry file if needed */
     if(entry_count(symbols, count_labels) && error_count == 0) {
         char *entry_file = create_extension(file_name, ".ent");
         FILE *f = fopen(entry_file, "w+");
@@ -86,6 +91,8 @@ int second_pass(char *file_name) {
         }
         free(entry_file);
     }
+
+    /* Create extern file if needed */
     if(extern_count(symbols, count_labels) && error_count == 0) 
     {
         char *extern_file = create_extension(file_name, ".ext");
@@ -109,6 +116,7 @@ int second_pass(char *file_name) {
         fclose(f1);
         free(extern_file);
     }
+    /* Close all open files */
     fclose(f);
     free(am_file);
     return 0;

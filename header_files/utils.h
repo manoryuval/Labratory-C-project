@@ -1,3 +1,6 @@
+#ifndef UTILS_H
+#define UTILS_H
+
 /*
 Changes the extension of a file name.
 @param file_name The original file name.
@@ -39,7 +42,17 @@ Converts a numeric string to an integer.
 @return The integer value of the string.
 */
 int num_to_int(char *token);
-
+/*
+Checks if a line contains multiple consecutive commas.
+@param line The line to check.
+@return 1 if multiple consecutive commas are found, 0 otherwise.
+*/
 int multiple_consecutive_commas(char *line);
-
+/*
+Checks for missing commas in a line of input.
+@param input The input line to check.
+@return 0 if all commas are present, 1 if a comma is missing, 2 if a comma is directly after a command.
+*/
 int check_missing_commas(const char* input);
+
+#endif
