@@ -169,7 +169,7 @@ void char_to_code(char c, int line, char type)
    /* Convert the character to its ASCII value */
    int i = (int)c;
    /* Check if the ASCII value is within the valid range */
-   if( (i > 32 && i < 126) || i == 0) {
+   if( (i > 31 && i < 126) || i == 0) {
       /* If valid, convert to code */
       num_to_code(i, line, type);
       return;

@@ -43,7 +43,9 @@ int main(int argc, char *argv[]) {
             free(ent_file);
             free(ext_file);
             free(ob_file);
-            free(as_name); 
+            free(as_name);
+            clear();
+            printf("\n");
             continue;
         }
         /* Run the preprocessing stage */
