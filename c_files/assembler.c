@@ -40,9 +40,6 @@ int main(int argc, char *argv[]) {
         file = fopen(as_name, "r");
         if (!file) {/* If .as file not found */
             print_error(ERROR20, current_filename, 0);
-            remove(ent_file);
-            remove(ext_file);
-            remove(ob_file);
             free(ent_file);
             free(ext_file);
             free(ob_file);

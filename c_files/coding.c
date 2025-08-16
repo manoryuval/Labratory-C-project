@@ -234,12 +234,7 @@ void fprint_ICF(char *file_name, int icf)
    FILE *f = fopen(ob_file, "w+");
    code_line *current = ic;
    int i;
-   /* Check if the instruction code final value is within the valid range */
-   if(icf + START_MEMORY_ADDRESS > 255)
-   {
-      print_error(ERROR36, current_filename, 0);
-      return;
-   }
+   
    /* Print the instruction code final value */
    print_num(f, ICF);
    print_num(f, DCF);

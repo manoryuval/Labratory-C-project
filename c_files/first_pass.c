@@ -374,6 +374,12 @@ int first_pass (char *file_name)
     update_symbol_address(symbols, count_labels, ICF);
     dc_to_ic(ICF);
     add100(symbols, count_labels);    
+    
+    /* Check if the instruction code final value is within the valid range */
+    if(ic + dc + START_MEMORY_ADDRESS > 255)
+    {
+        print_error(ERROR36, current_filename, 0);
+    }
     fclose(input);
     fclose(f);
     free(am_file);
