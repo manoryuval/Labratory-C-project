@@ -13,8 +13,9 @@
 
 Mcro *mcro_head = NULL; /* Initialize the global macro head pointer */
 int line_count = 0;
-/*Function to add a new mcro to the linked list*/
+
 void add_mcro(Mcro **head, char *name, char *body) {
+    /* Allocate memory for a new macro node */
     Mcro *new_node = (Mcro *)malloc(sizeof(Mcro));
     if (!new_node) {
         print_error(ERROR11, current_filename, line_count);
@@ -150,7 +151,6 @@ int preproc(char *file_name) {
     return 1;
 }
 
-/* Prints the list of macros */
 void print_mcro_list(Mcro *head) {
     while (head != NULL) {
         printf(" NAME: %s\n", head->name);
@@ -159,7 +159,6 @@ void print_mcro_list(Mcro *head) {
     }
 }
 
-/* Frees all memory allocated for the Mcro linked list */
 void clear_macros() {
     Mcro *current = mcro_head;
     Mcro *next_node;
